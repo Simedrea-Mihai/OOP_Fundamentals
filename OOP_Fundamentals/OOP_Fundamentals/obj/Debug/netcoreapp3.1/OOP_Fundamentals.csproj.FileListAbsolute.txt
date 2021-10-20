@@ -1,0 +1,14 @@
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.exe
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.deps.json
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.runtimeconfig.json
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.runtimeconfig.dev.json
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.dll
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\bin\Debug\netcoreapp3.1\OOP_Fundamentals.pdb
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.csprojAssemblyReference.cache
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.GeneratedMSBuildEditorConfig.editorconfig
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.AssemblyInfoInputs.cache
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.AssemblyInfo.cs
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.csproj.CoreCompileInputs.cache
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.dll
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.pdb
+D:\AMDARIS\Internship\M1\2. OOP Fundamentals\OOP_Fundamentals\OOP_Fundamentals\obj\Debug\netcoreapp3.1\OOP_Fundamentals.genruntimeconfig.cache
