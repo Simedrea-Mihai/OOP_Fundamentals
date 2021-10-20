@@ -1,0 +1,10 @@
+is_global = true
+build_property.TargetFramework = net5.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.PublishSingleFile = 
+build_property.IncludeAllContentForSelfExtract = 
+build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
+build_property.RootNamespace = C_Sharp_Language_Basic
+build_property.ProjectDir = D:\AMDARIS\Internship\M1\3. C_Sharp Language Basic\C_Sharp_Language_Basic\C_Sharp_Language_Basic\
