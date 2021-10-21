@@ -1,4 +1,4 @@
-# Football Management
+# Football Manager
 ## Main Program
 
 <details>
@@ -7,92 +7,73 @@
   
 ```csharp
 using System;
-using OOP_Fundamentals.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using FootballManager.Entities;
+using FootballManager.Enums;
+using FootballManager.EntitiesLogic;
 
-namespace OOP_Fundamentals
+namespace FootballManager
 {
     class Program
     {
         static void Main(string[] args)
         {
 
-            // Initialization
-            List<string> teams = new List<string>();
-            teams.Add("Real Madrid"); teams.Add("Atletico Madrid"); teams.Add("FC Barcelona");
+            /*
+            List<int> teams = new List<int>();
+            teams.Add(1);
+            Player player = new Player("Cristiano", "Ronaldo", DateTime.Now, 1, 500, Enums.PlayerPosition.ST, teams);
+            Player player2 = new Player("Cristiano2", "Ronaldo", DateTime.Now, 1, 500, Enums.PlayerPosition.ST, teams);
+
+            List<Player> players = new List<Player>();
+            players.Add(player);
+
+            Manager manager = new Manager("Luis", "Enrique", DateTime.Now, teams);
+
+            Supporter supporter = new Supporter(0);
+            List<Supporter> supporters = new List<Supporter>();
+            supporters.Add(supporter);
+            
+            Team team = new Team(0, manager, players, supporters);
+
+            Player.Generate(players, 100);
+            players.Show(firstName: true, birthDate : true, playerPosition : true);
+
+            team.AddPlayers(players);*/
 
             List<Player> players = new List<Player>();
 
 
-            players.Add(new Player("Real Madrid", 20, teams));
-            players.Add(new Player("PSG", 20, teams));
-            players.Add(new Player("Man UTD", 20, teams));
-
-            // Set players names
-            players[0].Name = "Eden Hazard";
-            players[1].Name = "Lionel Messi";
-            players[2].Name = "Cristiano Ronaldo";
-
-            Console.WriteLine("Former team for a player\n-------------------------- ");
-            Console.WriteLine(players[0].FormerTeams[1]);
-            Console.WriteLine("\n\n\n");
-
-            // <------ ASSOCIATION ------ > 
-
-            // Association (player - accessories)
-            Accessories accessories = new Accessories();
-
-            players[1].playerBL.Equip(accessories);
-            accessories.Link_With(players[1]);
+            players.AddPlayer(new Player());
+            players.AddPlayer(new Player("Lionel", "Messi", DateTime.Now, 169, 67, 0, 500, PlayerPosition.RW, new List<int>()));
+            Player.Generate(players, 100);
+            Player.Generate(players, 1000);
 
 
-            // Association (player - supporter)
-            Supporter supporter = new Supporter();
-
-            Console.WriteLine("Status between player and supporter\n------------------------------------");
-            Console.WriteLine(supporter.GetStatus(players[1]));
-            Console.WriteLine(players[1].playerBL.GetStatus(supporter));
-            Console.WriteLine("\n\n\n");
-
-
-            // <------ AGGREGATION ------ > 
-
-            // Aggregation (manager - player)
-            Manager manager = new Manager();
-            foreach (Player player in players)
-                manager.players.Add(player);
-
-            Console.WriteLine("Show all players linked to this manager\n---------------------------------------");
-            manager.ShowPlayersNames(); // show all players names linked with this manager
-
-
-            // <------ COMPOSITION ------ > 
-
-            // Composition (manager - team_project)
-            
-            
-            Manager manager1 = new Manager();
-            manager1.Name = "Luis Enrique";
-            manager1.BirthDate = new DateTime(2002, 12, 2);
-            manager1.Wage = 500;
-
-
+            players.Show(firstName: true, lastName: true, goals: true, height: true, weight: true, playerPosition: true, status: true);
 
             Console.WriteLine("\n\n\n");
 
-            Console.WriteLine("If the team project is unsuccessful, then the manager wage will decrease\n---------------------------------------------------------------------------");
-            manager1.ManagerStatus(false);
-            manager1.ManagerStatus(false);
 
-            Console.WriteLine(manager1.Wage);
+            List<Supporter> supporters = new List<Supporter>();
+            List<int> teams = new List<int>(); // o sa fie ceva dictionary maybe, nu doar un int 
+            Manager manager = new Manager("Luis", "Enrique", DateTime.Now, 180, 70, teams);
+
+            Team team = new Team(1, "FC Barcelona", manager, supporters);
+
+            team.Scout(players, new int[] { 50, 3, 10, 10, 15 });
+
+            team.Players.Show(firstName: true, lastName: true, birthDate: true, currentTeamId: true, playerPosition: true, status: true);
+
+            Console.WriteLine("\n\n\n");
+            players.Show(firstName: true, lastName: true, goals: true, height: true, weight: true, playerPosition: true, status: true);
 
 
 
         }
-
-        
-
     }
 }
 
@@ -101,249 +82,489 @@ namespace OOP_Fundamentals
   
 ## Classes
 
+### Entities
+  
 <details>
-  <p><br> Aceasta clasa contine alte clase care mostenesc proprietatile clasei "Person". Aceste clase sunt : Player, Manager, Supporter </p>
+<summary>Manager.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FootballManager.Entities
+{
+    public class Manager : Person
+    {
+        public Manager(string firstName, string lastName, DateTime birthDate, int height, int weight,
+                       List<int> trainedTeamsIds) : base(firstName, lastName, birthDate, height, weight)
+        {
+            this.TrainedTeamsIds = trainedTeamsIds;
+        }
+
+        public List<int> TrainedTeamsIds;
+    }
+}
+
+```
+</details>
+
+<details>
 <summary>Person.cs</summary>
 <br>
   
 ```csharp
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace OOP_Fundamentals.Tasks
+using FootballManager.ExternalClasses;
+
+namespace FootballManager.Entities
 {
-
-
     public abstract class Person
     {
 
+        private Random rnd = new Random();
 
-        // Properties
-        public string Name { get; set; }
-        public DateTime BirthDate { get; set; }
-        public int Wage { get; set; }
-
-        // Constructor of class "Person" without params
-        public Person() { }
-
-        // Constructor of class "Person" with 3 params
-        public Person(string name, DateTime birthDate, int wage)
+        // Person constructor with random params
+        public Person()
         {
-            this.Name = name;
-            this.BirthDate = birthDate;
-            this.Wage = wage;
+            this.FirstName = PersonData.GetRandomFirstName();
+            this.LastName = PersonData.GetRandomLastName();
+            this.BirthDate = GenDateTime.DRandom();
+            this.Height = rnd.Next(150, 210);
+            this.Weight = rnd.Next(50, 250);
         }
 
+        // Person constructor with params
+        public Person(string firstName, string lastName, DateTime birthDate, int height, int weight)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.BirthDate = birthDate;
+            this.Height = height;
+            this.Weight = weight;
+        }
+
+
+        // Properties
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public int Height { get; set; }
+        public int Weight { get; set; }
+        public short Age { get; }
+        public int Salary { get; set; }
     }
 
-    // Player interface 
-    interface IPlayer
+    public static class PersonData
     {
-        void Equip(Accessories accessories);
-        bool GetStatus(Supporter supporter);
-    }
+        private static string[] firstNamesData = System.IO.File.ReadAllLines(@"firstNamesDB.txt");
+        private static string[] lastNamesData = System.IO.File.ReadAllLines(@"lastNamesDB.txt");
+        private static Random rnd = new();
 
-    // Player class (The Player IS A type of Person)
+        public static string GetRandomFirstName()
+        {
+            return firstNamesData[rnd.Next(0, firstNamesData.Length)];
+        }
+
+        public static string GetRandomLastName()
+        {
+            return lastNamesData[rnd.Next(0, lastNamesData.Length)];
+        }
+    }
+}
+
+```
+</details>
+
+<details>
+<summary>Player.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+using FootballManager.Entities;
+using FootballManager.Enums;
+using FootballManager.EntitiesLogic;
+using FootballManager.ExternalClasses;
+
+namespace FootballManager.Entities
+{
     public class Player : Person
     {
-        // Properties
-        public string CurrentTeam { get; set; }
-        public int Goals { get; set; }
-        public List<string> FormerTeams { get; set; }
+        Random rnd = new Random();
 
-        public PlayerBL playerBL;
-
-        // Constructor of class "Player" with 1 param
-        public Player() 
+        public Player() : base()
         {
-            this.playerBL = new PlayerBL();
+            this.CurrentTeamId = 0;
+            this.Goals = 0;
+            this.Position = (PlayerPosition)rnd.Next(0, 13);
+            this.FormerTeamsIds = new List<int>();
+            this.Status = false;
         }
 
-        // Constructor of class "Player" with BL params
-        public Player(PlayerBL iplayer)
+
+        public Player(string firstName, string lastName, DateTime birthDate, int height, int weight,  
+                      int currentTeamId,
+                      int goals,
+                      PlayerPosition position,
+                      List<int> formerTeamsIds) : base(firstName, lastName, birthDate, height, weight)
         {
-            this.playerBL = iplayer;
-        }
-        
-        // Constructor of class "Player" with 3 params
-        public Player(string currentTeam, int goals, List<string> formerTeams)
-        {
-            this.playerBL = new PlayerBL();
-            this.CurrentTeam = currentTeam;
+
+            this.CurrentTeamId = currentTeamId;
             this.Goals = goals;
-            this.FormerTeams = formerTeams;
+            this.Position = position;
+            this.FormerTeamsIds = formerTeamsIds;
+            this.Status = true;
+
         }
 
-    }
+        public int CurrentTeamId { get; set; }
+        public int Goals { get; set; }
+        public PlayerPosition Position { get; set; }
+        public List<int> FormerTeamsIds { get; set; }
+        public bool Status { get; set; }
 
-    // PlayerBL class (BL for Player)
-    public class PlayerBL : IPlayer
-    {
-        public PlayerBL() { }
 
-        // ASSOCIATION
-        public void Equip(Accessories accessories)
+        // -----------------------------------------------------------------------------------------------
+
+        // --- STATIC METHODS ---
+
+        // Generate players and add them to the list
+        public static void Generate(List<Player> players, int number)
         {
-            // some code
+            for (int i = 1; i <= number; i++)
+                players.AddPlayer(new Player());
         }
 
-        // Relationship with supporter
-        public bool GetStatus(Supporter supporter)
-        {
-            return true;
-        }
-
-
-    }
-
-    // Manager class (The Manager IS A type of Person)
-
-    public class Manager : Person
-    {
-        // Properties
-        public List<string> TrainedTeams { get; set; }
-        private readonly Team_Project _project;
-
-        // Constructor of class "Manager" without params
-        public Manager() 
-        {
-            this._project = new Team_Project(this);
-        }
-
-
-        // Constructor of class "Manager" with 1 param
-
-        public Manager(List<string> trainedTeams)
-        {
-            this.TrainedTeams = trainedTeams;
-        }
-
-        // AGGREGATION (manager - player)
-        public List<Player> players = new List<Player>();
-
-        public void ShowPlayersNames()
-        {
-            foreach(Player player in players)
-                Console.WriteLine(player.Name);
-        }
-
-        // COMPOSITION (manager status)
-
-        public void ManagerStatus(bool state)
-        {
-            if (state == true)
-                this._project.IsProsperous = true;
-            else
-                this._project.IsProsperous = false;
-        }
         
-
-    }
-
-    // Supporter class (The Supporter IS A type of Person)
-    public class Supporter : Person
-    {
-        // Properties
-        public string FavoriteTeam { get; set; }
-
-        // Constructor of class "Supporter" without params
-        public Supporter() { }
-
-        // Constructor of class "Supporter" with 1 param
-        public Supporter(string favoriteTeam)
-        {
-            this.FavoriteTeam = favoriteTeam;
-        }
-
-        // Relationship with player
-        public bool GetStatus(Player player)
-        {
-            return true;
-        }
-
     }
 }
 
-
 ```
 </details>
-  
+
 <details>
-  <p><br> Clasa curenta se afla intr-o relatie de asociere cu clasa "Player" si va contine diverse accesorii pe care le va avea un jucator, dar si anumite skill-uri ale acestuia </p>
-<summary>Accessories.cs</summary>
+<summary>Supporter.cs</summary>
 <br>
   
 ```csharp
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace OOP_Fundamentals.Tasks
+namespace FootballManager.Entities
 {
-    public class Accessories
+    public class Supporter
     {
-
-        // Constructor of class "Accessories" without params
-        public Accessories() { }
-
-
-        // Association with PLAYER
-        public void Link_With(Person person)
+        public Supporter(int favoriteTeamId)
         {
-            // some code
+            this.FavoriteTeamId = favoriteTeamId;
         }
 
-    }
-}
-```
-</details>
-  
-<details>
-  <p><br> Clasa curenta se afla intr-o relatie de compozitie cu clasa "Manager", ceea ce inseamna ca : daca manager-ul face performanta cu echipa, atunci proiectul echipei va evolua, iar daca proiectul echipei evolueaza situatia manager-ului va fi una buna la echipa </p>
-<summary>Team_Project.cs</summary>
-<br>
-  
-```csharp
-using System;
-using System.Collections.Generic;
-using System.Text;
+        public int FavoriteTeamId;
 
-namespace OOP_Fundamentals.Tasks
-{
-
-
-    public class Team_Project
-    {
-        // Properties
-
-        private readonly Manager _manager;
-        private bool isprosperous = false;
-
-        public bool IsProsperous 
-        {
-            get { return isprosperous; }
-            set 
-            {
-                isprosperous = value;
-
-                if (value)
-                    _manager.Wage += 1;
-                else
-                    _manager.Wage -= 1;
-            } 
-        }
        
+    }
+}
+```
+</details>
 
-        // Constructor of class "Team_Project" without params
-        public Team_Project() {}
+<details>
+<summary>Team.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-        // Constructor of class "Team_Project" with 1 param
-        public Team_Project(Manager manager)
+using FootballManager.Entities;
+using FootballManager.EntitiesLogic;
+using FootballManager.Enums;
+using FootballManager.ExternalClasses;
+
+namespace FootballManager.Entities
+{
+    public class Team
+    {
+        public Team(int teamId, string name, Manager manager, List<Supporter> supporters)
         {
-            _manager = manager;
+            this.TeamId = teamId;
+            this.Name = name;
+            this.Manager_Team = manager;
+            this.Supporters = supporters;
+            this.Players = new List<Player>();
         }
 
+        public int TeamId { get; }
+        public string Name { get; set; }
+        public Manager Manager_Team { get; set; }
+        public List<Player> Players { get; set; }
+        public List<Supporter> Supporters { get; set; }
+
+
+
+        // ----------------------------------------------------------------------------------------------
+
+        // Add team methods
+        public void Scout(List<Player> players, int[] playersDistribution) 
+        {
+            int totalNumber = playersDistribution[0];
+            int gk_count = playersDistribution[1];
+            int defender_count = playersDistribution[2];
+            int midfielder_count = playersDistribution[3];
+            int striker_count = playersDistribution[4];
+
+            foreach(Player player in players.ToList())
+            {
+                if(gk_count > 0 && player.Position == PlayerPosition.GK)
+                {
+                    player.Status = true;
+                    player.CurrentTeamId = TeamId;
+                    Players.AddPlayer(player);
+                    gk_count--;
+                    totalNumber--;
+                }
+
+                else if(defender_count > 0 && (player.Position == PlayerPosition.CB || player.Position == PlayerPosition.RB
+                                            || player.Position == PlayerPosition.LB || player.Position == PlayerPosition.LWB)
+                                            || player.Position == PlayerPosition.RWB)
+                {
+                    player.Status = true;
+                    player.CurrentTeamId = TeamId;
+                    Players.AddPlayer(player);
+                    defender_count--;
+                    totalNumber--;
+                }
+
+                else if(midfielder_count > 0 && (player.Position == PlayerPosition.LM || player.Position == PlayerPosition.RM
+                                              || player.Position == PlayerPosition.CM || player.Position == PlayerPosition.CAM))
+                {
+                    player.Status = true;
+                    player.CurrentTeamId = TeamId;
+                    Players.AddPlayer(player);
+                    midfielder_count--;
+                    totalNumber--;
+                }
+
+                else if(striker_count > 0 && (player.Position == PlayerPosition.LW || player.Position == PlayerPosition.RW
+                                           || player.Position == PlayerPosition.CF || player.Position == PlayerPosition.ST))
+                {
+                    player.Status = true;
+                    player.CurrentTeamId = TeamId;
+                    Players.AddPlayer(player);
+                    striker_count--;
+                    totalNumber--;
+                }
+                else
+                {
+                    if(totalNumber > 0)
+                    {
+                        player.Status = true;
+                        player.CurrentTeamId = TeamId;
+                        players.AddPlayer(player);
+                        totalNumber--;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+```
+</details>
+
+### EntitiesLogic
+
+<details>
+<summary>PlayerLogic.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using FootballManager.Entities;
+using FootballManager.Enums;
+
+namespace FootballManager.EntitiesLogic
+{
+
+    // List Extensions for "Player" class
+    public static class ListExtensions
+    {
+        public static void AddPlayer(this List<Player> players, Player player)
+        {
+            // there will be some requirements 
+            players.Add(player);
+        }
+
+        public static void Show(this List<Player> players, bool firstName = false, bool lastName = false, bool birthDate = false,
+                 bool height = false, bool weight = false, bool currentTeamId = false, bool goals = false, bool playerPosition = false, bool formerTeamsIds = false, bool status = false)
+        {
+            bool[] values = new bool[] { firstName, lastName, birthDate, height, weight, currentTeamId, goals, playerPosition, formerTeamsIds, status };
+
+            for(int i = 0; i < players.Count(); i++)
+            {
+                if (values[0])
+                    Console.Write(" | " + players[i].FirstName + " | ");
+
+                if (values[1])
+                    Console.Write(" | " + players[i].LastName + " | ");
+
+                if (values[2])
+                    Console.Write(" | " + players[i].BirthDate + " | ");
+
+                if (values[3])
+                    Console.Write(" | " + players[i].Height + " | ");
+
+                if (values[4])
+                    Console.Write(" | " + players[i].Weight + " | ");
+
+                if (values[5])
+                    Console.Write(" | " + players[i].CurrentTeamId + " | ");
+
+                if (values[6])
+                    Console.Write(" | " + players[i].Goals + " | ");
+
+                if (values[7])
+                    Console.Write(" | " + players[i].Position + " | ");
+
+                if (values[8])
+                    Console.Write(" | " + players[i].FormerTeamsIds + " | ");
+
+                if (values[9])
+                    Console.Write(" | " + players[i].Status + " | ");
+
+
+                Console.WriteLine();
+
+
+
+
+            }
+
+        }
+
+        private static readonly List<Player> _players = new();
+        public static IReadOnlyList<Player> Players => _players.AsReadOnly();
+
+    }
+
+    public class PlayerLogic
+    {
+      
+
+    }
+}
+
+```
+</details>
+  
+<details>
+<summary>SupporterLogic.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FootballManager.Entities;
+
+namespace FootballManager.EntitiesLogic
+{
+    public interface ISupporterLogic
+    {
+        public void Add_Supporters(Supporter supporter)
+        {
+
+        }
+    }
+
+    public class SupporterLogic : ISupporterLogic
+    {
+        public SupporterLogic()
+        {
+
+        }
+    }
+}
+
+```
+</details>
+
+### Enums
+
+<details>
+<summary>PlayerPosition.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FootballManager.Enums
+{
+    public enum PlayerPosition
+    {
+         GK, CB, LB, RB, LWB, RWB, CM, CAM, LM, RM, CF, ST, LW, RW
+    }
+}
+
+```
+</details>
+  
+### ExternalClasses
+
+<details>
+<summary>GenDateTime.cs</summary>
+<br>
+  
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FootballManager.ExternalClasses
+{
+    public static class GenDateTime
+    {
+        public static DateTime DRandom()
+        {
+            Random rnd = new Random();
+            DateTime dateTime = new DateTime(rnd.Next(1975, DateTime.Now.Year - 15), rnd.Next(1, 12), rnd.Next(1, 28)); // aici e ceva problema
+            return dateTime;
+        }
     }
 }
 
@@ -351,6 +572,7 @@ namespace OOP_Fundamentals.Tasks
 </details>
 
 
+  
 ## UML Diagram
   
   ![Alt text here](UML.drawio.png)
