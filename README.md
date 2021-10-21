@@ -353,4 +353,4 @@ namespace OOP_Fundamentals.Tasks
 
 ## UML Diagram
   
-  ![Alt text here](UML.drawio (1).png)
+  ![Alt text here](UML.drawio.png)
