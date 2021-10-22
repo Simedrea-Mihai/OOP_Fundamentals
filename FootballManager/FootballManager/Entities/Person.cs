@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 using FootballManager.ExternalClasses;
 
@@ -16,11 +17,13 @@ namespace FootballManager.Entities
         // Person constructor with random params
         public Person()
         {
-            this.FirstName = PersonData.GetRandomFirstName();
-            this.LastName = PersonData.GetRandomLastName();
+            this.FirstName = null;
+            this.LastName = null;
             this.BirthDate = GenDateTime.DRandom();
             this.Height = rnd.Next(150, 210);
             this.Weight = rnd.Next(50, 250);
+            this.Age = (short)((DateTime.Now - this.BirthDate).Days / 365);
+
         }
 
         // Person constructor with params
@@ -31,8 +34,8 @@ namespace FootballManager.Entities
             this.BirthDate = birthDate;
             this.Height = height;
             this.Weight = weight;
+            this.Age = (short)((DateTime.Now - this.BirthDate).Days / 365);
         }
-
 
         // Properties
         public int Id { get; set; }
@@ -45,20 +48,41 @@ namespace FootballManager.Entities
         public int Salary { get; set; }
     }
 
+
     public static class PersonData
     {
-        private static string[] firstNamesData = System.IO.File.ReadAllLines(@"firstNamesDB.txt");
-        private static string[] lastNamesData = System.IO.File.ReadAllLines(@"lastNamesDB.txt");
+        private static List<string> firstNamesData = new List<string>();
+        private static List<string> lastNamesData = new List<string>();
         private static Random rnd = new();
 
-        public static string GetRandomFirstName()
+        public static async Task LoadData()
         {
-            return firstNamesData[rnd.Next(0, firstNamesData.Length)];
+            String line;
+
+            using (StreamReader reader = new StreamReader("firstNamesDB.txt"))
+            {
+
+                while ((line = await reader.ReadLineAsync()) != null)
+                    firstNamesData.Add(line);
+            }
+
+            using (StreamReader reader = new StreamReader("lastNamesDB.txt"))
+            {
+                while ((line = reader.ReadLine()) != null)
+                    lastNamesData.Add(line);
+            }
         }
 
-        public static string GetRandomLastName()
+        public static async Task<string> GetRandomFirstName()
         {
-            return lastNamesData[rnd.Next(0, lastNamesData.Length)];
+            await LoadData();
+            return firstNamesData[rnd.Next(0, firstNamesData.Count)];
+        }
+
+        public static async Task<string> GetRandomLastName()
+        {
+            await LoadData();
+            return lastNamesData[rnd.Next(0, lastNamesData.Count)];
         }
     }
 }

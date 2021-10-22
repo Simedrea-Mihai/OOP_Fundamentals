@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\AMDARIS\\Internship\\FootballManager\\FootballManager\\FootballManager\\FootballManager.csproj": {}
+    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FootballManager\\FootballManager\\FootballManager.csproj": {}
   },
   "projects": {
-    "D:\\AMDARIS\\Internship\\FootballManager\\FootballManager\\FootballManager\\FootballManager.csproj": {
+    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FootballManager\\FootballManager\\FootballManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\AMDARIS\\Internship\\FootballManager\\FootballManager\\FootballManager\\FootballManager.csproj",
+        "projectUniqueName": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FootballManager\\FootballManager\\FootballManager.csproj",
         "projectName": "FootballManager",
-        "projectPath": "D:\\AMDARIS\\Internship\\FootballManager\\FootballManager\\FootballManager\\FootballManager.csproj",
+        "projectPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FootballManager\\FootballManager\\FootballManager.csproj",
         "packagesPath": "C:\\Users\\Mihai\\.nuget\\packages\\",
-        "outputPath": "D:\\AMDARIS\\Internship\\FootballManager\\FootballManager\\FootballManager\\obj\\",
+        "outputPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FootballManager\\FootballManager\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

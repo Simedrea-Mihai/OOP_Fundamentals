@@ -32,68 +32,156 @@ namespace FootballManager.Entities
 
         // ----------------------------------------------------------------------------------------------
 
+
         // Add team methods
         public void Scout(List<Player> players, int[] playersDistribution) 
         {
-            int totalNumber = playersDistribution[0];
-            int gk_count = playersDistribution[1];
-            int defender_count = playersDistribution[2];
-            int midfielder_count = playersDistribution[3];
-            int striker_count = playersDistribution[4];
-
-            foreach(Player player in players.ToList())
+            try
             {
-                if(gk_count > 0 && player.Position == PlayerPosition.GK)
-                {
-                    player.Status = true;
-                    player.CurrentTeamId = TeamId;
-                    Players.AddPlayer(player);
-                    gk_count--;
-                    totalNumber--;
-                }
+                int totalNumber = playersDistribution[0];
+                int gk_count = playersDistribution[1];
+                int defender_count = playersDistribution[2];
+                int midfielder_count = playersDistribution[3];
+                int striker_count = playersDistribution[4];
 
-                else if(defender_count > 0 && (player.Position == PlayerPosition.CB || player.Position == PlayerPosition.RB
-                                            || player.Position == PlayerPosition.LB || player.Position == PlayerPosition.LWB)
-                                            || player.Position == PlayerPosition.RWB)
+                while (totalNumber > 0)
                 {
-                    player.Status = true;
-                    player.CurrentTeamId = TeamId;
-                    Players.AddPlayer(player);
-                    defender_count--;
-                    totalNumber--;
-                }
-
-                else if(midfielder_count > 0 && (player.Position == PlayerPosition.LM || player.Position == PlayerPosition.RM
-                                              || player.Position == PlayerPosition.CM || player.Position == PlayerPosition.CAM))
-                {
-                    player.Status = true;
-                    player.CurrentTeamId = TeamId;
-                    Players.AddPlayer(player);
-                    midfielder_count--;
-                    totalNumber--;
-                }
-
-                else if(striker_count > 0 && (player.Position == PlayerPosition.LW || player.Position == PlayerPosition.RW
-                                           || player.Position == PlayerPosition.CF || player.Position == PlayerPosition.ST))
-                {
-                    player.Status = true;
-                    player.CurrentTeamId = TeamId;
-                    Players.AddPlayer(player);
-                    striker_count--;
-                    totalNumber--;
-                }
-                else
-                {
-                    if(totalNumber > 0)
+                    if (striker_count > 0)
                     {
-                        player.Status = true;
-                        player.CurrentTeamId = TeamId;
-                        players.AddPlayer(player);
-                        totalNumber--;
+                        Player player = players.Find(x => ((x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
+                                                          || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW) && x.Status == false));
+
+                        if (player != null)
+                        {
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        else
+                        {
+                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                                                         x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
+                                                      || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
+                                                      || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
+                                                      || x.Position == PlayerPosition.CM || x.Position == PlayerPosition.CAM
+                                                      || x.Position == PlayerPosition.CB || x.Position == PlayerPosition.RB
+                                                      || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
+                                                      || x.Position == PlayerPosition.RWB) && x.Status == false));
+
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        striker_count--;
                     }
+
+                    if (midfielder_count > 0)
+                    {
+                        Player player = players.Find(x => ((x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
+                                                         || x.Position == PlayerPosition.CM || x.Position == PlayerPosition.CAM) && x.Status == false));
+
+                        if (player != null)
+                        {
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        else
+                        {
+                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                                                         x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
+                                                      || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
+                                                      || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
+                                                      || x.Position == PlayerPosition.CM || x.Position == PlayerPosition.CAM
+                                                      || x.Position == PlayerPosition.CB || x.Position == PlayerPosition.RB
+                                                      || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
+                                                      || x.Position == PlayerPosition.RWB) && x.Status == false));
+
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        midfielder_count--;
+                    }
+
+                    if (defender_count > 0)
+                    {
+                        Player player = players.Find(x => ((x.Position == PlayerPosition.CB || x.Position == PlayerPosition.RB
+                                                         || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
+                                                         || x.Position == PlayerPosition.RWB) && x.Status == false));
+
+                        if (player != null)
+                        {
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        else
+                        {
+                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                                                         x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
+                                                      || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
+                                                      || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
+                                                      || x.Position == PlayerPosition.CM || x.Position == PlayerPosition.CAM
+                                                      || x.Position == PlayerPosition.CB || x.Position == PlayerPosition.RB
+                                                      || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
+                                                      || x.Position == PlayerPosition.RWB) && x.Status == false));
+
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        defender_count--;
+                    }
+
+                    if (gk_count > 0)
+                    {
+                        Player player = players.Find(x => (x.Position == PlayerPosition.GK && x.Status == false));
+                        if (player != null)
+                        {
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        else
+                        {
+                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                                                         x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
+                                                      || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
+                                                      || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
+                                                      || x.Position == PlayerPosition.CM || x.Position == PlayerPosition.CAM
+                                                      || x.Position == PlayerPosition.CB || x.Position == PlayerPosition.RB
+                                                      || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
+                                                      || x.Position == PlayerPosition.RWB) && x.Status == false));
+
+                            player.Status = true;
+                            player.CurrentTeamId = TeamId;
+                            Players.AddPlayer(player);
+                        }
+
+                        gk_count--;
+
+                    }
+              
+                    totalNumber--;
                 }
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw;
+            }
 
+          
+
+            
         }
     }
 }
