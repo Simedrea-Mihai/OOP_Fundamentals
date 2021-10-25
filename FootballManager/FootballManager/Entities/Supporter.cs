@@ -8,12 +8,14 @@ namespace FootballManager.Entities
 {
     public class Supporter
     {
-        public Supporter(int favoriteTeamId)
+        public Supporter(int favoriteTeamId, int numberOfSupporters)
         {
             this.FavoriteTeamId = favoriteTeamId;
+            this.NumberOfSupporters = numberOfSupporters;
         }
 
         public int FavoriteTeamId;
+        public int NumberOfSupporters;
 
        
     }

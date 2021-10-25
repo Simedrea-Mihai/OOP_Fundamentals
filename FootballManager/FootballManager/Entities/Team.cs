@@ -11,22 +11,48 @@ using FootballManager.ExternalClasses;
 
 namespace FootballManager.Entities
 {
+
+    // ----- TEAM CLASS ----- 
     public class Team
     {
-        public Team(int teamId, string name, Manager manager, List<Supporter> supporters)
+        Random rnd = new(); // create a random class
+
+
+        // Team class constructor 
+        public Team(int teamId, string name, Manager manager, int[] formation)
         {
-            this.TeamId = teamId;
-            this.Name = name;
-            this.Manager_Team = manager;
-            this.Supporters = supporters;
-            this.Players = new List<Player>();
+            this.TeamId = teamId; // set team id
+            this.Name = name; // set team name 
+            this.Manager_Team = manager; // set team manager
+            this.Supporters = new Supporter(teamId, rnd.Next(1000, 2000)); // create a random number of supporters
+            this.Players = new List<Player>(); // create a list of players for the team
+            this.Formation = Check_Formation(formation); // check formation and assign it to this.Formation
+            manager.CurrentTeamId = teamId; // link the manager with the team
+            manager.FirstName = PersonData.GetRandomFirstName().Result; // set a manager first name for the team
+            manager.LastName = PersonData.GetRandomLastName().Result; // set a manager last name for the team
         }
 
+        public Team(int teamId, string name, Manager manager)
+        {
+            this.TeamId = teamId; // set team id
+            this.Name = name; // set team name 
+            this.Manager_Team = manager; // set team manager
+            this.Supporters = new Supporter(teamId, rnd.Next(1000, 2000)); // create a random number of supporters
+            this.Players = new List<Player>(); // create a list of players for the team
+            this.Formation = Formations.GetFormation(); // set a random formation
+            manager.CurrentTeamId = teamId; // link the manager with the team
+            manager.FirstName = PersonData.GetRandomFirstName().Result; // set a manager first name for the team
+            manager.LastName = PersonData.GetRandomLastName().Result; // set a manager last name for the team
+        }
+
+
+        // Properties
         public int TeamId { get; }
         public string Name { get; set; }
         public Manager Manager_Team { get; set; }
         public List<Player> Players { get; set; }
-        public List<Supporter> Supporters { get; set; }
+        public Supporter Supporters { get; set; }
+        public int[] Formation { get; set; }
 
 
 
@@ -34,23 +60,28 @@ namespace FootballManager.Entities
 
 
         // Add team methods
+
+        // Scout method (using this, you will be able to find random players)
         public void Scout(List<Player> players, int[] playersDistribution) 
         {
             try
             {
-                int totalNumber = playersDistribution[0];
-                int gk_count = playersDistribution[1];
-                int defender_count = playersDistribution[2];
-                int midfielder_count = playersDistribution[3];
-                int striker_count = playersDistribution[4];
+                int totalNumber = playersDistribution[0]; // get the total number of players
+                int gk_count = playersDistribution[1]; // get the number of gks
+                int defender_count = playersDistribution[2]; // get the number of defenders
+                int midfielder_count = playersDistribution[3]; // get the number of midfielders
+                int striker_count = playersDistribution[4]; // get the number of strikers 
 
-                while (totalNumber > 0)
+                while (totalNumber > 0) 
                 {
                     if (striker_count > 0)
                     {
+
+                        // Find an available striker 
                         Player player = players.Find(x => ((x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
                                                           || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW) && x.Status == false));
 
+                        // if striker is found then add it
                         if (player != null)
                         {
                             player.Status = true;
@@ -58,6 +89,7 @@ namespace FootballManager.Entities
                             Players.AddPlayer(player);
                         }
 
+                        // otherwise, find any other player
                         else
                         {
                             player = players.Find(x => ((x.Position == PlayerPosition.GK ||
@@ -182,6 +214,14 @@ namespace FootballManager.Entities
           
 
             
+        }
+
+        int[] Check_Formation(int[] formation)
+        {
+            if (formation.Sum() == 11)
+                return formation;
+            else
+                return new int[] { 4, 4, 3, 0, 0 }; // default formation
         }
     }
 }
