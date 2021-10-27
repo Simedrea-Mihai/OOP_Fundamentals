@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\GenericsAndCollections + LINQ\\GenericsAndCollections\\GenericsAndCollections\\GenericsAndCollections_LINQ.csproj": {}
+    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FileSystem and Streams\\FileSystemApp\\FileSystemApp\\FileSystemApp.csproj": {}
   },
   "projects": {
-    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\GenericsAndCollections + LINQ\\GenericsAndCollections\\GenericsAndCollections\\GenericsAndCollections_LINQ.csproj": {
+    "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FileSystem and Streams\\FileSystemApp\\FileSystemApp\\FileSystemApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\GenericsAndCollections + LINQ\\GenericsAndCollections\\GenericsAndCollections\\GenericsAndCollections_LINQ.csproj",
-        "projectName": "GenericsAndCollections_LINQ",
-        "projectPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\GenericsAndCollections + LINQ\\GenericsAndCollections\\GenericsAndCollections\\GenericsAndCollections_LINQ.csproj",
+        "projectUniqueName": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FileSystem and Streams\\FileSystemApp\\FileSystemApp\\FileSystemApp.csproj",
+        "projectName": "FileSystemApp",
+        "projectPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FileSystem and Streams\\FileSystemApp\\FileSystemApp\\FileSystemApp.csproj",
         "packagesPath": "C:\\Users\\Mihai\\.nuget\\packages\\",
-        "outputPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\GenericsAndCollections + LINQ\\GenericsAndCollections\\GenericsAndCollections\\obj\\",
+        "outputPath": "D:\\AMDARIS\\Internship\\FootballManager\\OOP_Fundamentals\\FileSystem and Streams\\FileSystemApp\\FileSystemApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
