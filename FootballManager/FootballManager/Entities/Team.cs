@@ -92,7 +92,8 @@ namespace FootballManager.Entities
                         // otherwise, find any other player
                         else
                         {
-                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                            Player p = new Player();
+                            p = players.Find(x => ((x.Position == PlayerPosition.GK ||
                                                          x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
                                                       || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
                                                       || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
@@ -101,9 +102,15 @@ namespace FootballManager.Entities
                                                       || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
                                                       || x.Position == PlayerPosition.RWB) && x.Status == false));
 
-                            player.Status = true;
-                            player.CurrentTeamId = TeamId;
-                            Players.AddPlayer(player);
+                            if (p == null)
+                                Players.AddPlayer(new Player());
+
+                            else
+                            {
+                                p.Status = true;
+                                p.CurrentTeamId = TeamId;
+                                Players.AddPlayer(p);
+                            }
                         }
 
                         striker_count--;
@@ -123,7 +130,8 @@ namespace FootballManager.Entities
 
                         else
                         {
-                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                            Player p = new Player();
+                            p = players.Find(x => ((x.Position == PlayerPosition.GK ||
                                                          x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
                                                       || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
                                                       || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
@@ -132,9 +140,15 @@ namespace FootballManager.Entities
                                                       || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
                                                       || x.Position == PlayerPosition.RWB) && x.Status == false));
 
-                            player.Status = true;
-                            player.CurrentTeamId = TeamId;
-                            Players.AddPlayer(player);
+                            if (p == null)
+                                Players.AddPlayer(new Player());
+
+                            else
+                            {
+                                p.Status = true;
+                                p.CurrentTeamId = TeamId;
+                                Players.AddPlayer(p);
+                            }
                         }
 
                         midfielder_count--;
@@ -155,7 +169,8 @@ namespace FootballManager.Entities
 
                         else
                         {
-                            player = players.Find(x => ((x.Position == PlayerPosition.GK ||
+                            Player p = new Player();
+                            p = players.Find(x => ((x.Position == PlayerPosition.GK ||
                                                          x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
                                                       || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
                                                       || x.Position == PlayerPosition.LM || x.Position == PlayerPosition.RM
@@ -164,9 +179,15 @@ namespace FootballManager.Entities
                                                       || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
                                                       || x.Position == PlayerPosition.RWB) && x.Status == false));
 
-                            player.Status = true;
-                            player.CurrentTeamId = TeamId;
-                            Players.AddPlayer(player);
+                            if (p == null)
+                                Players.AddPlayer(new Player());
+
+                            else
+                            {
+                                p.Status = true;
+                                p.CurrentTeamId = TeamId;
+                                Players.AddPlayer(p);
+                            }
                         }
 
                         defender_count--;
@@ -184,6 +205,7 @@ namespace FootballManager.Entities
 
                         else
                         {
+                            Player p = new Player();
                             player = players.Find(x => ((x.Position == PlayerPosition.GK ||
                                                          x.Position == PlayerPosition.ST || x.Position == PlayerPosition.LW
                                                       || x.Position == PlayerPosition.CF || x.Position == PlayerPosition.RW
@@ -193,9 +215,15 @@ namespace FootballManager.Entities
                                                       || x.Position == PlayerPosition.LB || x.Position == PlayerPosition.LWB
                                                       || x.Position == PlayerPosition.RWB) && x.Status == false));
 
-                            player.Status = true;
-                            player.CurrentTeamId = TeamId;
-                            Players.AddPlayer(player);
+                            if (p == null)
+                                Players.AddPlayer(new Player());
+
+                            else
+                            {
+                                p.Status = true;
+                                p.CurrentTeamId = TeamId;
+                                Players.AddPlayer(p);
+                            }
                         }
 
                         gk_count--;

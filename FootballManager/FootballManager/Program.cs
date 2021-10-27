@@ -17,7 +17,7 @@ namespace FootballManager
 
             Console.WriteLine("\n\n\n");
 
-            League newLeague = new League(12);
+            League newLeague = new League("League", 12);
             Console.WriteLine("\n\n");
             newLeague.Show();
 
@@ -38,37 +38,12 @@ namespace FootballManager
 
             Console.WriteLine("\n\n");
 
-            // Add formation
 
-            // Show formations for all teams - debug
-            for(int i = 0; i<newLeague.Teams.Count;i++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    Console.WriteLine(newLeague.Teams[i].Formation[j] + " ");
-                }
-                Console.WriteLine("\n");
-            }
-
-            newLeague.Teams[0].Formation = new int[] { 4, 2, 3, 1, 0 };
-
-            Console.WriteLine("\n\n\n------------------\n\n\n");
-
-            for (int i = 0; i < newLeague.Teams.Count; i++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    Console.WriteLine(newLeague.Teams[i].Formation[j] + " ");
-                }
-                Console.WriteLine("\n");
-            }
-
-            Console.WriteLine("\n\n\n");
-
-            
-
+            League l = new League("a", 12);
+            League l2 = new League("b", 12);
 
 
         }
+
     }
 }

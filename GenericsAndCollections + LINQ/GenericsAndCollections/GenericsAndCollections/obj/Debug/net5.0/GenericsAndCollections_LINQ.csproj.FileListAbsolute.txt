@@ -1,0 +1,16 @@
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.exe
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.deps.json
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.runtimeconfig.json
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.runtimeconfig.dev.json
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.dll
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\ref\GenericsAndCollections_LINQ.dll
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\bin\Debug\net5.0\GenericsAndCollections_LINQ.pdb
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.csprojAssemblyReference.cache
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.GeneratedMSBuildEditorConfig.editorconfig
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.AssemblyInfoInputs.cache
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.AssemblyInfo.cs
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.csproj.CoreCompileInputs.cache
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.dll
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\ref\GenericsAndCollections_LINQ.dll
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.pdb
+D:\AMDARIS\Internship\FootballManager\OOP_Fundamentals\GenericsAndCollections (5)\GenericsAndCollections\GenericsAndCollections\obj\Debug\net5.0\GenericsAndCollections_LINQ.genruntimeconfig.cache

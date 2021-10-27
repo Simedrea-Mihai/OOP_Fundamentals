@@ -4,8 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.IO;
+
 namespace FootballManager.Entities
 {
+    public static class LeagueCount
+    {
+        public static int Count = 0;
+    }
+
     public class League
     {
         // Constructor
@@ -14,10 +21,14 @@ namespace FootballManager.Entities
             this.Teams = new List<Team>();
         }
 
-        public League(int maxTeams)
+        public League(string name, int maxTeams)
         {
+            LeagueCount.Count += 1;
+            this.Name = name;
+            this.Id = LeagueCount.Count;
             this.Teams = new List<Team>();
             this.MaxTeams = maxTeams;
+            this.CurrentTimeSimulation = LoadTimeSimulation();
 
             for (int i = 1; i <= maxTeams; i++)
             {
@@ -30,6 +41,9 @@ namespace FootballManager.Entities
         private Exception exception = new Exception("2 teams with the same ID.");
         public List<Team> Teams { get; }
         public int MaxTeams { get; }
+        public DateTime CurrentTimeSimulation { get; }
+        public string Name { get; set; }
+        public int Id { get; }
 
         public static List<Player> players = new List<Player>(); // a list of all players
 
@@ -71,6 +85,55 @@ namespace FootballManager.Entities
                 Console.WriteLine(team.TeamId + "      " + team.Name + "      " + team.Manager_Team.Id + "      " + team.Supporters.FavoriteTeamId + "      " + team.Supporters.NumberOfSupporters);
 
 
+        }
+
+        // Load current time simulation
+        public DateTime LoadTimeSimulation()
+        {
+            if (!File.Exists("LeagueManagement.txt"))
+            {
+                File.WriteAllText("LeagueManagement.txt", this.Id.ToString() + " | " + new DateTime(2021, 1, 1).ToString() + "\n");
+                return new DateTime(2021, 1, 1);
+            }
+            else
+            {
+                string content = File.ReadAllText("LeagueManagement.txt");
+
+                char[] sep = new char[] { '\n', '|' };
+                var split = content.Split(sep);
+
+                bool ok = false;
+                int index = 0;
+
+                //Console.WriteLine(split.Length);
+
+                /*
+                for (int i = 0; i < split.Length; i += 2)
+                {
+                    if (Convert.ToInt32(split[i].Trim()) == this.Id)
+                    {
+                        ok = true;
+                        index = i;
+                        break;
+                    }
+                }*/
+
+                if(ok)
+                    return DateTime.Parse(split[index + 1]);
+                else
+                {
+                    string c =  this.Id.ToString() + " | " + new DateTime(2021, 1, 1).ToString() + "\n";
+
+                    File.AppendAllText("LeagueManagement.txt", c);
+                    return new DateTime(2021, 1, 1);
+
+                }    
+
+                
+                
+              
+
+            }
         }
 
 
