@@ -1,4 +1,5 @@
 ﻿using Application.Features.Leagues.Queries.GetLeaguesList;
+using Application.Features.Managers.Queries.GetManagersList;
 using Application.Features.Players.Queries.GetPlayersList;
 using Application.Features.Teams.Queries.GetTeamList;
 using Domain;
@@ -19,6 +20,7 @@ namespace Application.Profiles
             CreateMap<League, LeagueListVm>().ReverseMap();
             CreateMap<Team, TeamListVm>().ReverseMap();
             CreateMap<Player, PlayerListVm>().ReverseMap();
+            CreateMap<Manager, ManagerListVm>().ReverseMap();
         }
     }
 }

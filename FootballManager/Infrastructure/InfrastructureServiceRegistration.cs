@@ -13,6 +13,8 @@ namespace Infrastructure
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IPlayerRepository, PlayerRepository>();
+            services.AddScoped<IManagerRepository, ManagerRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
 
             return services;
         }

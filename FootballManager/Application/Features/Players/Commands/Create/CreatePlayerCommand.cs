@@ -12,13 +12,8 @@ namespace Application.Features.Players.Commands.Create
 {
     public class CreatePlayerCommand : IRequest<int>
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public int Age { get; set; }
-
-        public int OVR { get; set; }
-        public int Potential { get; set; }
+        public Profile Profile { get; set; }
+        public PlayerAttribute PlayerAttribute { get; set; }
 
     }
 
@@ -30,18 +25,20 @@ namespace Application.Features.Players.Commands.Create
 
         public int Handle(CreatePlayerCommand command)
         {
-            Player player = new Player(command.FirstName, command.LastName, command.BirthDate);
+
+            Player player = new Player(command.Profile);
 
             _repository.SetAttributes(player);
             _repository.Create(player);
 
             return player.Id;
+            
 
         }
 
         public Task<int> Handle(CreatePlayerCommand command, CancellationToken cancellationToken)
         {
-            Player player = new Player(command.FirstName, command.LastName, command.BirthDate);
+            Player player = new Player(command.Profile);
 
             _repository.SetAttributes(player);
             _repository.Create(player);

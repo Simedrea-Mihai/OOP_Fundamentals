@@ -1,22 +1,32 @@
-﻿using Application.Features.Players.Commands.Create;
+﻿using Application.Contracts.Persistence;
+using Application.Features.Players.Commands.Create;
+using Application.Features.Players.Commands.CreateMultiple;
 using Application.Features.Players.Queries.GetPlayersList;
+using Domain;
+using Infrastructure.Static_Methods;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("controller2")]
-    public class PlayerController
+    [Route("controller")]
+    public class PlayerController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public PlayerController(IMediator mediator)
+        private readonly IProfileRepository _repository;
+        public PlayerController(IMediator mediator, IProfileRepository repository)
         {
             _mediator = mediator;
+            _repository = repository;
         }
 
         [HttpGet("list")]
@@ -25,11 +35,18 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetPlayerListQuery());
         }
 
-        [HttpPost("create")]
-        public async Task<int> CreateAsync(CreatePlayerCommand command)
+        [HttpPost("create a player")]
+        public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
         {
             return await _mediator.Send(command);
         }
+
+        [HttpPost("create players")]
+        public async Task<List<int>> CreateAsync(CreatePlayersCommand command)
+        {
+            return (List<int>)await _mediator.Send(command);
+        }
+
 
     }
 }

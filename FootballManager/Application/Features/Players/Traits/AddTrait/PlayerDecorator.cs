@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Contracts.Persistence
+namespace Application.Features.Players.Traits.AddTrait
 {
-    public interface IProfileRepository
+    public abstract class PlayerDecorator
     {
-        string[] GetName();
+
     }
 }

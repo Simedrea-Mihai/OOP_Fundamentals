@@ -1,6 +1,8 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
+using Infrastructure.Repositories.TraitsDecorator;
 using Infrastructure.Static_Methods;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,28 +27,28 @@ namespace Infrastructure.Repositories
             _context.Players.Add(player);
             _context.SaveChanges();
 
-            Console.WriteLine(player.FirstName);
-
             return player;
         }
 
         public IList<Player> ListAll()
         { 
 
-            foreach (var player in _context.Players)
-                Console.WriteLine(player.FirstName);
-
-            return _context.Players.ToList();
+            return _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).Include(player => player.PlayerAttribute.Traits).ToList();
         }
 
         public Player SetAttributes(Player player)
         {
-            player.OVR = rnd.Next(60, 70);
-            player.BirthDate =  new DateTime(rnd.Next(1975, DateTime.Now.Year - 15), rnd.Next(1, 12), rnd.Next(1, 28)); // aici e ceva problema
-            player.Age = (DateTime.Now - player.BirthDate).Days / 365;
-            player.Potential = SPlayer.SetPotential(player);
+            player.Profile.BirthDate =  new DateTime(rnd.Next(1975, DateTime.Now.Year - 15), rnd.Next(1, 12), rnd.Next(1, 28)); // aici e ceva problema
+            player.Profile.Age = (DateTime.Now - player.Profile.BirthDate).Days / 365;
+            player.Free_Agent = true;
+
+            IPlayerTraits traits = new Basic();
+
+
+            player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
 
             return player;
         }
+
     }
 }

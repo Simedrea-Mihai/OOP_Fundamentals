@@ -8,6 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Domain;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
+using System.Text;
+using Application.Contracts.Persistence;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.TraitsDecorator;
 
 namespace Presentation
 {
@@ -15,7 +22,6 @@ namespace Presentation
     {
         public static void Main(string[] args)
         {
-
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,23 +10,17 @@ namespace Domain
     public class Player : BaseEntity
     {
         public override int Id { get; set; }
-        //public Profile Profile { get; set; }
+        public Profile Profile { get; set; }
 
-        public int OVR { get; set; }
-        public int Potential { get; set; }
+        public PlayerAttribute PlayerAttribute { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public int Age { get; set; }
+        public bool Free_Agent { get; set; }
 
+        private Player() { }
 
-        public Player(string firstName, string lastName, DateTime birthDate)
+        public Player(Profile profile)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            BirthDate = birthDate;
-
+            Profile = profile;
         }
 
     }

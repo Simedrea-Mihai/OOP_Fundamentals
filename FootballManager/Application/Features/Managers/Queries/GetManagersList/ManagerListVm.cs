@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 using Domain;
 
-namespace Application.Features.Players.Queries.GetPlayersList
+namespace Application.Features.Managers.Queries.GetManagersList
 {
-    public class PlayerListVm
+    public class ManagerListVm
     {
         public int Id { get; set; }
-
         public Profile Profile { get; set; }
-
-        public PlayerAttribute PlayerAttribute { get; set; }
-
-        public bool Free_Agent { get; set; }
-
     }
 }

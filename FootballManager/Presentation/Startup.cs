@@ -1,4 +1,5 @@
 using Application;
+using Domain;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,9 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Presentation
@@ -54,7 +58,7 @@ namespace Presentation
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });

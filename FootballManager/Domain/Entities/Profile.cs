@@ -7,7 +7,7 @@ namespace Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public short Age { get; set; }
+        public int Age { get; set; }
 
         public Profile(string firstName, string lastName, DateTime birthDate)
         {

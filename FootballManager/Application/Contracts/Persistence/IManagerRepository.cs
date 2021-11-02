@@ -8,11 +8,9 @@ using Domain;
 
 namespace Application.Contracts.Persistence
 {
-    public interface IPlayerRepository
+    public interface IManagerRepository
     {
-        Player Create(Player player);
-        Player SetAttributes(Player player);
-        IList<Player> ListAll();
-
+        Manager Create(Manager manager);
+        IList<Manager> ListAll();
     }
 }
