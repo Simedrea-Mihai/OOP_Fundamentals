@@ -28,9 +28,9 @@ namespace Application.Features.Managers.Queries.GetManagersList
 
         public Task<IList<ManagerListVm>> Handle(GetManagerListQuery request, CancellationToken cancellationToken)
         {
-            var players = _repository.ListAll();
+            var managers = _repository.ListAll();
 
-            return Task.FromResult(_mapper.Map<IList<ManagerListVm>>(players));
+            return Task.FromResult(_mapper.Map<IList<ManagerListVm>>(managers));
         }
 
     }

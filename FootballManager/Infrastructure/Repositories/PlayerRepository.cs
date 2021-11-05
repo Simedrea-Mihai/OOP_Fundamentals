@@ -38,13 +38,9 @@ namespace Infrastructure.Repositories
 
         public Player SetAttributes(Player player)
         {
-            player.Profile.BirthDate =  new DateTime(rnd.Next(1975, DateTime.Now.Year - 15), rnd.Next(1, 12), rnd.Next(1, 28)); // aici e ceva problema
-            player.Profile.Age = (DateTime.Now - player.Profile.BirthDate).Days / 365;
             player.Free_Agent = true;
 
             IPlayerTraits traits = new Basic();
-
-
             player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
 
             return player;

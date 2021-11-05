@@ -20,6 +20,7 @@ namespace Infrastructure.Repositories
 
         public Manager Create(Manager manager)
         {
+            manager.Free_Agent = true;
             _context.Managers.Add(manager);
             _context.SaveChanges();
             return manager;
@@ -27,8 +28,7 @@ namespace Infrastructure.Repositories
 
         public IList<Manager> ListAll()
         {
-
-            return _context.Managers.Include(manger => manger.Profile).Include(manager => manager.Team).ToList();
+            return _context.Managers.Include(manger => manger.Profile).ToList();
         }
     }
 }

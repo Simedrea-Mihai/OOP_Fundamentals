@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{A0D2547D-9968-4F67-B1D2-DD200FE53F9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5E9F4C73-1BAA-40E5-9DE1-9971EDE41851}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5E9F4C73-1BAA-40E5-9DE1-9971EDE41851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{61B49ED1-E9B8-48B2-B743-22D379861DEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{61B49ED1-E9B8-48B2-B743-22D379861DEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballManager.UnitTests", "FootballManager.UnitTests\FootballManager.UnitTests.csproj", "{83D5646A-F9BF-4518-8228-FA8195659D57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{61B49ED1-E9B8-48B2-B743-22D379861DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61B49ED1-E9B8-48B2-B743-22D379861DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61B49ED1-E9B8-48B2-B743-22D379861DEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D5646A-F9BF-4518-8228-FA8195659D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D5646A-F9BF-4518-8228-FA8195659D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D5646A-F9BF-4518-8228-FA8195659D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D5646A-F9BF-4518-8228-FA8195659D57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

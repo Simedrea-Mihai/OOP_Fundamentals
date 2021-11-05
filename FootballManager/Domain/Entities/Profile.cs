@@ -9,6 +9,8 @@ namespace Domain
         public DateTime BirthDate { get; set; }
         public int Age { get; set; }
 
+        public Profile() { }
+
         public Profile(string firstName, string lastName, DateTime birthDate)
         {
             FirstName = firstName;

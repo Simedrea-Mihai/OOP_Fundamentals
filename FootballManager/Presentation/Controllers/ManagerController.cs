@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Infrastructure.Static_Methods;
+using Application.Features.Managers.Commands.CreateMultiple;
 
 namespace Presentation.Controllers
 {
@@ -22,12 +23,8 @@ namespace Presentation.Controllers
     public class ManagerController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IProfileRepository _repository;
-        public ManagerController(IMediator mediator, IProfileRepository repository)
-        {
-            _mediator = mediator;
-            _repository = repository;
-        }
+
+        public ManagerController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
         public async Task<IList<ManagerListVm>> ListAllAsync()
@@ -36,37 +33,21 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("create a manager")]
-        public async Task<int> CreateAsync(CreateManagerCommand command)
+        public async Task<int> CreateAsyncManager(CreateManagerCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        /*[HttpPost("create_managers")]
-        public async void CreateManagersAsync(CreateManagerCommand command)
+        [HttpPost("create a random manager")]
+        public async Task<int> CreateAsyncRandomManager(CreateRandomManagerCommand command)
         {
-            /*
-            for (int i = 0; i < StaticVariables.EntitiesCount; i++)
-            {
-                string[] names = _repository.GetName();
-                var player = new Manager(new Profile(names[0], names[1], DateTime.Now));
-                var json = JsonConvert.SerializeObject(player);
+            return await _mediator.Send(command);
+        }
 
-                var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-                using var client = new HttpClient();
-                var url = @"https://localhost:5001/Manager/create_managers";
-
-                var post = await client.PostAsync(url, data);
-            }
-
-        }*/
-
-
-        // work in progress
-        [HttpPut("edit")]
-        public async Task<int> EditAsync(AddManager command)
+        [HttpPost("create managers")]
+        public async Task<List<int>> CreatesAsync(CreateManagersCommand command)
         {
-            return (int)await _mediator.Send(command);
+            return (List<int>)await _mediator.Send(command);
         }
 
     }

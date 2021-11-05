@@ -12,5 +12,6 @@ namespace Application.Contracts.Persistence
     {
         Team Create(Team team);
         IList<Team> ListAll();
+        Manager AddManager(Team team, Manager manager);
     }
 }

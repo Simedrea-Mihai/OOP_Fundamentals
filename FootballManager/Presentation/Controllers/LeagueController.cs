@@ -14,10 +14,7 @@ namespace Presentation.Controllers
     public class LeagueController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public LeagueController(IMediator mediator)
-        {
-            _mediator = mediator; 
-        }
+        public LeagueController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
         public async Task<IList<LeagueListVm>> ListAllAsync()

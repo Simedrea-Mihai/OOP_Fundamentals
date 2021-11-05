@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Players.Traits.AddTrait
+namespace Application.Static_Methods
 {
-    public abstract class PlayerDecorator
+    public static class SManager
     {
-
+        public static int MinimumAge = 30;
     }
 }

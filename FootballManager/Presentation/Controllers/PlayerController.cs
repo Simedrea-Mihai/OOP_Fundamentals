@@ -22,12 +22,7 @@ namespace Presentation.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IProfileRepository _repository;
-        public PlayerController(IMediator mediator, IProfileRepository repository)
-        {
-            _mediator = mediator;
-            _repository = repository;
-        }
+        public PlayerController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
         public async Task<IList<PlayerListVm>> ListAllAsync()
@@ -35,11 +30,12 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetPlayerListQuery());
         }
 
-        [HttpPost("create a player")]
+        [HttpPost("create a random player")]
         public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
         {
             return await _mediator.Send(command);
         }
+       
 
         [HttpPost("create players")]
         public async Task<List<int>> CreateAsync(CreatePlayersCommand command)

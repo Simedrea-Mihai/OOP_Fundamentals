@@ -1,4 +1,5 @@
-﻿using Application.Features.Teams.Queries.GetTeamList;
+﻿using Application.Features.Teams.Commands.AddManager;
+using Application.Features.Teams.Queries.GetTeamList;
 using Application.Teams.CreateTeam;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,7 @@ namespace Presentation.Controllers
     public class TeamController
     {
         private readonly IMediator _mediator;
-        public TeamController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public TeamController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
         public async Task<IList<TeamListVm>> ListAllAsync()
@@ -27,6 +25,12 @@ namespace Presentation.Controllers
 
         [HttpPost("create")]
         public async Task<int> CreateAsync(CreateTeamCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+
+        [HttpPatch("add manager")]
+        public async Task<int> AddManagerAsync(AddManager command)
         {
             return await _mediator.Send(command);
         }

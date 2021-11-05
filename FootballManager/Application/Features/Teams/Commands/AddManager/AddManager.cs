@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,29 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Teams.Commands.AddManager
 {
-    public class AddManager
+    public class AddManager : IRequest<int>
     {
-        public int TeamId { get; set; }
-        public Profile Profile { get; set; }
         public Team Team { get; set; }
     }
 
-    public class AddManagerHandler
+    public class AddManagerHandler : IRequestHandler<AddManager, int>
     {
         public readonly IManagerRepository _repository;
+        public readonly ITeamRepository _teamRepository;
 
 
-        public AddManagerHandler(IManagerRepository repository)
+        public AddManagerHandler(IManagerRepository repository, ITeamRepository teamRepository)
         {
             _repository = repository;
+            _teamRepository = teamRepository;
         }
 
         public int Handle(AddManager command)
         {
-            Manager manager = new Manager(command.Profile);
+            Manager manager = new Manager(command.Team.Manager.Profile);
+            Team team = new Team(command.Team.Name);
+            Console.WriteLine(team.Name);
+            _teamRepository.AddManager(team, manager);
 
             return manager.Id;
 
@@ -36,10 +40,11 @@ namespace Application.Features.Teams.Commands.AddManager
 
         public Task<int> Handle(AddManager command, CancellationToken cancellationToken)
         {
-            Manager manager = new Manager(command.Profile);
+            _teamRepository.AddManager(command.Team, command.Team.Manager);
 
+            Console.WriteLine(command.Team.Name + " " + command.Team.Manager.Profile.FirstName);
 
-            return Task.FromResult(manager.Id);
+            return Task.FromResult(command.Team.Manager.Id);
         }
 
     }

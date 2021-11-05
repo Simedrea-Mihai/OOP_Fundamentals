@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Application.Contracts.Persistence
     public interface IProfileRepository
     {
         string[] GetName();
+        Profile SetProfileManager(Profile profile);
+        Profile SetProfilePlayer(Profile profile);
     }
 }

@@ -20,14 +20,20 @@ namespace Application.Features.Players.Commands.Create
     public class CreatePlayerCommandHandler : IRequestHandler<CreatePlayerCommand, int>
     {
         private readonly IPlayerRepository _repository;
+        private readonly IProfileRepository _profileRepository;
 
-        public CreatePlayerCommandHandler(IPlayerRepository repository) => _repository = repository;
+        public CreatePlayerCommandHandler(IPlayerRepository repository, IProfileRepository profileRepository)
+        {
+            _repository = repository;
+            _profileRepository = profileRepository;
+        }
 
         public int Handle(CreatePlayerCommand command)
         {
 
             Player player = new Player(command.Profile);
 
+            _profileRepository.SetProfilePlayer(player.Profile);
             _repository.SetAttributes(player);
             _repository.Create(player);
 
@@ -40,6 +46,7 @@ namespace Application.Features.Players.Commands.Create
         {
             Player player = new Player(command.Profile);
 
+            _profileRepository.SetProfilePlayer(player.Profile);
             _repository.SetAttributes(player);
             _repository.Create(player);
 

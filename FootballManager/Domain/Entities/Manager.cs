@@ -11,7 +11,8 @@ namespace Domain
         public override int Id { get; set; }
         public int TeamId { get; set; }
         public Profile Profile { get; set; }
-        public Team Team { get; set; }
+
+        public bool Free_Agent { get; set; }
 
 
     
