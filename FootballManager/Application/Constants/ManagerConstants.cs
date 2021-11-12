@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Static_Methods
+namespace Application.Constants
 {
-    public static class SManager
+    public static class ManagerConstants
     {
-        public static int MinimumAge = 30;
+        public const int MinimumAge = 30;
     }
 }

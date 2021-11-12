@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/league")]
     public class LeagueController : ControllerBase
     {
         private readonly IMediator _mediator;

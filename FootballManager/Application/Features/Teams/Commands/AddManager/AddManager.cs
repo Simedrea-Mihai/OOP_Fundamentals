@@ -12,14 +12,17 @@ namespace Application.Features.Teams.Commands.AddManager
 {
     public class AddManager : IRequest<int>
     {
-        public Team Team { get; set; }
+        public int TeamId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class AddManagerHandler : IRequestHandler<AddManager, int>
     {
         public readonly IManagerRepository _repository;
         public readonly ITeamRepository _teamRepository;
-
+        private readonly Team Team = new Team("default");
+        private readonly Manager Manager = new Manager(new("defalut", "default", DateTime.Now));
 
         public AddManagerHandler(IManagerRepository repository, ITeamRepository teamRepository)
         {
@@ -27,24 +30,17 @@ namespace Application.Features.Teams.Commands.AddManager
             _teamRepository = teamRepository;
         }
 
-        public int Handle(AddManager command)
-        {
-            Manager manager = new Manager(command.Team.Manager.Profile);
-            Team team = new Team(command.Team.Name);
-            Console.WriteLine(team.Name);
-            _teamRepository.AddManager(team, manager);
-
-            return manager.Id;
-
-        }
 
         public Task<int> Handle(AddManager command, CancellationToken cancellationToken)
         {
-            _teamRepository.AddManager(command.Team, command.Team.Manager);
+            Team.Id = command.TeamId;
+            Team.Manager = Manager;
+            Team.Manager.Profile.FirstName = command.FirstName;
+            Team.Manager.Profile.LastName = command.LastName;
 
-            Console.WriteLine(command.Team.Name + " " + command.Team.Manager.Profile.FirstName);
+            _teamRepository.AddManager(Team, Team.Manager);
 
-            return Task.FromResult(command.Team.Manager.Id);
+            return Task.FromResult(Team.Manager.Id);
         }
 
     }

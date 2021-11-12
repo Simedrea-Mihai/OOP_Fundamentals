@@ -30,7 +30,9 @@ namespace Application.Features.Players.Commands.CreateMultiple
         public async Task<IList<int>> Handle(CreatePlayersCommand command, CancellationToken cancellationToken)
         {
             List<int> ids = new List<int>();
-            for(int i = 0; i < command.Count; i++)
+
+            int i = 0;
+            for(i = 0; i < command.Count; i++)
             {
                 string[] name = _profileRepository.GetName();
                 var player = _repository.Create(new(new(name[0], name[1], DateTime.Now)));
@@ -39,6 +41,7 @@ namespace Application.Features.Players.Commands.CreateMultiple
                 _repository.SetAttributes(player);
                 ids.Add(player.Id);
             }
+            ids.Remove(i);
 
             return await Task.FromResult(ids);
         }

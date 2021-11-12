@@ -32,13 +32,25 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetManagerListQuery());
         }
 
+        [HttpGet("list-free-managers")]
+        public async Task<IList<ManagerListVm>> ListAllFreeManagersAsync()
+        {
+            return await _mediator.Send(new GetFreeManagerListQuery());
+        }
+
+        [HttpGet("list taken managers")]
+        public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync()
+        {
+            return await _mediator.Send(new GetTakenManagerListQuery());
+        }
+
         [HttpPost("create a manager")]
         public async Task<int> CreateAsyncManager(CreateManagerCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPost("create a random manager")]
+        [HttpPost("create-random-manager")]
         public async Task<int> CreateAsyncRandomManager(CreateRandomManagerCommand command)
         {
             return await _mediator.Send(command);

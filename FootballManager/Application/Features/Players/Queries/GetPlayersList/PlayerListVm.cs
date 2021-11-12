@@ -11,6 +11,7 @@ namespace Application.Features.Players.Queries.GetPlayersList
     public class PlayerListVm
     {
         public int Id { get; set; }
+        public double Market_Value { get; set; }
 
         public Profile Profile { get; set; }
 

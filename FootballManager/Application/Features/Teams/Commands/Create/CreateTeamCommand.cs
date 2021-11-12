@@ -13,26 +13,22 @@ namespace Application.Teams.CreateTeam
     public class CreateTeamCommand : IRequest<int>
     {
         public string Name { get; set; }
+        public double Budget { get; set; }
+
     }
 
     public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, int>
     {
         private readonly ITeamRepository _repository;
+        private readonly Random rnd = new Random();
 
         public CreateTeamHandler(ITeamRepository repository) => _repository = repository;
 
-        public int Handle(CreateTeamCommand command)
-        {
-            Team team = new(command.Name);
-            _repository.Create(team);
-
-            return team.Id;
-                
-        }
 
         public Task<int> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {
             Team team = new(command.Name);
+            team.Budget = rnd.Next(100000000, 300000000);
             _repository.Create(team);
 
             return Task.FromResult(team.Id);

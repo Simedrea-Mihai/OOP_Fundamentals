@@ -12,7 +12,12 @@ namespace Application.Contracts.Persistence
     {
         Player Create(Player player);
         Player SetAttributes(Player player);
+        Player SetMarketValue(Player player);
         IList<Player> ListAll();
+        IList<Player> ListFreePlayers();
+        IList<Player> ListTakenPlayers();
+        Player GetPlayer();
+        bool Taken(Player player);
 
     }
 }

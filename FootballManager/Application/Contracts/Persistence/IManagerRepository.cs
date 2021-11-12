@@ -12,5 +12,7 @@ namespace Application.Contracts.Persistence
     {
         Manager Create(Manager manager);
         IList<Manager> ListAll();
+        IList<Manager> ListFreeManagers();
+        IList<Manager> ListTakenManagers();
     }
 }

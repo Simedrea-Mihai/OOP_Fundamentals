@@ -12,7 +12,7 @@ namespace Domain
         public int TeamId { get; set; }
         public Profile Profile { get; set; }
 
-        public bool Free_Agent { get; set; }
+        public bool FreeAgent { get; set; }
 
 
     

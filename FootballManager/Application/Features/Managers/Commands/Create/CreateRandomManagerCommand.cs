@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Contracts.Persistence;
-using Application.Static_Methods;
+using Application.Constants;
 using Domain;
 using MediatR;
 

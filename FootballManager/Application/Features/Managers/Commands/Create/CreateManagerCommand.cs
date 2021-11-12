@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Domain;
 using System.Threading;
 using Profile = Domain.Profile;
-using Application.Static_Methods;
+using Application.Constants;
 
 namespace Application.Features.Managers.Commands.Create
 {
@@ -42,9 +42,9 @@ namespace Application.Features.Managers.Commands.Create
 
             manager.Profile.BirthDate = command.Profile.BirthDate;
             manager.Profile.Age = (DateTime.Now - manager.Profile.BirthDate).Days / 365;
-            manager.Free_Agent = true;
+            manager.FreeAgent = true;
 
-            if (manager.Profile.Age < SManager.MinimumAge)
+            if (manager.Profile.Age < ManagerConstants.MinimumAge)
                 throw new Exception("Age under 30");
 
             _repository.Create(manager);
@@ -58,7 +58,7 @@ namespace Application.Features.Managers.Commands.Create
             Manager manager = new Manager(command.Profile);
             manager.Profile.BirthDate = command.Profile.BirthDate;
             manager.Profile.Age = (DateTime.Now - manager.Profile.BirthDate).Days / 365;
-            manager.Free_Agent = true;
+            manager.FreeAgent = true;
 
             //if (manager.Profile.Age < SManager.MinimumAge)
                // throw new Exception("Age under 30");

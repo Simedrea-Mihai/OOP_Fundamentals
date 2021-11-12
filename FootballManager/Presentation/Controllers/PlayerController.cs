@@ -30,6 +30,18 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetPlayerListQuery());
         }
 
+        [HttpGet("list free players")]
+        public async Task<IList<PlayerListVm>> ListAllFreePlayersAsync()
+        {
+            return await _mediator.Send(new GetFreePlayerListQuery());
+        }
+
+        [HttpGet("list taken players")]
+        public async Task<IList<PlayerListVm>> ListAllTakenPlayersAsync()
+        {
+            return await _mediator.Send(new GetTakenPlayerListQuery());
+        }
+
         [HttpPost("create a random player")]
         public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
         {

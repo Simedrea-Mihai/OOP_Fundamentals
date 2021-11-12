@@ -33,7 +33,7 @@ namespace Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAplicationServices();
-            services.AddInfrastructureService();
+            services.AddInfrastructureService(Configuration);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
