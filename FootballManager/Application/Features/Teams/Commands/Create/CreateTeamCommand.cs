@@ -28,7 +28,12 @@ namespace Application.Teams.CreateTeam
         public Task<int> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {
             Team team = new(command.Name);
-            team.Budget = rnd.Next(1, 4) * 100000000;
+
+            if (command.Budget == 0)
+                team.Budget = rnd.Next(1, 4) * 100000000;
+            else
+                team.Budget = command.Budget;
+
             _repository.Create(team);
 
             return Task.FromResult(team.Id);

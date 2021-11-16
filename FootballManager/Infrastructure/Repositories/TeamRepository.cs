@@ -69,6 +69,7 @@ namespace Infrastructure.Repositories
             player = _playerRepository.GetPlayer();
             BuyPlayer(team, player, buy: false);
 
+
         }
 
         public Team Create(Team team)

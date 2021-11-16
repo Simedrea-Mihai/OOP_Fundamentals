@@ -13,6 +13,6 @@ namespace Application.Features.Managers.Queries.GetManagersList
         public int Id { get; set; }
         public Profile Profile { get; set; }
         public bool Free_Agent { get; set; }
-        public int TeamId { get; set; }
+        public int TeamIdManager { get; set; }
     }
 }

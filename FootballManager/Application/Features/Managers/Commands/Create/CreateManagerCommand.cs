@@ -15,31 +15,57 @@ namespace Application.Features.Managers.Commands.Create
 {
     public class CreateManagerCommand : IRequest<int>
     {
-        public Profile Profile { get; set; }
-        public bool Free_Agent { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public int TeamIdManager { get; set; }
 
     }
 
     public class CreateManagerCommandHandler : IRequestHandler<CreateManagerCommand, int>
     {
         private readonly IManagerRepository _repository;
+        private readonly ITeamRepository _teamRepository;
 
-        public CreateManagerCommandHandler(IManagerRepository repository) => _repository = repository;
+        public CreateManagerCommandHandler(IManagerRepository repository, ITeamRepository teamRepository)
+        {
+            _repository = repository;
+            _teamRepository = teamRepository;
+        }
 
         public Task<int> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
         {
-            Manager manager = new Manager(command.Profile);
-            manager.Profile.BirthDate = command.Profile.BirthDate;
-            manager.Profile.Age = (DateTime.Now - manager.Profile.BirthDate).Days / 365;
-            manager.FreeAgent = true;
+            Profile profile = new Profile(command.FirstName, command.LastName, command.BirthDate);
+
+
+            Manager manager = new Manager(profile);
+            manager.Profile.BirthDate = command.BirthDate;
+            manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
+            manager.TeamIdManager = command.TeamIdManager;
 
             if (manager.Profile.Age < ManagerConstants.MinimumAge)
                 throw new Exception("Manager age under 30");
 
             else
-            { 
-                _repository.Create(manager);
-                return Task.FromResult(manager.Id);
+            {
+
+                if (command.TeamIdManager != 0)
+                {
+                    Team team = new Team("default");
+                    team.Id = command.TeamIdManager;
+                    _repository.Create(manager);
+                    manager.FreeAgent = true;
+                    manager.TeamIdManager = 0;
+                    _teamRepository.AddManager(team, manager);
+
+                    return Task.FromResult(manager.Id);
+                }
+                else
+                {
+                    manager.FreeAgent = true;
+                    _repository.Create(manager);
+                    return Task.FromResult(manager.Id);
+                }
             }
         }
 

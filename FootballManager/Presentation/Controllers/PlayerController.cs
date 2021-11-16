@@ -42,7 +42,7 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetTakenPlayerListQuery());
         }
 
-        [HttpPost("create-random-player")]
+        [HttpPost("create-player")]
         public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
         {
             return await _mediator.Send(command);

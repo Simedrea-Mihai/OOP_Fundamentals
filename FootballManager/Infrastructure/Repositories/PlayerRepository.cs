@@ -65,11 +65,14 @@ namespace Infrastructure.Repositories
             return player;
         }
 
-        public Player SetAttributes(Player player)
+        public Player SetAttributes(Player player, bool randomAttributes)
         {
             player.FreeAgent = true;
             IPlayerTraits traits = new Basic();
-            player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
+
+            if (randomAttributes)
+                player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
+
             player = SetMarketValue(player);
 
             return player;

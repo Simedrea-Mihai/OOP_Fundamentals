@@ -11,7 +11,7 @@ namespace Application.Contracts.Persistence
     public interface IPlayerRepository
     {
         Player Create(Player player);
-        Player SetAttributes(Player player);
+        Player SetAttributes(Player player, bool randomAttributes);
         Player SetMarketValue(Player player);
         IList<Player> ListAll();
         IList<Player> ListFreePlayers();

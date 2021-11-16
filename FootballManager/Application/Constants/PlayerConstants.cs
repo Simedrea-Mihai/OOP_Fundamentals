@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Constants
 {
-    public static class ManagerConstants
+    public static class PlayerConstants
     {
-        public const int MinimumAge = 30;
-        public const int YearsToGoBack = 40;
-        public const int Offset = -30;
+        public const int YearsToGoBack = 20;
+        public const int Offset = -18;
     }
 }

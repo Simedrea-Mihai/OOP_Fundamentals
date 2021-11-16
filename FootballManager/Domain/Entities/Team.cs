@@ -11,7 +11,6 @@ namespace Domain
         public override int Id { get; set; }
         public double Budget { get; set; }
         public List<Player> Players { get; set; }
-        //public Player Player { get; set; }
         public Manager Manager { get; set; }
         public string Name { get; set; }
         public bool LeagueAppended { get; set; }

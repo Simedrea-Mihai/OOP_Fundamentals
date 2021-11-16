@@ -20,7 +20,6 @@ namespace Infrastructure.Repositories
 
         public Manager Create(Manager manager)
         {
-            manager.FreeAgent = true;
             _context.Managers.Add(manager);
             _context.SaveChanges();
             return manager;

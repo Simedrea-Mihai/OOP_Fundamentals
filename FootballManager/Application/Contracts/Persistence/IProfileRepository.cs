@@ -11,6 +11,6 @@ namespace Application.Contracts.Persistence
     {
         string[] GetName();
         Profile SetProfileManager(Profile profile);
-        Profile SetProfilePlayer(Profile profile);
+        Profile SetProfilePlayer(Profile profile, bool randomProfile);
     }
 }

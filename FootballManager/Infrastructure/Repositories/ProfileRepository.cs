@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Constants;
+using Application.Contracts.Persistence;
 using Bogus;
 using Domain;
 using System;
@@ -15,10 +16,15 @@ namespace Infrastructure.Repositories
         private readonly ApplicationDbContext _context;
 
 
-        Faker<Profile> BillingDetailsFaker = new Faker<Profile>(locale: "ro")
+        Faker<Profile> BillingDetailsFakerPlayer = new Faker<Profile>(locale: "ro")
             .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
             .RuleFor(x => x.LastName, x => x.Person.LastName)
-            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(40, DateTime.Now.AddYears(-18)).Date);
+            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(PlayerConstants.YearsToGoBack, DateTime.Now.AddYears(PlayerConstants.Offset)).Date);
+
+        Faker<Profile> BillingDetailsFakerManager = new Faker<Profile>(locale: "ro")
+            .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
+            .RuleFor(x => x.LastName, x => x.Person.LastName)
+            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(ManagerConstants.YearsToGoBack, DateTime.Now.AddYears(ManagerConstants.Offset)).Date);
 
 
         public ProfileRepository(ApplicationDbContext context) => _context = context;
@@ -26,24 +32,26 @@ namespace Infrastructure.Repositories
         {
             string[] names = new string[2];
 
-            names[0] = BillingDetailsFaker.Generate().FirstName;
-            names[1] = BillingDetailsFaker.Generate().LastName;
+            names[0] = BillingDetailsFakerPlayer.Generate().FirstName;
+            names[1] = BillingDetailsFakerPlayer.Generate().LastName;
 
             return names;
         }
 
         public Profile SetProfileManager(Profile profile)
         {
-            profile.BirthDate = BillingDetailsFaker.Generate().BirthDate;  // increase start age
+            profile.BirthDate = BillingDetailsFakerManager.Generate().BirthDate; 
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
             
 
             return profile;
         }
 
-        public Profile SetProfilePlayer(Profile profile)
+        public Profile SetProfilePlayer(Profile profile, bool randomProfile)
         {
-            profile.BirthDate = BillingDetailsFaker.Generate().BirthDate;
+            if(randomProfile)
+                profile.BirthDate = BillingDetailsFakerPlayer.Generate().BirthDate;
+
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
 
             return profile;

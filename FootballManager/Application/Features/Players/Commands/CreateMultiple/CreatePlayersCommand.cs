@@ -37,10 +37,9 @@ namespace Application.Features.Players.Commands.CreateMultiple
                 name = _profileRepository.GetName();
                 Player player = new Player(new Profile(name[0], name[1], DateTime.Now));
 
-                _profileRepository.SetProfilePlayer(player.Profile);
-                _repository.SetAttributes(player);
+                _profileRepository.SetProfilePlayer(player.Profile, randomProfile: true);
+                _repository.SetAttributes(player, randomAttributes: true);
                 _repository.Create(player);
-
                 ids.Add(player.Id);
             }
 
