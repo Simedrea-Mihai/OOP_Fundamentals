@@ -12,5 +12,6 @@ namespace Application.Contracts.Persistence
     {
         League Create(League league);
         IList<League> ListAll();
+        League AddTeams(League league, IList<Team> TeamIds);
     }
 }

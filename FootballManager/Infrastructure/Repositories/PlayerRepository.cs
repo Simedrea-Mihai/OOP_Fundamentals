@@ -13,7 +13,6 @@ namespace Infrastructure.Repositories
 {
     public class PlayerRepository : IPlayerRepository
     {
-
         private readonly ApplicationDbContext _context;
         private readonly Random rnd = new Random();
 
@@ -48,9 +47,20 @@ namespace Infrastructure.Repositories
 
         public Player GetPlayer()
         {
-            var player_id = rnd.Next(0, _context.Players.Count() - 1);
+            var list = _context.Players.Where(player => player.FreeAgent == true).ToList();
 
-            var player = _context.Players.Where(player => player.FreeAgent == true && player.Id == player_id).First();
+            List<int> ids = new List<int>();
+
+            for (int i = 0; i < list.Count; i++)
+                ids.Add(list[i].Id);
+
+            var player_id = rnd.Next(ids.Count);
+
+            var player = _context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits)
+                .Where(player => player.FreeAgent == true && player.Id == list[player_id].Id).FirstOrDefault();
 
             return player;
         }
@@ -58,7 +68,6 @@ namespace Infrastructure.Repositories
         public Player SetAttributes(Player player)
         {
             player.FreeAgent = true;
-
             IPlayerTraits traits = new Basic();
             player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
             player = SetMarketValue(player);
@@ -80,13 +89,13 @@ namespace Infrastructure.Repositories
             int potential = player.PlayerAttribute.Potential;
 
             if (potential > 90)
-                player.Market_Value = rnd.Next(20000000, 50000000);
+                player.Market_Value = rnd.Next(2, 9) * 10000000;
             else if (potential > 80 && potential <= 90)
-                player.Market_Value = rnd.Next(10000000, 30000000);
+                player.Market_Value = rnd.Next(1, 5) * 10000000;
             else if (potential > 75 && potential <= 80)
-                player.Market_Value = rnd.Next(5000000, 10000000);
+                player.Market_Value = rnd.Next(5, 9) * 1000000;
             else
-                player.Market_Value = rnd.Next(1000000, 5000000);
+                player.Market_Value = rnd.Next(1, 5) * 1000000;
 
             return player;
 

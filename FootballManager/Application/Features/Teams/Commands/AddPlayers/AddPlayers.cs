@@ -37,7 +37,8 @@ namespace Application.Teams.AddPlayers
         {
             Team.Id = command.TeamId;
 
-            _teamRepository.AddPlayers(Team, command.players_count);
+            for (int i = 0; i < command.players_count; i++)
+                _teamRepository.BuyPlayer(Team, _PlayerRepository.GetPlayer(), buy: false);
             return Task.FromResult(command.players_count);
         }
     }

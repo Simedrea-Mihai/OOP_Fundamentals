@@ -30,17 +30,21 @@ namespace Infrastructure.Repositories
             var list = _context.Managers.Include(manager => manager.Profile).ToList();
 
             var requestedManager = list.FirstOrDefault(
-                mn => mn.Profile.FirstName == manager.Profile.FirstName
-                   && mn.Profile.LastName == manager.Profile.LastName
+                mn => mn.Id == manager.Id
                    && mn.FreeAgent == true
-                );
+                   && mn.TeamIdManager == 0);
 
             if (requestedManager != null)
             {
                 requestedManager.FreeAgent = false;
+                requestedManager.TeamIdManager = team.Id;
 
                 var items = _context.Teams.Include(team => team.Manager).ThenInclude(manager => manager.Profile).ToList();
-                items.Find(t => t.Id == team.Id).Manager = requestedManager;
+
+                if (items.Find(t => t.Id == team.Id).Manager == null)
+                    items.Find(t => t.Id == team.Id).Manager = requestedManager;
+                else
+                    throw new Exception("This team has already a manager");
                 
             }
             else
@@ -54,24 +58,17 @@ namespace Infrastructure.Repositories
 
         public void AddPlayers(Team team, int players_count)
         {
-            _context.Teams.Include(team => team.Players).ToList();
-            _context.Players.Include(player => player.Profile).ToList();
 
             if (players_count > _context.Players.Count())
                 throw new Exception("Player's count overflow the size of the list of players");
 
-            while (players_count >= 1)
-            {
-                var random_player = _playerRepository.GetPlayer();
-                random_player.FreeAgent = false;
+            if (_context.Teams.Find(team.Id).Players == null)
+                _context.Teams.Find(team.Id).Players = new List<Player>();
 
-                var t = _context.Teams.Find(team.Id);
-                t.Players.Add(random_player);
-                players_count -= 1;
-                
-            }
+            Player player;
+            player = _playerRepository.GetPlayer();
+            BuyPlayer(team, player, buy: false);
 
-            _context.SaveChanges();
         }
 
         public Team Create(Team team)
@@ -85,42 +82,58 @@ namespace Infrastructure.Repositories
 
         public IList<Team> ListAll()
         {
-            return _context.Teams.Include(team => team.Manager).Include(team => team.Manager.Profile).Include(team => team.Players).Include(team => team.Player.PlayerAttribute).ThenInclude(player => player.Traits).Include(team => team.Players).Include(team => team.Players).ThenInclude(player => player.Profile).ToList();
+            return _context.Teams
+                .Include(team => team.Manager)
+                .Include(team => team.Manager.Profile)
+                .Include(team => team.Players)
+                .Include(team => team.Players)
+                .ThenInclude(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits)
+                .Include(team => team.Players)
+                .Include(team => team.Players)
+                .ThenInclude(player => player.Profile).ToList();
         }
 
-        public Player BuyPlayer(Team team, Player player)
+        public Player BuyPlayer(Team team, Player player, bool buy)
         {
             if (team.Id == 0)
                 throw new Exception("Can't link the player with a null team ID");
 
             var list = _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits).ToList();
+            _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits);
+
 
             var requestedPlayer = list.FirstOrDefault(
-                pl => pl.Profile.FirstName == player.Profile.FirstName
-                   && pl.Profile.LastName == player.Profile.LastName
+                pl => pl.Id == player.Id
                    && pl.FreeAgent == true
                 );
+
 
             if (requestedPlayer != null)
             {
                 if (_context.Teams.Find(team.Id).Budget > requestedPlayer.Market_Value)
                 {
                     requestedPlayer.FreeAgent = false;
+                    requestedPlayer.TeamIdPlayer = team.Id;
+           
 
-                    _context.Teams.Find(team.Id).Budget -= requestedPlayer.Market_Value;
-                    _context.Teams.Find(team.Id).Player = requestedPlayer;
-                    _context.Teams.Find(team.Id).Player.PlayerAttribute = requestedPlayer.PlayerAttribute;
-                    _context.Teams.Find(team.Id).Player.PlayerAttribute.Traits = requestedPlayer.PlayerAttribute.Traits;
+                    if(buy == true)
+                        _context.Teams.Find(team.Id).Budget -= requestedPlayer.Market_Value;
 
-                    var items = _context.Teams.Include(team => team.Player).Include(team => team.Player.PlayerAttribute).ThenInclude(player => player.Traits).Include(team => team.Players).ThenInclude(player => player.Profile).ToList();
-                    items.Find(t => t.Id == team.Id).Players.Add(requestedPlayer);
                 }
+                else
+                    throw new Exception("Budget < Player's market value");
             }
             else
                 throw new Exception("Player not found in the database or it's already taken");
 
-            _context.SaveChanges();
 
+            if (_context.Teams.Find(team.Id).Players == null)
+                _context.Teams.Find(team.Id).Players = new List<Player>();
+
+            _context.Teams.Find(team.Id).Players.Add(requestedPlayer);
+
+            _context.SaveChanges();
             return requestedPlayer;
 
         }

@@ -1,5 +1,7 @@
-﻿using Application.Features.Leagues.CreateLeague;
+﻿using Application.Features.Leagues.AddTeams;
+using Application.Features.Leagues.CreateLeague;
 using Application.Features.Leagues.Queries.GetLeaguesList;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,6 +26,12 @@ namespace Presentation.Controllers
 
         [HttpPost("create")]
         public async Task<int> CreateAsync(CreateLeagueCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+
+        [HttpPatch("add-teams")]
+        public async Task<int> AddTeamAsync(AddTeams command)
         {
             return await _mediator.Send(command);
         }

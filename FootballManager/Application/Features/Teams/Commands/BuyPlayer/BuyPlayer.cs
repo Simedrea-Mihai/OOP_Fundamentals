@@ -14,8 +14,7 @@ namespace Application.Features.Teams.Commands.AddManager
     {
 
         public int TeamId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int PlayerId { get; set; }
     }
 
     public class BuyPlayerHandler : IRequestHandler<BuyPlayer, int>
@@ -35,16 +34,17 @@ namespace Application.Features.Teams.Commands.AddManager
         public Task<int> Handle(BuyPlayer command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
-            Team.Player = Player;
 
-            Player.Profile.FirstName = command.FirstName;
-            Player.Profile.LastName = command.LastName;
-            Player.PlayerAttribute = new PlayerAttribute();
+            if (Team.Players == null)
+                Team.Players = new List<Player>();
+
+            Player.Id = command.PlayerId;
+            Team.Players.Add(Player);
 
 
-            _teamRepository.BuyPlayer(Team, Player);
+            _teamRepository.BuyPlayer(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true);
 
-            return Task.FromResult(Team.Player.Id);
+            return Task.FromResult(Team.Players.Where(player => player.Id == command.PlayerId).First().Id);
         }
 
     }

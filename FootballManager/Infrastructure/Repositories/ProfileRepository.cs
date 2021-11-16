@@ -14,8 +14,9 @@ namespace Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context;
 
+
         Faker<Profile> BillingDetailsFaker = new Faker<Profile>(locale: "ro")
-            .RuleFor(x => x.FirstName, x => x.Person.FirstName)
+            .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
             .RuleFor(x => x.LastName, x => x.Person.LastName)
             .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(40, DateTime.Now.AddYears(-18)).Date);
 
@@ -44,7 +45,6 @@ namespace Infrastructure.Repositories
         {
             profile.BirthDate = BillingDetailsFaker.Generate().BirthDate;
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
-
 
             return profile;
         }

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("api/player")]
     public class PlayerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -30,29 +30,29 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetPlayerListQuery());
         }
 
-        [HttpGet("list free players")]
+        [HttpGet("list-free-players")]
         public async Task<IList<PlayerListVm>> ListAllFreePlayersAsync()
         {
             return await _mediator.Send(new GetFreePlayerListQuery());
         }
 
-        [HttpGet("list taken players")]
+        [HttpGet("list-taken-players")]
         public async Task<IList<PlayerListVm>> ListAllTakenPlayersAsync()
         {
             return await _mediator.Send(new GetTakenPlayerListQuery());
         }
 
-        [HttpPost("create a random player")]
+        [HttpPost("create-random-player")]
         public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
         {
             return await _mediator.Send(command);
         }
        
 
-        [HttpPost("create players")]
-        public async Task<List<int>> CreateAsync(CreatePlayersCommand command)
+        [HttpPost("create-players")]
+        public async Task<List<int>> CreateAsyncPlayers(CreatePlayersCommand command)
         {
-            return (List<int>)await _mediator.Send(command);
+            return await _mediator.Send(command);
         }
 
 

@@ -30,12 +30,15 @@ namespace Application.Features.Managers.Commands.CreateMultiple
         public async Task<IList<int>> Handle(CreateManagersCommand command, CancellationToken cancellationToken)
         {
             List<int> ids = new List<int>();
+            string[] name;
+
             for (int i = 0; i< command.Count; i++)
             {
-                string[] name = _profileRepository.GetName();
-                var manager = _repository.Create(new(new(name[0], name[1], DateTime.Now)));
+                name = _profileRepository.GetName();
+                Manager manager = new Manager(new Profile(name[0], name[1], DateTime.Now));
 
                 _profileRepository.SetProfileManager(manager.Profile);
+                _repository.Create(manager);
 
                 ids.Add(manager.Id);
             }

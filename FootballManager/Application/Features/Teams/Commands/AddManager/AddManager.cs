@@ -13,8 +13,7 @@ namespace Application.Features.Teams.Commands.AddManager
     public class AddManager : IRequest<int>
     {
         public int TeamId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int ManagerId { get; set; }
     }
 
     public class AddManagerHandler : IRequestHandler<AddManager, int>
@@ -35,8 +34,7 @@ namespace Application.Features.Teams.Commands.AddManager
         {
             Team.Id = command.TeamId;
             Team.Manager = Manager;
-            Team.Manager.Profile.FirstName = command.FirstName;
-            Team.Manager.Profile.LastName = command.LastName;
+            Team.Manager.Id = command.ManagerId;
 
             _teamRepository.AddManager(Team, Team.Manager);
 

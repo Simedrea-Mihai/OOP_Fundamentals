@@ -9,7 +9,7 @@ namespace Domain
     public class Manager : BaseEntity
     {
         public override int Id { get; set; }
-        public int TeamId { get; set; }
+        public int TeamIdManager { get; set; }
         public Profile Profile { get; set; }
 
         public bool FreeAgent { get; set; }

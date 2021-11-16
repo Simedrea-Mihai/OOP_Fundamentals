@@ -15,5 +15,6 @@ namespace Application.Features.Teams.Queries.GetTeamList
         public string Name { get; set; }
         public Manager Manager { get; set; }
         public IList<Player> Players { get; set; }
+        public bool Taken { get; set; }
     }
 }

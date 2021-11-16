@@ -10,9 +10,9 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase(databaseName: "inMemory"));
-            services.AddDbContext<ApplicationDbContext>(options => 
-                options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase(databaseName: "inMemory"));
+            ///services.AddDbContext<ApplicationDbContext>(options => 
+                ///options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));
 
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();

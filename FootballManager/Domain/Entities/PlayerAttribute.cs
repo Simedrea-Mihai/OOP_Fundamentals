@@ -15,10 +15,7 @@ namespace Domain
         public int Potential { get; set; }
 
         public Traits Traits { get; set; }
-        public PlayerAttribute()
-        {
-
-        }
+        public PlayerAttribute() { }
 
         public PlayerAttribute(int ovr, int potential, Traits traits)
         {

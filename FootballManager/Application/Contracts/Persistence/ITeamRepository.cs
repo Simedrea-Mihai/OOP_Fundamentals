@@ -13,7 +13,7 @@ namespace Application.Contracts.Persistence
         Team Create(Team team);
         IList<Team> ListAll();
         Manager AddManager(Team team, Manager manager);
-        Player BuyPlayer(Team team, Player player);
+        Player BuyPlayer(Team team, Player player, bool buy);
         void AddPlayers(Team team, int players_count);
     }
 }

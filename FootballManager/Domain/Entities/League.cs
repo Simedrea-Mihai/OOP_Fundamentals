@@ -9,7 +9,7 @@ namespace Domain
     public class League : BaseEntity
     {
         public override int Id { get; set; }
-        //public ICollection<Team> Teams { get; set; }
+        public IList<Team> Teams { get; set; }
         public string Name { get; set; }
 
         public League(string name)

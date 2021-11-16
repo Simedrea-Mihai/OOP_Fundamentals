@@ -31,19 +31,19 @@ namespace Presentation.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpPatch("add manager")]
+        [HttpPatch("add-manager")]
         public async Task<int> AddManagerAsync(AddManager command)
         {
             return await _mediator.Send(command);
         }
         
-        [HttpPatch("add players")]
+        [HttpPatch("add-players")]
         public async Task<int> AddPlayersAsync(AddPlayers command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPatch("buy a player")]
+        [HttpPatch("buy-player")]
         public async Task<int> BuyPlayerAsync(BuyPlayer command)
         {
             return await _mediator.Send(command);

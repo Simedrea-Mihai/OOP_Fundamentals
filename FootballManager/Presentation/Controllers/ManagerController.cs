@@ -19,7 +19,7 @@ using Application.Features.Managers.Commands.CreateMultiple;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/manager")]
     public class ManagerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -38,13 +38,13 @@ namespace Presentation.Controllers
             return await _mediator.Send(new GetFreeManagerListQuery());
         }
 
-        [HttpGet("list taken managers")]
+        [HttpGet("list-taken-managers")]
         public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync()
         {
             return await _mediator.Send(new GetTakenManagerListQuery());
         }
 
-        [HttpPost("create a manager")]
+        [HttpPost("create-manager")]
         public async Task<int> CreateAsyncManager(CreateManagerCommand command)
         {
             return await _mediator.Send(command);
@@ -56,7 +56,7 @@ namespace Presentation.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpPost("create managers")]
+        [HttpPost("create-managers")]
         public async Task<List<int>> CreatesAsync(CreateManagersCommand command)
         {
             return (List<int>)await _mediator.Send(command);
