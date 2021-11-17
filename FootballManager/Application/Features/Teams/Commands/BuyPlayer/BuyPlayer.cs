@@ -31,7 +31,7 @@ namespace Application.Features.Teams.Commands.AddManager
             _teamRepository = teamRepository;
         }
 
-        public Task<int> Handle(BuyPlayer command, CancellationToken cancellationToken)
+        public async Task<int> Handle(BuyPlayer command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
 
@@ -42,9 +42,11 @@ namespace Application.Features.Teams.Commands.AddManager
             Team.Players.Add(Player);
 
 
-            _teamRepository.BuyPlayer(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true);
+            await _teamRepository.BuyPlayerAsync(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
 
-            return Task.FromResult(Team.Players.Where(player => player.Id == command.PlayerId).First().Id);
+            Thread.Sleep(2000);
+
+            return await Task.FromResult(Team.Players.Where(player => player.Id == command.PlayerId).First().Id);
         }
 
     }

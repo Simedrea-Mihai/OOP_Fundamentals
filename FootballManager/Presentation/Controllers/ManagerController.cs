@@ -15,6 +15,7 @@ using System.Net.Http;
 using System.Text;
 using Infrastructure.Static_Methods;
 using Application.Features.Managers.Commands.CreateMultiple;
+using System.Threading;
 
 namespace Presentation.Controllers
 {
@@ -27,21 +28,21 @@ namespace Presentation.Controllers
         public ManagerController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
-        public async Task<IList<ManagerListVm>> ListAllAsync()
+        public async Task<IList<ManagerListVm>> ListAllAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetManagerListQuery());
+            return await _mediator.Send(new GetManagerListQuery(), cancellationToken);
         }
 
         [HttpGet("list-free-managers")]
-        public async Task<IList<ManagerListVm>> ListAllFreeManagersAsync()
+        public async Task<IList<ManagerListVm>> ListAllFreeManagersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetFreeManagerListQuery());
+            return await _mediator.Send(new GetFreeManagerListQuery(), cancellationToken);
         }
 
         [HttpGet("list-taken-managers")]
-        public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync()
+        public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetTakenManagerListQuery());
+            return await _mediator.Send(new GetTakenManagerListQuery(), cancellationToken);
         }
 
         [HttpPost("create-manager")]

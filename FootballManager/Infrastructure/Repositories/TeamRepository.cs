@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
+using Infrastructure.Repositories.Methods;
 
 namespace Infrastructure.Repositories
 {
     public class TeamRepository : ITeamRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITeamRepository _repository;
         private readonly IPlayerRepository _playerRepository;
 
         public TeamRepository(ApplicationDbContext context, IPlayerRepository playerRepository)
@@ -21,62 +24,44 @@ namespace Infrastructure.Repositories
             _playerRepository = playerRepository;
         }
 
+
+
         public Manager AddManager(Team team, Manager manager)
         {
-          
-            if (team.Id == 0)
-                throw new Exception("Can't link the manager with a null team ID");
-
-            var list = _context.Managers.Include(manager => manager.Profile).ToList();
-
-            var requestedManager = list.FirstOrDefault(
-                mn => mn.Id == manager.Id
-                   && mn.FreeAgent == true
-                   && mn.TeamIdManager == 0);
-
-            if (requestedManager != null)
-            {
-                requestedManager.FreeAgent = false;
-                requestedManager.TeamIdManager = team.Id;
-
-                var items = _context.Teams.Include(team => team.Manager).ThenInclude(manager => manager.Profile).ToList();
-
-                if (items.Find(t => t.Id == team.Id).Manager == null)
-                    items.Find(t => t.Id == team.Id).Manager = requestedManager;
-                else
-                    throw new Exception("This team has already a manager");
-                
-            }
-            else
-                throw new Exception("Manager not found in the database or it's already taken");
-
-
-            _context.SaveChanges();
-
+            TeamMethods.AddManager(_context, team, manager);
             return manager;
         }
 
-        public void AddPlayers(Team team, int players_count)
+        public async Task<Manager> AddManagerAsync(Team team, Manager manager, CancellationToken cancellationToken)
         {
-
-            if (players_count > _context.Players.Count())
-                throw new Exception("Player's count overflow the size of the list of players");
-
-            if (_context.Teams.Find(team.Id).Players == null)
-                _context.Teams.Find(team.Id).Players = new List<Player>();
-
-            Player player;
-            player = _playerRepository.GetPlayer();
-            BuyPlayer(team, player, buy: false);
-
-
+            TeamMethods.AddManager(_context, team, manager);
+            return await Task.FromResult(manager);
         }
+
+
+        public IList<Player> AddPlayers(Team team, int players_count)
+        {
+            IList<Player> players = TeamMethods.AddPlayers(_context, _repository, _playerRepository, team, players_count);
+            return players;
+        }
+
+        public async Task<IList<Player>> AddPlayersAsync(Team team, int players_count, CancellationToken cancellationToken)
+        {
+            IList<Player> players = TeamMethods.AddPlayers(_context, _repository, _playerRepository, team, players_count);
+            return await Task.FromResult(players).ConfigureAwait(false);
+        }
+
 
         public Team Create(Team team)
         {
-            _context.Teams.Add(team);
-            _context.SaveChanges();
+            TeamMethods.Create(_context, team);
             return team;
+        }
+
+        public async Task<Team> CreateAsync(Team team, CancellationToken cancellationToken)
+        {
+            TeamMethods.Create(_context, team);
+            return await Task.FromResult(team).ConfigureAwait(false);
         }
 
 
@@ -95,48 +80,33 @@ namespace Infrastructure.Repositories
                 .ThenInclude(player => player.Profile).ToList();
         }
 
+        public async Task<IList<Team>> ListAllAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Teams
+                .Include(team => team.Manager)
+                .Include(team => team.Manager.Profile)
+                .Include(team => team.Players)
+                .Include(team => team.Players)
+                .ThenInclude(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits)
+                .Include(team => team.Players)
+                .Include(team => team.Players)
+                .ThenInclude(player => player.Profile)
+                .ToListAsync().ConfigureAwait(false);
+        }
+
         public Player BuyPlayer(Team team, Player player, bool buy)
         {
-            if (team.Id == 0)
-                throw new Exception("Can't link the player with a null team ID");
-
-            var list = _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits).ToList();
-            _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits);
-
-
-            var requestedPlayer = list.FirstOrDefault(
-                pl => pl.Id == player.Id
-                   && pl.FreeAgent == true
-                );
-
-
-            if (requestedPlayer != null)
-            {
-                if (_context.Teams.Find(team.Id).Budget > requestedPlayer.Market_Value)
-                {
-                    requestedPlayer.FreeAgent = false;
-                    requestedPlayer.TeamIdPlayer = team.Id;
-           
-
-                    if(buy == true)
-                        _context.Teams.Find(team.Id).Budget -= requestedPlayer.Market_Value;
-
-                }
-                else
-                    throw new Exception("Budget < Player's market value");
-            }
-            else
-                throw new Exception("Player not found in the database or it's already taken");
-
-
-            if (_context.Teams.Find(team.Id).Players == null)
-                _context.Teams.Find(team.Id).Players = new List<Player>();
-
-            _context.Teams.Find(team.Id).Players.Add(requestedPlayer);
-
-            _context.SaveChanges();
+            Player requestedPlayer = TeamMethods.BuyPlayer(_context, team, player, buy);
             return requestedPlayer;
 
         }
+
+        public async Task<Player> BuyPlayerAsync(Team team, Player player, bool buy, CancellationToken cancellationToken)
+        {
+            Player requestedPlayer = TeamMethods.BuyPlayer(_context, team, player, buy);
+            return await Task.FromResult(requestedPlayer).ConfigureAwait(false);
+        }
+
     }
 }

@@ -30,15 +30,15 @@ namespace Application.Features.Teams.Commands.AddManager
         }
 
 
-        public Task<int> Handle(AddManager command, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddManager command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
             Team.Manager = Manager;
             Team.Manager.Id = command.ManagerId;
 
-            _teamRepository.AddManager(Team, Team.Manager);
+            await _teamRepository.AddManagerAsync(Team, Team.Manager, cancellationToken);
 
-            return Task.FromResult(Team.Manager.Id);
+            return await Task.FromResult(Team.Manager.Id);
         }
 
     }

@@ -40,7 +40,7 @@ namespace Application.Features.Leagues.AddTeams
 
             League.Teams = Teams;
 
-            var league = _repository.AddTeams(League, Teams);
+            var league = _repository.AddTeamsAsync(League, Teams, cancellationToken);
 
             return Task.FromResult(league.Id);
         }

@@ -56,7 +56,7 @@ namespace Application.Features.Managers.Commands.Create
                     _repository.Create(manager);
                     manager.FreeAgent = true;
                     manager.TeamIdManager = 0;
-                    _teamRepository.AddManager(team, manager);
+                    _teamRepository.AddManagerAsync(team, manager, cancellationToken);
 
                     return Task.FromResult(manager.Id);
                 }

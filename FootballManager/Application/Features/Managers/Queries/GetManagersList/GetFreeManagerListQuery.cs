@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Managers.Queries.GetManagersList
 {
-    public class GetFreeManagerListQuery : IRequest<IList<ManagerListVm>>
-    {
+    public class GetFreeManagerListQuery : IRequest<IList<ManagerListVm>> { }
 
-    }
 
     public class GetFreeManagerListQueryHandler : IRequestHandler<GetFreeManagerListQuery, IList<ManagerListVm>>
     {

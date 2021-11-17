@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\Identity\" />
+    <Folder Include="Models\Authentication\" />
   </ItemGroup>
 
 </Project>

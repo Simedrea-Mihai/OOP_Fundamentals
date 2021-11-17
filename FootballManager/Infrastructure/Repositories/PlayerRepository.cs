@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
+using Infrastructure.Repositories.Methods;
 using Infrastructure.Repositories.TraitsDecorator;
 using Infrastructure.Static_Methods;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -14,6 +16,7 @@ namespace Infrastructure.Repositories
     public class PlayerRepository : IPlayerRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPlayerRepository _playerRepository;
         private readonly Random rnd = new Random();
 
         public PlayerRepository(ApplicationDbContext context)
@@ -29,55 +32,113 @@ namespace Infrastructure.Repositories
             return player;
         }
 
+
+        public async Task<Player> CreateAsync(Player player, CancellationToken cancellationToken)
+        {
+
+            _context.Players.Add(player);
+            _context.SaveChanges();
+
+            return await Task.FromResult(player);
+        }
+
+        // LIST
         public IList<Player> ListAll()
         { 
 
-            return _context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).Include(player => player.PlayerAttribute.Traits).ToList();
-        }
-
-        public IList<Player> ListFreePlayers()
-        {
-            return _context.Players.Include(player => player.Profile).Where(player => player.FreeAgent == true).Include(player => player.PlayerAttribute).Include(player => player.PlayerAttribute.Traits).ToList();
-        }
-
-        public IList<Player> ListTakenPlayers()
-        {
-            return _context.Players.Include(player => player.Profile).Where(player => player.FreeAgent == false).Include(player => player.PlayerAttribute).Include(player => player.PlayerAttribute.Traits).ToList();
-        }
-
-        public Player GetPlayer()
-        {
-            var list = _context.Players.Where(player => player.FreeAgent == true).ToList();
-
-            List<int> ids = new List<int>();
-
-            for (int i = 0; i < list.Count; i++)
-                ids.Add(list[i].Id);
-
-            var player_id = rnd.Next(ids.Count);
-
-            var player = _context.Players
+            return _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
-                .ThenInclude(player => player.Traits)
-                .Where(player => player.FreeAgent == true && player.Id == list[player_id].Id).FirstOrDefault();
+                .Include(player => player.PlayerAttribute.Traits).ToList();
+        }
 
+        // LIST ASYNC
+        public async Task<IList<Player>> ListAllAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits)
+                .ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        // LIST FREE PLAYERS
+        public IList<Player> ListFreePlayers()
+        {
+            return _context.Players
+                .Include(player => player.Profile)
+                .Where(player => player.FreeAgent == true)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits).ToList();
+        }
+
+        // LIST FREE PLAYERS ASYNC
+        public async Task<IList<Player>> ListFreePlayersAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Players
+                .Include(player => player.Profile)
+                .Where(player => player.FreeAgent == true)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits)
+                .ToListAsync().ConfigureAwait(false);
+        }
+
+
+        // LIST TAKEN PLAYERS
+        public IList<Player> ListTakenPlayers()
+        {
+            return _context.Players
+                .Include(player => player.Profile)
+                .Where(player => player.FreeAgent == false)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits).ToList();
+        }
+
+        // LIST TAKEN PLAYERS ASYNC
+
+        public async Task<IList<Player>> ListTakenPlayersAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Players
+                .Include(player => player.Profile)
+                .Where(player => player.FreeAgent == false)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits)
+                .ToListAsync().ConfigureAwait(false);
+        }
+
+
+        // GET PLAYER
+        public Player GetPlayer()
+        {
+            Player player = PlayerMethods.GetPlayer(_context);
             return player;
         }
 
+
+        // GET PLAYER ASYNC
+        public async Task<Player> GetPlayerAsync(CancellationToken cancellationToken)
+        {
+            Player player = PlayerMethods.GetPlayer(_context);
+            return await Task.FromResult(player).ConfigureAwait(false);
+        }
+
+
+        // SET ATTRIBUTES
         public Player SetAttributes(Player player, bool randomAttributes)
         {
-            player.FreeAgent = true;
-            IPlayerTraits traits = new Basic();
-
-            if (randomAttributes)
-                player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
-
-            player = SetMarketValue(player);
-
-            return player;
+            Player playerInstance = PlayerMethods.SetAttributes(_context, _playerRepository, player, randomAttributes);
+            return playerInstance;
         }
 
+        // SET ATTRIBUTES ASYNC
+        public async Task<Player> SetAttributesAsync(Player player, bool randomAttributes, CancellationToken cancellationToken)
+        {
+            Player playerInstance = PlayerMethods.SetAttributes(_context, _playerRepository, player, randomAttributes);
+            return await Task.FromResult(playerInstance).ConfigureAwait(false);
+        }
+
+
+        // TAKEN
         public bool Taken(Player player)
         {
             if (player.FreeAgent == false)
@@ -87,21 +148,30 @@ namespace Infrastructure.Repositories
 
         }
 
+        // TAKEN ASYNC
+        public async Task<bool> TakenAsync(Player player, CancellationToken cancellationToken)
+        {
+            if (player.FreeAgent == false)
+                return await Task.FromResult(true).ConfigureAwait(false);
+            else
+                return await Task.FromResult(false).ConfigureAwait(false);
+        }
+
+
+        // SET MARKET VALUE 
         public Player SetMarketValue(Player player)
         {
-            int potential = player.PlayerAttribute.Potential;
+            Player playerInstance = PlayerMethods.SetMarketValue(_context, player);
+            return playerInstance;
 
-            if (potential > 90)
-                player.Market_Value = rnd.Next(2, 9) * 10000000;
-            else if (potential > 80 && potential <= 90)
-                player.Market_Value = rnd.Next(1, 5) * 10000000;
-            else if (potential > 75 && potential <= 80)
-                player.Market_Value = rnd.Next(5, 9) * 1000000;
-            else
-                player.Market_Value = rnd.Next(1, 5) * 1000000;
+        }
 
-            return player;
+        // SET MARKET VALUE ASYNC
 
+        public async Task<Player> SetMarketValueAsync(Player player, CancellationToken cancellationToken)
+        {
+            Player playerInstance = PlayerMethods.SetMarketValue(_context, player);
+            return await Task.FromResult(playerInstance).ConfigureAwait(false);
         }
     }
 }

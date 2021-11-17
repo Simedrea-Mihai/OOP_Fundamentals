@@ -25,7 +25,7 @@ namespace Application.Teams.CreateTeam
         public CreateTeamHandler(ITeamRepository repository) => _repository = repository;
 
 
-        public Task<int> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {
             Team team = new(command.Name);
 
@@ -34,9 +34,9 @@ namespace Application.Teams.CreateTeam
             else
                 team.Budget = command.Budget;
 
-            _repository.Create(team);
+            await _repository.CreateAsync(team, cancellationToken);
 
-            return Task.FromResult(team.Id);
+            return await Task.FromResult(team.Id);
         }
     }
 

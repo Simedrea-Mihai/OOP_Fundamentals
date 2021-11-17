@@ -33,13 +33,14 @@ namespace Application.Teams.AddPlayers
             _teamRepository = teamRepository;
         }
 
-        public Task<int> Handle(AddPlayers command, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddPlayers command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
 
             for (int i = 0; i < command.players_count; i++)
-                _teamRepository.BuyPlayer(Team, _PlayerRepository.GetPlayer(), buy: false);
-            return Task.FromResult(command.players_count);
+                await _teamRepository.BuyPlayerAsync(Team, _PlayerRepository.GetPlayer(), buy: false, cancellationToken);
+
+            return await Task.FromResult(command.players_count);
         }
     }
 }

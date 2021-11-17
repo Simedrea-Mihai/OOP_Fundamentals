@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Presentation.Controllers
@@ -25,34 +26,34 @@ namespace Presentation.Controllers
         public PlayerController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("list")]
-        public async Task<IList<PlayerListVm>> ListAllAsync()
+        public async Task<IList<PlayerListVm>> ListAllAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetPlayerListQuery());
+            return await _mediator.Send(new GetPlayerListQuery(), cancellationToken);
         }
 
         [HttpGet("list-free-players")]
-        public async Task<IList<PlayerListVm>> ListAllFreePlayersAsync()
+        public async Task<IList<PlayerListVm>> ListAllFreePlayersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetFreePlayerListQuery());
+            return await _mediator.Send(new GetFreePlayerListQuery(), cancellationToken);
         }
 
         [HttpGet("list-taken-players")]
-        public async Task<IList<PlayerListVm>> ListAllTakenPlayersAsync()
+        public async Task<IList<PlayerListVm>> ListAllTakenPlayersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetTakenPlayerListQuery());
+            return await _mediator.Send(new GetTakenPlayerListQuery(), cancellationToken);
         }
 
         [HttpPost("create-player")]
-        public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command)
+        public async Task<int> CreateAsyncPlayer(CreatePlayerCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(command, cancellationToken);
         }
        
 
         [HttpPost("create-players")]
-        public async Task<List<int>> CreateAsyncPlayers(CreatePlayersCommand command)
+        public async Task<List<int>> CreateAsyncPlayers(CreatePlayersCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(command, cancellationToken);
         }
 
 
