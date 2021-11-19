@@ -21,6 +21,11 @@ namespace Infrastructure.Repositories
 
         public Manager Create(Manager manager)
         {
+            manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
+
+            if (manager.Profile.Age < 30)
+                throw new Exception("Age must be more than 30");
+
             _context.Managers.Add(manager);
             _context.SaveChanges();
             return manager;

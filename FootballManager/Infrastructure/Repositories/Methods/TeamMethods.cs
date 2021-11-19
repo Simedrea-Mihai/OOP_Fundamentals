@@ -81,14 +81,14 @@ namespace Infrastructure.Repositories.Methods
 
             if (requestedPlayer != null)
             {
-                if (context.Teams.Find(team.Id).Budget > requestedPlayer.Market_Value)
+                if (context.Teams.Find(team.Id).Budget > requestedPlayer.MarketValue)
                 {
                     requestedPlayer.FreeAgent = false;
                     requestedPlayer.TeamIdPlayer = team.Id;
 
 
                     if (buy == true)
-                        context.Teams.Find(team.Id).Budget -= requestedPlayer.Market_Value;
+                        context.Teams.Find(team.Id).Budget -= requestedPlayer.MarketValue;
 
                 }
                 else

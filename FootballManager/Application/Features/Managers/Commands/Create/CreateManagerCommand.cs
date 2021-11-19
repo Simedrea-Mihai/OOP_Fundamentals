@@ -40,33 +40,26 @@ namespace Application.Features.Managers.Commands.Create
 
             Manager manager = new Manager(profile);
             manager.Profile.BirthDate = command.BirthDate;
-            manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
             manager.TeamIdManager = command.TeamIdManager;
 
-            if (manager.Profile.Age < ManagerConstants.MinimumAge)
-                throw new Exception("Manager age under 30");
+            if (command.TeamIdManager != 0)
+            {
+                Team team = new Team("default");
+                team.Id = command.TeamIdManager;
+                _repository.Create(manager);
+                manager.FreeAgent = true;
+                manager.TeamIdManager = 0;
+                _teamRepository.AddManagerAsync(team, manager, cancellationToken);
 
+                return Task.FromResult(manager.Id);
+            }
             else
             {
-
-                if (command.TeamIdManager != 0)
-                {
-                    Team team = new Team("default");
-                    team.Id = command.TeamIdManager;
-                    _repository.Create(manager);
-                    manager.FreeAgent = true;
-                    manager.TeamIdManager = 0;
-                    _teamRepository.AddManagerAsync(team, manager, cancellationToken);
-
-                    return Task.FromResult(manager.Id);
-                }
-                else
-                {
-                    manager.FreeAgent = true;
-                    _repository.Create(manager);
-                    return Task.FromResult(manager.Id);
-                }
+                manager.FreeAgent = true;
+                _repository.Create(manager);
+                return Task.FromResult(manager.Id);
             }
+            
         }
 
     }

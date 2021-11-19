@@ -29,8 +29,8 @@ namespace Infrastructure
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            ///services.AddDbContext<ApplicationDbContext>(options => 
-            ///options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));
+            /*services.AddDbContext<ApplicationDbContext>(options => 
+            options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));*/
 
             services.AddTransient<IAuthenticationService, AuthenticationService>();
 

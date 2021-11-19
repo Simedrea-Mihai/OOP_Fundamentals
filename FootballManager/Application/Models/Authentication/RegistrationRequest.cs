@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models.Authentication
 {
@@ -11,6 +12,9 @@ namespace Application.Models.Authentication
         public string LastName { get; set; }
 
         [Required]
+        public DateTime BirthDate { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -21,5 +25,6 @@ namespace Application.Models.Authentication
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+
     }
 }

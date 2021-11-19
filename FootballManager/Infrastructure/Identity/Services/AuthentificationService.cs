@@ -6,11 +6,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Contracts.Identity;
+using Application.Contracts.Persistence;
 using Application.Models.Authentication;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Domain;
 
 namespace Infrastructure.Identity.Services
 {
@@ -19,14 +21,17 @@ namespace Infrastructure.Identity.Services
         private readonly JwtSettings _jwtSettings;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IManagerRepository _managerRepository;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IManagerRepository managerRepository)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _signInManager = signInManager;
+            _managerRepository = managerRepository;
         }
 
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
@@ -64,6 +69,7 @@ namespace Infrastructure.Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.UserName,
+                BirthDate = request.BirthDate,
                 EmailConfirmed = true
             };
 
@@ -74,7 +80,10 @@ namespace Infrastructure.Identity.Services
                 var result = await _userManager.CreateAsync(user, request.Password);
 
                 if (result.Succeeded)
+                {
+                    _managerRepository.Create(new Manager(new Profile(user.FirstName, user.LastName, user.BirthDate)));
                     return new RegistrationResponse { UserId = user.Id };
+                }
                 throw new Exception($"{result.Errors}");
             }
 

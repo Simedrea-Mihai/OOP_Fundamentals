@@ -55,13 +55,13 @@ namespace Infrastructure.Repositories.Methods
             int potential = player.PlayerAttribute.Potential;
 
             if (potential > 90)
-                player.Market_Value = rnd.Next(2, 9) * 10000000;
+                player.MarketValue = rnd.Next(2, 9) * 10_000_000;
             else if (potential > 80 && potential <= 90)
-                player.Market_Value = rnd.Next(1, 5) * 10000000;
+                player.MarketValue = rnd.Next(1, 5) * 10_000_000;
             else if (potential > 75 && potential <= 80)
-                player.Market_Value = rnd.Next(5, 9) * 1000000;
+                player.MarketValue = rnd.Next(5, 9) * 1_000_000;
             else
-                player.Market_Value = rnd.Next(1, 5) * 1000000;
+                player.MarketValue = rnd.Next(1, 5) * 1_000_000;
 
             return player;
         }
