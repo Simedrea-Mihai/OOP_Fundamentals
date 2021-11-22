@@ -24,13 +24,13 @@ namespace Infrastructure
             IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("inMemory"));
+            //services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("inMemory"));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            /*services.AddDbContext<ApplicationDbContext>(options => 
-            options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));*/
+            services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));
 
             services.AddTransient<IAuthenticationService, AuthenticationService>();
 

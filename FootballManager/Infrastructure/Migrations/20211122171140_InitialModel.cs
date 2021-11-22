@@ -50,6 +50,21 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GoalkeeperProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoalkeeperProfiles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Leagues",
                 columns: table => new
                 {
@@ -180,6 +195,29 @@ namespace Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Goalkeeper",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    OVR = table.Column<int>(type: "int", nullable: false),
+                    CleanSheet = table.Column<int>(type: "int", nullable: false),
+                    DIV = table.Column<int>(type: "int", nullable: false),
+                    REF = table.Column<int>(type: "int", nullable: false),
+                    HAN = table.Column<int>(type: "int", nullable: false),
+                    POS = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Goalkeeper", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Goalkeeper_GoalkeeperProfiles_Id",
+                        column: x => x.Id,
+                        principalTable: "GoalkeeperProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -407,6 +445,9 @@ namespace Infrastructure.Migrations
                 name: "Attributes");
 
             migrationBuilder.DropTable(
+                name: "Goalkeeper");
+
+            migrationBuilder.DropTable(
                 name: "Profile");
 
             migrationBuilder.DropTable(
@@ -417,6 +458,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Traits");
+
+            migrationBuilder.DropTable(
+                name: "GoalkeeperProfiles");
 
             migrationBuilder.DropTable(
                 name: "Managers");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211121172637_InitialModel")]
+    [Migration("20211122171140_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,27 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Domain.Entities.GoalkeeperProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GoalkeeperProfiles");
+                });
 
             modelBuilder.Entity("Domain.League", b =>
                 {
@@ -406,6 +427,31 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Goalkeeper", b =>
+                {
+                    b.HasBaseType("Domain.Entities.GoalkeeperProfile");
+
+                    b.Property<int>("CleanSheet")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DIV")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HAN")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OVR")
+                        .HasColumnType("int");
+
+                    b.Property<int>("POS")
+                        .HasColumnType("int");
+
+                    b.Property<int>("REF")
+                        .HasColumnType("int");
+
+                    b.ToTable("Goalkeeper");
+                });
+
             modelBuilder.Entity("Domain.Manager", b =>
                 {
                     b.HasOne("Domain.Team", "Team")
@@ -509,6 +555,15 @@ namespace Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Goalkeeper", b =>
+                {
+                    b.HasOne("Domain.Entities.GoalkeeperProfile", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Goalkeeper", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 

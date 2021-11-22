@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Entities;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +9,11 @@ namespace Infrastructure
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +30,9 @@ namespace Infrastructure
             profile.ToTable("Profile");
             profile.Property(p => p.FirstName).IsRequired().HasMaxLength(50);
             profile.Property(p => p.LastName).IsRequired().HasMaxLength(50);
+
+            var goalkeeper = builder.Entity<Goalkeeper>();
+            goalkeeper.ToTable("Goalkeeper");
 
             builder.Entity<Profile>().Property(p => p.PlayerId).IsRequired(false);
             builder.Entity<Profile>().Property(p => p.ManagerId).IsRequired(false);
@@ -56,6 +62,8 @@ namespace Infrastructure
         public DbSet<Player> Players { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<PlayerAttribute> Attributes { get; set; }
+        public DbSet<Goalkeeper> Goalkeepers { get; set; }
+        public DbSet<GoalkeeperProfile> GoalkeeperProfiles { get; set; }
 
     }
 }
