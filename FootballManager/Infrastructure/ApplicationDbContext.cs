@@ -23,6 +23,30 @@ namespace Infrastructure
             players.ToTable("Players");
             players.Property(p => p.MarketValue).IsRequired();
 
+            var profile = builder.Entity<Profile>();
+            profile.ToTable("Profile");
+            profile.Property(p => p.FirstName).IsRequired().HasMaxLength(50);
+            profile.Property(p => p.LastName).IsRequired().HasMaxLength(50);
+
+            builder.Entity<Profile>().Property(p => p.PlayerId).IsRequired(false);
+            builder.Entity<Profile>().Property(p => p.ManagerId).IsRequired(false);
+
+            builder.Entity<Player>()
+                .HasOne(a => a.Profile)
+                .WithOne(a => a.Player)
+                .HasForeignKey<Profile>(c => c.PlayerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Manager>()
+                .HasOne(a => a.Profile)
+                .WithOne(a => a.Manager)
+                .HasForeignKey<Profile>(c => c.ManagerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Team>()
+                .HasOne(a => a.Manager)
+                .WithOne(a => a.Team)
+                .HasForeignKey<Manager>(c => c.TeamIdManager);
 
             base.OnModelCreating(builder);
         }

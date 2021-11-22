@@ -42,5 +42,6 @@ namespace Application.Contracts.Persistence
         bool Taken(Player player);
         Task<bool> TakenAsync(Player player, CancellationToken cancellationToken);
 
+        Task<int> RemovePlayerByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

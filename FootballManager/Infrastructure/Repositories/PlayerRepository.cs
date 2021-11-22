@@ -173,5 +173,12 @@ namespace Infrastructure.Repositories
             Player playerInstance = PlayerMethods.SetMarketValue(_context, player);
             return await Task.FromResult(playerInstance).ConfigureAwait(false);
         }
+
+        // REMOVE PLAYER BY ID
+        public async Task<int> RemovePlayerByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            PlayerMethods.RemovePlayerById(_context, id);
+            return await Task.FromResult(id).ConfigureAwait(false);
+        }
     }
 }

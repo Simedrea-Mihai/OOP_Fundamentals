@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
+using Infrastructure.Repositories.Methods;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Infrastructure.Repositories
         public Manager Create(Manager manager)
         {
             manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
+            manager.FreeAgent = true;
 
             if (manager.Profile.Age < 30)
                 throw new Exception("Age must be more than 30");
@@ -68,6 +70,13 @@ namespace Infrastructure.Repositories
         public async Task<IList<Manager>> ListTakenManagersAsync(CancellationToken cancellationToken)
         {
             return await _context.Managers.Where(manager => manager.FreeAgent == false).Include(manager => manager.Profile).ToListAsync().ConfigureAwait(false);
+        }
+
+        // REMOVE MANAGER BY ID
+        public async Task<int> RemoveManagerByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            ManagerMethods.RemoveManagerById(_context, id);
+            return await Task.FromResult(id).ConfigureAwait(false);
         }
     }
 }

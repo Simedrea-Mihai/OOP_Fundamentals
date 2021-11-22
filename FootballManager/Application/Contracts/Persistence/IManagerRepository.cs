@@ -21,8 +21,10 @@ namespace Application.Contracts.Persistence
         Task<IList<Manager>> ListFreeManagersAsync(CancellationToken cancellationToken);
 
 
-
         IList<Manager> ListTakenManagers();
         Task<IList<Manager>> ListTakenManagersAsync(CancellationToken cancellationToken);
+
+
+        Task<int> RemoveManagerByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

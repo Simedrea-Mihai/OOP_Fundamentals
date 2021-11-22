@@ -108,5 +108,20 @@ namespace Infrastructure.Repositories.Methods
             return requestedPlayer;
         }
 
+        public static Team RemovePlayers(ApplicationDbContext context, Team team)
+        {
+            Team t = new Team("default");
+            t.Id = team.Id;
+
+            context.Players.RemoveRange(context.Players.ToArray().Where(p => p.TeamIdPlayer == team.Id));
+
+            context.SaveChanges();
+
+            return t;
+
+            
+
+        }
+
     }
 }

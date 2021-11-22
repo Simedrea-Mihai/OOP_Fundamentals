@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
@@ -9,6 +12,14 @@ namespace Domain
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public int Age { get; set; }
+
+
+        public Player Player { get; set; }
+        public int? PlayerId { get; set; }
+
+        public Manager Manager { get; set; }
+        public int? ManagerId { get; set; }
+
 
         public Profile() { }
 

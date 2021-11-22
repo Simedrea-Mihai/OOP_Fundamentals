@@ -16,6 +16,8 @@ using System.Text;
 using Infrastructure.Static_Methods;
 using Application.Features.Managers.Commands.CreateMultiple;
 using System.Threading;
+using Microsoft.AspNetCore.Authorization;
+using Application.Features.Players.Commands.Create;
 
 namespace Presentation.Controllers
 {
@@ -61,6 +63,12 @@ namespace Presentation.Controllers
         public async Task<List<int>> CreatesAsync(CreateManagersCommand command)
         {
             return (List<int>)await _mediator.Send(command);
+        }
+
+        [HttpDelete("delete-by-id")]
+        public async Task<int> RemoveAsyncManagerById(RemoveManagerCommand command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
         }
 
     }

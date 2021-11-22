@@ -49,6 +49,11 @@ namespace Presentation.Controllers
         {
             return await _mediator.Send(command, cancellationToken);
         }
+        [HttpPatch("fire-all")]
+        public async Task<int> DeleteAllAsync(RemovePlayers command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
+        }
 
     }
 }

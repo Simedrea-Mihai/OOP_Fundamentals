@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories.Methods
             if (randomAttributes)
                 player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
 
-            player = PlayerMethods.SetMarketValue(context, player);
+            player = SetMarketValue(context, player);
 
             return player;
         }
@@ -64,6 +64,15 @@ namespace Infrastructure.Repositories.Methods
                 player.MarketValue = rnd.Next(1, 5) * 1_000_000;
 
             return player;
+        }
+
+        public static void RemovePlayerById(ApplicationDbContext context, int id)
+        {
+            Player player = context.Players.Where(p => p.Id == id).First();
+
+            context.Players.Remove(player);
+
+            context.SaveChanges();
         }
     }
 }

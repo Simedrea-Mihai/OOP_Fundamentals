@@ -56,6 +56,11 @@ namespace Presentation.Controllers
             return await _mediator.Send(command, cancellationToken);
         }
 
+        [HttpDelete("delete-by-id")]
+        public async Task<int> RemoveAsyncPlayerById(RemovePlayerCommand command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
+        }
 
     }
 }

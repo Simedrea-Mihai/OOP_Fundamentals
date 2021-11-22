@@ -11,6 +11,8 @@ namespace Application.Contracts.Persistence
 {
     public interface ITeamRepository
     {
+
+        // -------------- ADD SECTION --------------
         Team Create(Team team);
         Task<Team> CreateAsync(Team team, CancellationToken cancellationToken);
 
@@ -29,5 +31,10 @@ namespace Application.Contracts.Persistence
         //void AddPlayers(Team team, int players_count);
         IList<Player> AddPlayers(Team team, int players_count);
         Task<IList<Player>> AddPlayersAsync(Team team, int players_count, CancellationToken cancellationToken);
+
+
+
+        // -------------- REMOVE SECTION --------------
+        Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken);
     }
 }

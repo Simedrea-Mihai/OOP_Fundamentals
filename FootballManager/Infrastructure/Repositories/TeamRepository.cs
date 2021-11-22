@@ -108,5 +108,11 @@ namespace Infrastructure.Repositories
             return await Task.FromResult(requestedPlayer).ConfigureAwait(false);
         }
 
+        public async Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken)
+        {
+            Team t = TeamMethods.RemovePlayers(_context, team);
+            return await Task.FromResult(team).ConfigureAwait(false);
+        }
+
     }
 }

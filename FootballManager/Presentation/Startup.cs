@@ -36,6 +36,10 @@ namespace Presentation
             services.AddAplicationServices();
             services.AddInfrastructureService(Configuration);
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             services.AddControllers();
             AddSwagger(services);
         }
