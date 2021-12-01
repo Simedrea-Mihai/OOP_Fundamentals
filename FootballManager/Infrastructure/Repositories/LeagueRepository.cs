@@ -35,8 +35,9 @@ namespace Infrastructure.Repositories
 
         public League Create(League league)
         {
-            League leagueInstance = LeagueMethods.Create(_context, league);
-            return leagueInstance;
+            _context.Leagues.Add(league);
+            _context.SaveChanges();
+            return league;
         }
 
         public async Task<League> CreateAsync(League league, CancellationToken cancellationToken)
@@ -90,6 +91,12 @@ namespace Infrastructure.Repositories
                 .ThenInclude(player => player.PlayerAttribute)
                 .ThenInclude(player => player.Traits)
                 .ToListAsync().ConfigureAwait(false);
+        }
+
+        public async Task<int> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            LeagueMethods.RemoveLeagueById(_context, id);
+            return await Task.FromResult(id).ConfigureAwait(false);
         }
     }
 }

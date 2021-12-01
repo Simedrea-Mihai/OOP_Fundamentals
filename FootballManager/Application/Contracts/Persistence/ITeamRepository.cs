@@ -36,5 +36,7 @@ namespace Application.Contracts.Persistence
 
         // -------------- REMOVE SECTION --------------
         Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken);
+        Task<int> FirePlayerAsync(int TeamId, int PlayerId, CancellationToken cancellationToken);
+        Task<int> RemoveTeamByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

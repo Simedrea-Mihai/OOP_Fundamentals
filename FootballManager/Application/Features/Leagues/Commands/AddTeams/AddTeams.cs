@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,7 +13,10 @@ namespace Application.Features.Leagues.AddTeams
 {
     public class AddTeams : IRequest<int>
     {
+        [Required]
         public int LeagueId { get; set; }
+
+        [Required]
         public List<int> Teams { get; set; }
     }
 

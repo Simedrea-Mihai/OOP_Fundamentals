@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,9 +13,11 @@ using MediatR;
 namespace Application.Teams.AddPlayers
 {
     public class AddPlayers : IRequest<int>
-    { 
+    {
+        [Required]
         public int TeamId { get; set; }
-        public int players_count { get; set; }
+        [Required]
+        public int PlayersCount { get; set; }
     }
 
     public class AddPlayersHandler : IRequestHandler<AddPlayers, int>
@@ -37,10 +40,10 @@ namespace Application.Teams.AddPlayers
         {
             Team.Id = command.TeamId;
 
-            for (int i = 0; i < command.players_count; i++)
+            for (int i = 0; i < command.PlayersCount; i++)
                 await _teamRepository.BuyPlayerAsync(Team, _PlayerRepository.GetPlayer(), buy: false, cancellationToken);
 
-            return await Task.FromResult(command.players_count);
+            return await Task.FromResult(command.PlayersCount);
         }
     }
 }

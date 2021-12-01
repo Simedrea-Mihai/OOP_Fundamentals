@@ -54,7 +54,8 @@ namespace Infrastructure.Repositories
 
         public Team Create(Team team)
         {
-            TeamMethods.Create(_context, team);
+            _context.Teams.Add(team);
+            _context.SaveChanges();
             return team;
         }
 
@@ -112,6 +113,19 @@ namespace Infrastructure.Repositories
         {
             Team t = TeamMethods.RemovePlayers(_context, team);
             return await Task.FromResult(team).ConfigureAwait(false);
+        }
+
+        public async Task<int> FirePlayerAsync(int TeamId, int PlayerId, CancellationToken cancellationToken)
+        {
+            TeamMethods.FirePlayer(_context, TeamId, PlayerId);
+            return await Task.FromResult(TeamId).ConfigureAwait(false);
+        }
+
+
+        public async Task<int> RemoveTeamByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            TeamMethods.RemoveTeamById(_context, id);
+            return await Task.FromResult(id).ConfigureAwait(false);
         }
 
     }

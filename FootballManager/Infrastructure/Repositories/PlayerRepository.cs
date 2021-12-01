@@ -43,13 +43,13 @@ namespace Infrastructure.Repositories
         }
 
         // LIST
-        public IList<Player> ListAll()
+        public async Task<IList<Player>> ListAll()
         { 
 
-            return _context.Players
+            return await _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits).ToList();
+                .Include(player => player.PlayerAttribute.Traits).ToListAsync();
         }
 
         // LIST ASYNC
@@ -104,6 +104,61 @@ namespace Infrastructure.Repositories
                 .Include(player => player.PlayerAttribute)
                 .Include(player => player.PlayerAttribute.Traits)
                 .ToListAsync().ConfigureAwait(false);
+        }
+
+        // GET ALL PLAYERS BY OVR
+
+        public IList<Player> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken)
+        {
+            List<Player> players = new List<Player>();
+
+            if(ascending)
+                players = _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderBy(x => x.PlayerAttribute.OVR)
+                    .Take(count)
+                    .ToList();
+
+            else
+                players = _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderByDescending(x => x.PlayerAttribute.OVR)
+                    .Take(count)
+                    .ToList();
+
+
+            return players;
+        }
+
+        // GET ALL PLAYERS BY AGE
+        public IList<Player> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken)
+        {
+            List<Player> players = new List<Player>();
+
+            if (ascending)
+                players = _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderBy(x => x.Profile.Age)
+                    .Take(count)
+                    .ToList();
+
+            else
+                players = _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderByDescending(x => x.Profile.Age)
+                    .Take(count)
+                    .ToList();
+
+
+            return players;
         }
 
 

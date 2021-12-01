@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Managers.Commands.CreateMultiple
 {
     public class CreateManagersCommand : IRequest<IList<int>>
     {
+        [Required]
         public int Count { get; set; }
     }
 
@@ -36,9 +38,8 @@ namespace Application.Features.Managers.Commands.CreateMultiple
             {
                 name = _profileRepository.GetName();
                 Manager manager = new Manager(new Profile(name[0], name[1], DateTime.Now));
-                manager.FreeAgent = true;
 
-                _profileRepository.SetProfileManager(manager.Profile);
+                _profileRepository.SetProfileManager(manager.Profile, randomProfile: true);
                 _repository.Create(manager);
 
                 ids.Add(manager.Id);

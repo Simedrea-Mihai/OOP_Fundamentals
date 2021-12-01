@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,6 +13,7 @@ namespace Application.Teams.CreateTeam
 {
     public class CreateTeamCommand : IRequest<int>
     {
+        [Required]
         public string Name { get; set; }
         public double Budget { get; set; }
 

@@ -16,22 +16,23 @@ namespace Infrastructure.Repositories.Methods
             if (team.Id == 0)
                 throw new Exception("Can't link the manager with a null team ID");
 
-            var list = context.Managers.Include(manager => manager.Profile).ToList();
+            var list = context.Managers.Include(m => m.Profile).ToList();
 
             var requestedManager = list.FirstOrDefault(
                 mn => mn.Id == manager.Id
-                   && mn.FreeAgent == true
-                   && mn.TeamIdManager == 0);
+                   && mn.FreeAgent == true);
 
             if (requestedManager != null)
             {
-                requestedManager.FreeAgent = false;
-                requestedManager.TeamIdManager = team.Id;
+                var items = context.Teams.ToList();
+                var tempTeam = items.Find(t => t.Id == team.Id);
 
-                var items = context.Teams.Include(team => team.Manager).ThenInclude(manager => manager.Profile).ToList();
-
-                if (items.Find(t => t.Id == team.Id).Manager == null)
+                if (tempTeam.Manager == null)
+                {
+                    requestedManager.FreeAgent = false;
+                    requestedManager.TeamIdManager = team.Id;
                     items.Find(t => t.Id == team.Id).Manager = requestedManager;
+                }
                 else
                     throw new Exception("This team has already a manager");
 
@@ -119,8 +120,45 @@ namespace Infrastructure.Repositories.Methods
 
             return t;
 
-            
+        }
 
+        public static void FirePlayer(ApplicationDbContext context, int TeamId, int PlayerId)
+        {
+
+            Player player = context.Teams.Include(p => p.Players).FirstOrDefault().Players.Where(p => p.Id == PlayerId).FirstOrDefault();
+
+            if (player == null)
+                throw new Exception($"Player with ID {PlayerId} was not found in team's database");
+
+            else
+            {
+                context.Teams.Include(p => p.Players).First().Players.Where(p => p.Id == PlayerId).First().FreeAgent = true;
+                context.Teams.Include(p => p.Players).First().Players.Where(p => p.Id == PlayerId).First().TeamIdPlayer = 0;
+
+                context.Teams.Include(p => p.Players).First().Players.Remove(player);
+
+                context.SaveChanges();
+            }
+        }
+
+        public static void RemoveTeamById(ApplicationDbContext context, int id)
+        {
+            Team team = context.Teams.Where(p => p.Id == id).First();
+
+            var managerTeam = context.Managers.Where(p => p.TeamIdManager == id).FirstOrDefault();
+
+            if(managerTeam != null)
+                context.Managers.Remove(managerTeam);
+
+            var playersList = context.Players.Where(p => p.TeamIdPlayer == id).ToList();
+
+            if(playersList.Count != 0)
+                foreach (var player in playersList)
+                    context.Players.Remove(player);
+
+            context.Teams.Remove(team);
+
+            context.SaveChanges();
         }
 
     }

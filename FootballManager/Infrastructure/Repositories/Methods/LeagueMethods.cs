@@ -52,5 +52,15 @@ namespace Infrastructure.Repositories.Methods
             context.SaveChanges();
             return league;
         }
+
+        public static void RemoveLeagueById(ApplicationDbContext context, int id)
+        {
+            League league = context.Leagues.Where(p => p.Id == id).First();
+
+            context.Leagues.Remove(league);
+
+            context.SaveChanges();
+        }
+
     }
 }

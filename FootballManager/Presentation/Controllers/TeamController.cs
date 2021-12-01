@@ -1,4 +1,5 @@
-﻿using Application.Features.Teams.Commands.AddManager;
+﻿using Application.Features.Players.Commands.Create;
+using Application.Features.Teams.Commands.AddManager;
 using Application.Features.Teams.Queries.GetTeamList;
 using Application.Teams.AddPlayers;
 using Application.Teams.CreateTeam;
@@ -20,40 +21,55 @@ namespace Presentation.Controllers
         private readonly IMediator _mediator;
         public TeamController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("list")]
+        [HttpGet("Team")]
         public async Task<IList<TeamListVm>> ListAllAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new GetTeamsListQuery(), cancellationToken);
         }
 
-        [HttpPost("create")]
-        public async Task<int> CreateAsync(CreateTeamCommand command, CancellationToken cancellationToken)
+        [HttpPost("Team")]
+        public async Task<int> CreateAsync([FromBody] CreateTeamCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
 
-        [HttpPatch("add-manager")]
-        public async Task<int> AddManagerAsync(AddManager command, CancellationToken cancellationToken)
+        [HttpPatch("Add-Manager")]
+        public async Task<int> AddManagerAsync([FromQuery] AddManager command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
         
-        [HttpPatch("add-players")]
-        public async Task<int> AddPlayersAsync(AddPlayers command, CancellationToken cancellationToken)
+        [HttpPatch("Add-Players")]
+        public async Task<int> AddPlayersAsync([FromQuery] AddPlayers command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
 
-        [HttpPatch("buy-player")]
-        public async Task<int> BuyPlayerAsync(BuyPlayer command, CancellationToken cancellationToken)
+        [HttpPatch("Buy-Player")]
+        public async Task<int> BuyPlayerAsync([FromQuery] BuyPlayer command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
+
+        [HttpPatch("Fire-Player")]
+        public async Task<int> FirePlayerAsync([FromQuery] FirePlayerCommand command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        /*
         [HttpPatch("fire-all")]
         public async Task<int> DeleteAllAsync(RemovePlayers command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
+        }*/
+
+        [HttpDelete("Team")]
+        public async Task<int> RemoveAsyncTeamById([FromQuery] RemoveTeamCommand command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
         }
+
 
     }
 }

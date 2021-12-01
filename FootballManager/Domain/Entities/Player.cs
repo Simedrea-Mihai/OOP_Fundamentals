@@ -17,11 +17,13 @@ namespace Domain
 
         public Profile Profile { get; set; }
 
+        public Team Team { get; set; }
+
         public PlayerAttribute PlayerAttribute { get; set; }
 
         public bool FreeAgent { get; set; }
 
-        private Player() { }
+        public Player() { }
 
         public Player(Profile profile)
         {

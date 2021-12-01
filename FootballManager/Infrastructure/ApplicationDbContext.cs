@@ -31,8 +31,6 @@ namespace Infrastructure
             profile.Property(p => p.FirstName).IsRequired().HasMaxLength(50);
             profile.Property(p => p.LastName).IsRequired().HasMaxLength(50);
 
-            var goalkeeper = builder.Entity<Goalkeeper>();
-            goalkeeper.ToTable("Goalkeeper");
 
             builder.Entity<Profile>().Property(p => p.PlayerId).IsRequired(false);
             builder.Entity<Profile>().Property(p => p.ManagerId).IsRequired(false);
@@ -49,6 +47,23 @@ namespace Infrastructure
                 .HasForeignKey<Profile>(c => c.ManagerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+            /* under testing */
+
+            builder.Entity<Team>()
+                .HasOne(a => a.Manager)
+                .WithOne(a => a.Team)
+                .HasForeignKey<Manager>(c => c.TeamIdManager)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Team>()
+                .HasMany(a => a.Players)
+                .WithOne(a => a.Team)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            /* ------------ */
+
+
             builder.Entity<Team>()
                 .HasOne(a => a.Manager)
                 .WithOne(a => a.Team)
@@ -62,8 +77,6 @@ namespace Infrastructure
         public DbSet<Player> Players { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<PlayerAttribute> Attributes { get; set; }
-        public DbSet<Goalkeeper> Goalkeepers { get; set; }
-        public DbSet<GoalkeeperProfile> GoalkeeperProfiles { get; set; }
 
     }
 }

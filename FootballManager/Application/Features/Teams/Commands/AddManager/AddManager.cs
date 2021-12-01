@@ -3,6 +3,7 @@ using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,7 +13,9 @@ namespace Application.Features.Teams.Commands.AddManager
 {
     public class AddManager : IRequest<int>
     {
+        [Required]
         public int TeamId { get; set; }
+        [Required]
         public int ManagerId { get; set; }
     }
 
@@ -33,12 +36,11 @@ namespace Application.Features.Teams.Commands.AddManager
         public async Task<int> Handle(AddManager command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
-            Team.Manager = Manager;
-            Team.Manager.Id = command.ManagerId;
+            Manager.Id = command.ManagerId;
 
-            await _teamRepository.AddManagerAsync(Team, Team.Manager, cancellationToken);
+            await _teamRepository.AddManagerAsync(Team, Manager, cancellationToken);
 
-            return await Task.FromResult(Team.Manager.Id);
+            return Team.Id;
         }
 
     }

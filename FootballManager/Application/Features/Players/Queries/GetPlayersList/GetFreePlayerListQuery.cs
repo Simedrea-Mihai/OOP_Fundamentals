@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using AutoMapper;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;

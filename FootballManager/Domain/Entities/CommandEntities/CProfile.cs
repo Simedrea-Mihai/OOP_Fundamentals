@@ -12,6 +12,8 @@ namespace Domain.Entities.CommandEntities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
 
+        public CProfile() { }
+
         public CProfile(string firstName, string lastName, DateTime birthDate)
         {
             FirstName = firstName;

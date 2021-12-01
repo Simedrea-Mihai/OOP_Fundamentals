@@ -23,7 +23,7 @@ namespace Presentation.Controllers
             OperationId = "auth.authenticate",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request)
+        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync([FromQuery] AuthenticationRequest request)
         {
             return Ok(await _authenticationService.AuthenticateAsync(request));
         }
@@ -35,7 +35,7 @@ namespace Presentation.Controllers
             OperationId = "auth.register",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<RegistrationResponse>> RegisterAsync(RegistrationRequest request)
+        public async Task<ActionResult<RegistrationResponse>> RegisterAsync([FromQuery] RegistrationRequest request)
         {
             return Ok(await _authenticationService.RegisterAsync(request));
         }

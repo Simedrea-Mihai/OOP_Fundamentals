@@ -12,6 +12,7 @@ namespace Domain.Entities.CommandEntities
         public int OVR { get; set; }
         public int Potential { get; set; }
 
+        public CPlayerAttribute() { }
 
         public CPlayerAttribute(int ovr, int potential)
         {

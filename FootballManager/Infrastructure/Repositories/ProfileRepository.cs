@@ -38,12 +38,13 @@ namespace Infrastructure.Repositories
             return names;
         }
 
-        public Profile SetProfileManager(Profile profile)
+        public Profile SetProfileManager(Profile profile, bool randomProfile)
         {
-            profile.BirthDate = BillingDetailsFakerManager.Generate().BirthDate; 
+            if(randomProfile)
+                profile.BirthDate = BillingDetailsFakerManager.Generate().BirthDate; 
+
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
             
-
             return profile;
         }
 

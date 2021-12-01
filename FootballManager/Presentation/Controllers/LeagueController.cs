@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Application.Features.Players.Commands.Create;
 
 namespace Presentation.Controllers
 {
@@ -21,20 +22,26 @@ namespace Presentation.Controllers
         private readonly IMediator _mediator;
         public LeagueController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("list")]
+        [HttpGet("League")]
         public async Task<IList<LeagueListVm>> ListAllAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new GetLeaguesListQuery(), cancellationToken);
         }
 
-        [HttpPost("create")]
-        public async Task<int> CreateAsync(CreateLeagueCommand command, CancellationToken cancellationToken)
+        [HttpPost("League")]
+        public async Task<int> CreateAsync([FromQuery] CreateLeagueCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
 
-        [HttpPatch("add-teams")]
-        public async Task<int> AddTeamAsync(AddTeams command, CancellationToken cancellationToken)
+        [HttpPatch("Add-Teams")]
+        public async Task<int> AddTeamAsync([FromQuery] AddTeams command, CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpDelete("League")]
+        public async Task<int> RemoveAsyncLeagueById([FromQuery] RemoveLeagueCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }

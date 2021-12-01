@@ -19,5 +19,7 @@ namespace Application.Contracts.Persistence
 
         League AddTeams(League league, IList<Team> TeamIds);
         Task<League> AddTeamsAsync(League league, IList<Team> TeamIds, CancellationToken cancellationToken);
+
+        Task<int> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

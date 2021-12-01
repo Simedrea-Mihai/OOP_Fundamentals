@@ -1,4 +1,5 @@
 using Application;
+using Application.Contracts;
 using Domain;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Presentation.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +43,8 @@ namespace Presentation
             );
 
             services.AddControllers();
+            services.AddScoped<ILoggedInUserService, LoggedInUserService>();
+            services.AddAutoMapper(typeof(Startup));
             AddSwagger(services);
         }
 

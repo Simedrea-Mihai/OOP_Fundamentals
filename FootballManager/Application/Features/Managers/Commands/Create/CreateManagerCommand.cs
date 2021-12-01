@@ -10,55 +10,49 @@ using Domain;
 using System.Threading;
 using Profile = Domain.Profile;
 using Application.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Managers.Commands.Create
 {
     public class CreateManagerCommand : IRequest<int>
     {
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public DateTime BirthDate { get; set; }
-        public int TeamIdManager { get; set; }
 
     }
 
     public class CreateManagerCommandHandler : IRequestHandler<CreateManagerCommand, int>
     {
         private readonly IManagerRepository _repository;
-        private readonly ITeamRepository _teamRepository;
+        private readonly IProfileRepository _profileRepository;
 
-        public CreateManagerCommandHandler(IManagerRepository repository, ITeamRepository teamRepository)
+        public CreateManagerCommandHandler(IManagerRepository repository, IProfileRepository profileRepository)
         {
             _repository = repository;
-            _teamRepository = teamRepository;
+            _profileRepository = profileRepository;
         }
 
         public Task<int> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
         {
             Profile profile = new Profile(command.FirstName, command.LastName, command.BirthDate);
-
-
             Manager manager = new Manager(profile);
+            /*
             manager.Profile.BirthDate = command.BirthDate;
             manager.TeamIdManager = command.TeamIdManager;
+            manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
+            manager.FreeAgent = true;
 
-            if (command.TeamIdManager != 0)
-            {
-                Team team = new Team("default");
-                team.Id = command.TeamIdManager;
-                _repository.Create(manager);
-                manager.FreeAgent = true;
-                manager.TeamIdManager = 0;
-                _teamRepository.AddManagerAsync(team, manager, cancellationToken);
+            if (manager.Profile.Age < 30)
+                throw new Exception("Age must be more than 30");*/
 
-                return Task.FromResult(manager.Id);
-            }
-            else
-            {
-                manager.FreeAgent = true;
-                _repository.Create(manager);
-                return Task.FromResult(manager.Id);
-            }
+            _profileRepository.SetProfileManager(manager.Profile, randomProfile: false);
+            _repository.Create(manager);
+            return Task.FromResult(manager.Id);
+            
             
         }
 

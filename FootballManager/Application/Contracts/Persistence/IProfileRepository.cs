@@ -10,7 +10,7 @@ namespace Application.Contracts.Persistence
     public interface IProfileRepository
     {
         string[] GetName();
-        Profile SetProfileManager(Profile profile);
+        Profile SetProfileManager(Profile profile, bool randomProfile);
         Profile SetProfilePlayer(Profile profile, bool randomProfile);
     }
 }

@@ -23,8 +23,7 @@ namespace Application.Contracts.Persistence
         Task<Player> SetMarketValueAsync(Player player, CancellationToken cancellationToken);
 
 
-        IList<Player> ListAll();
-        Task<IList<Player>> ListAllAsync(CancellationToken cancellationToken);
+        Task<IList<Player>> ListAll();
 
 
         IList<Player> ListFreePlayers();
@@ -33,6 +32,9 @@ namespace Application.Contracts.Persistence
 
         IList<Player> ListTakenPlayers();
         Task<IList<Player>> ListTakenPlayersAsync(CancellationToken cancellationToken);
+
+        IList<Player> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken);
+        IList<Player> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken);
 
 
         Player GetPlayer();

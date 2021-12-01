@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Players.Commands.CreateMultiple
 {
     public class CreatePlayersCommand : IRequest<List<int>>
     {
+        [Required]
         public int Count { get; set; }
     }
 

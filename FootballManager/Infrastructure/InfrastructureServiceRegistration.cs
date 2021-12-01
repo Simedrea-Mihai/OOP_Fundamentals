@@ -24,13 +24,14 @@ namespace Infrastructure
             IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-            //services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("inMemory"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("inMemory"));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+            /*
             services.AddDbContext<ApplicationDbContext>(options => 
-                options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));
+                options.UseSqlServer(configuration.GetConnectionString("SqlConectionString")));*/
 
             services.AddTransient<IAuthenticationService, AuthenticationService>();
 
@@ -39,6 +40,7 @@ namespace Infrastructure
             services.AddScoped<IPlayerRepository, PlayerRepository>();
             services.AddScoped<IManagerRepository, ManagerRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
             services.AddAuthentication(options =>
                 {

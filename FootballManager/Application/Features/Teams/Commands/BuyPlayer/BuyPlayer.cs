@@ -3,6 +3,7 @@ using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,7 +14,9 @@ namespace Application.Features.Teams.Commands.AddManager
     public class BuyPlayer : IRequest<int>
     {
 
+        [Required]
         public int TeamId { get; set; }
+        [Required]
         public int PlayerId { get; set; }
     }
 
@@ -43,8 +46,6 @@ namespace Application.Features.Teams.Commands.AddManager
 
 
             await _teamRepository.BuyPlayerAsync(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
-
-            Thread.Sleep(2000);
 
             return await Task.FromResult(Team.Players.Where(player => player.Id == command.PlayerId).First().Id);
         }

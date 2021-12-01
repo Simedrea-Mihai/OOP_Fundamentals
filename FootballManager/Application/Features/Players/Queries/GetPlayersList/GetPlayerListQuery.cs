@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using AutoMapper;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Players.Queries.GetPlayersList
 {
-    public class GetPlayerListQuery : IRequest<IList<PlayerListVm>>
+    public class GetPlayerListQuery : IRequest<IList<Player>>
     {
 
     }
 
-    public class GetPlayerListQueryHandler : IRequestHandler<GetPlayerListQuery, IList<PlayerListVm>>
+    public class GetPlayerListQueryHandler : IRequestHandler<GetPlayerListQuery, IList<Player>>
     {
         private readonly IPlayerRepository _repository;
         private readonly IMapper _mapper;
@@ -26,11 +27,11 @@ namespace Application.Features.Players.Queries.GetPlayersList
             _mapper = mapper;
         }
 
-        public Task<IList<PlayerListVm>> Handle(GetPlayerListQuery request, CancellationToken cancellationToken)
+        public async Task<IList<Player>> Handle(GetPlayerListQuery request, CancellationToken cancellationToken)
         {
-            var players = _repository.ListAll();
+            var players = await _repository.ListAll();
 
-            return Task.FromResult(_mapper.Map<IList<PlayerListVm>>(players));
+            return players;
         }
     }
 }

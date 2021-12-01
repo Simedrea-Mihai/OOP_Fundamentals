@@ -28,9 +28,8 @@ namespace Application.Features.Managers.Commands.Create
         {
             string[] name = _profileRepository.GetName();
             Manager manager = new(new(name[0], name[1], DateTime.Now));
-            manager.FreeAgent = true;
 
-            _profileRepository.SetProfileManager(manager.Profile);
+            _profileRepository.SetProfileManager(manager.Profile, randomProfile: true);
             _repository.Create(manager);
 
             return Task.FromResult(manager.Id);

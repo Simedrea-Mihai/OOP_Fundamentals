@@ -81,9 +81,11 @@ namespace Infrastructure.Identity.Services
 
                 if (result.Succeeded)
                 {
+                    Console.WriteLine("success");
                     _managerRepository.Create(new Manager(new Profile(user.FirstName, user.LastName, user.BirthDate)));
                     return new RegistrationResponse { UserId = user.Id };
                 }
+
                 throw new Exception($"{result.Errors}");
             }
 

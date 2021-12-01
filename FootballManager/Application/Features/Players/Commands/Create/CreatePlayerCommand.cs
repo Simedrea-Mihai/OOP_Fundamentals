@@ -4,6 +4,7 @@ using Domain.Entities.CommandEntities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,7 +14,9 @@ namespace Application.Features.Players.Commands.Create
 {
     public class CreatePlayerCommand : IRequest<int>
     {
+        [Required]
         public CProfile Profile { get; set; }
+        [Required]
 
         public CPlayerAttribute PlayerAttribute { get; set; }
 

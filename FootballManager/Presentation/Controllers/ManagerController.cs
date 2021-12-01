@@ -29,44 +29,44 @@ namespace Presentation.Controllers
 
         public ManagerController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet("list")]
+        [HttpGet("Manager")]
         public async Task<IList<ManagerListVm>> ListAllAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new GetManagerListQuery(), cancellationToken);
         }
 
-        [HttpGet("list-free-managers")]
+        [HttpGet("Available-Manager")]
         public async Task<IList<ManagerListVm>> ListAllFreeManagersAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new GetFreeManagerListQuery(), cancellationToken);
         }
 
-        [HttpGet("list-taken-managers")]
+        [HttpGet("Unavailable-Manager")]
         public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new GetTakenManagerListQuery(), cancellationToken);
         }
 
-        [HttpPost("create-manager")]
-        public async Task<int> CreateAsyncManager(CreateManagerCommand command)
+        [HttpPost("Manager")]
+        public async Task<int> CreateAsyncManager([FromQuery] CreateManagerCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPost("create-random-manager")]
-        public async Task<int> CreateAsyncRandomManager(CreateRandomManagerCommand command)
+        [HttpPost("Random-Manager")]
+        public async Task<int> CreateAsyncRandomManager([FromQuery] CreateRandomManagerCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPost("create-managers")]
-        public async Task<List<int>> CreatesAsync(CreateManagersCommand command)
+        [HttpPost("Managers")]
+        public async Task<List<int>> CreatesAsync([FromQuery] CreateManagersCommand command)
         {
             return (List<int>)await _mediator.Send(command);
         }
 
-        [HttpDelete("delete-by-id")]
-        public async Task<int> RemoveAsyncManagerById(RemoveManagerCommand command, CancellationToken cancellationToken)
+        [HttpDelete("Manager")]
+        public async Task<int> RemoveAsyncManagerById([FromQuery] RemoveManagerCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
