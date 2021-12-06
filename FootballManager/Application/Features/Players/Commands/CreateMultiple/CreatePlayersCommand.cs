@@ -36,16 +36,16 @@ namespace Application.Features.Players.Commands.CreateMultiple
 
             for (int i = 1; i <= command.Count; i++)
             {
-                name = _profileRepository.GetName();
+                name = await _profileRepository.GetName(cancellationToken);
                 Player player = new Player(new Profile(name[0], name[1], DateTime.Now));
 
-                _profileRepository.SetProfilePlayer(player.Profile, randomProfile: true);
-                _repository.SetAttributes(player, randomAttributes: true);
-                _repository.Create(player);
+                await _profileRepository.SetProfilePlayer(player.Profile, randomProfile: true, cancellationToken);
+                await _repository.SetAttributes(player, randomAttributes: true, cancellationToken);
+                await _repository.Create(player, cancellationToken);
                 ids.Add(player.Id);
             }
 
-            return await Task.FromResult(ids);
+            return ids;
         }
     }
 }

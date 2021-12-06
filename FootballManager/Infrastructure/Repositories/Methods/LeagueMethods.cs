@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace Infrastructure.Repositories.Methods
 {
     public static class LeagueMethods
     {
-        public static League AddTeams(ApplicationDbContext context, League league, IList<Team> TeamIds)
+        public static async Task<League> AddTeams(ApplicationDbContext context, League league, IList<Team> TeamIds, CancellationToken cancellationToken)
         {
             if (league.Id == 0)
                 throw new Exception("Can't link the teams with a null league ID");
@@ -41,25 +42,24 @@ namespace Infrastructure.Repositories.Methods
                 i++;
             }
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
 
             return league;
         }
 
-        public static League Create(ApplicationDbContext context, League league)
+        public static async Task<League> Create(ApplicationDbContext context, League league, CancellationToken cancellationToken)
         {
             context.Leagues.Add(league);
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
             return league;
         }
 
-        public static void RemoveLeagueById(ApplicationDbContext context, int id)
+        public static async Task<int> RemoveLeagueById(ApplicationDbContext context, int id, CancellationToken cancellationToken)
         {
             League league = context.Leagues.Where(p => p.Id == id).First();
-
             context.Leagues.Remove(league);
-
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
+            return league.Id;
         }
 
     }

@@ -33,40 +33,77 @@ namespace Presentation.Controllers
             _mapper = mapper;
         }
 
+
+        [HttpGet("Player/{Id}")]
+        public async Task<IActionResult> ListById(int Id, CancellationToken cancellationToken)
+        {
+            GetPlayerById command = new GetPlayerById(Id);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(_mapper.Map<PlayerGetDto>(result));
+        }
+
         [HttpGet("Players")]
         public async Task<IActionResult> ListAllAsync([FromServices] ILoggedInUserService loggedInUserService, CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(new GetPlayerListQuery(), cancellationToken);
 
+            var list = new List<PlayerGetDto>();
+
             foreach (var c in created)
-                _mapper.Map<PlayerGetDto>(c);
+                list.Add(_mapper.Map<PlayerGetDto>(c));
 
-            var result = (PlayerGetDto)created;
-
-            return Ok(result);
+            return Ok(list);
         }
 
         [HttpGet("Available-Players")]
-        public async Task<IList<PlayerListVm>> ListAllFreePlayersAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllFreePlayersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetFreePlayerListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetFreePlayerListQuery(), cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpGet("Unavailable-Players")]
-        public async Task<IList<PlayerListVm>> ListAllTakenPlayersAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllTakenPlayersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetTakenPlayerListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetTakenPlayerListQuery(), cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
         }
         [HttpGet("Player-By-Ovr")]
-        public async Task<IList<PlayerListVm>> ListByOvrAsync([FromQuery]GetPlayersByOvrQuery command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListByOvrAsync([FromQuery]GetPlayersByOvrQuery command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpGet("Player-By-Age")]
-        public async Task<IList<PlayerListVm>> ListByAgeAsync([FromQuery] GetPlayersByAgeQuery command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListByAgeAsync([FromQuery] GetPlayersByAgeQuery command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpPost("Player")]

@@ -41,9 +41,9 @@ namespace Application.Teams.AddPlayers
             Team.Id = command.TeamId;
 
             for (int i = 0; i < command.PlayersCount; i++)
-                await _teamRepository.BuyPlayerAsync(Team, _PlayerRepository.GetPlayer(), buy: false, cancellationToken);
+                await _teamRepository.BuyPlayer(Team, await _PlayerRepository.GetPlayer(cancellationToken), buy: false, cancellationToken);
 
-            return await Task.FromResult(command.PlayersCount);
+            return command.PlayersCount;
         }
     }
 }

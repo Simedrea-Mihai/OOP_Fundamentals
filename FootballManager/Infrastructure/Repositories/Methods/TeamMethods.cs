@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Contracts.Persistence;
 using Domain;
@@ -11,7 +12,7 @@ namespace Infrastructure.Repositories.Methods
 {
     public static class TeamMethods
     {
-        public static void AddManager(ApplicationDbContext context, Team team, Manager manager)
+        public static async Task<Team> AddManager(ApplicationDbContext context, Team team, Manager manager, CancellationToken cancellationToken)
         {
             if (team.Id == 0)
                 throw new Exception("Can't link the manager with a null team ID");
@@ -41,10 +42,11 @@ namespace Infrastructure.Repositories.Methods
                 throw new Exception("Manager not found in the database or it's already taken");
 
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
+            return team;
         }
 
-        public static IList<Player> AddPlayers(ApplicationDbContext context, ITeamRepository repository, IPlayerRepository playerRepository, Team team, int players_count)
+        public static async Task<IList<Player>> AddPlayers(ApplicationDbContext context, ITeamRepository repository, IPlayerRepository playerRepository, Team team, int players_count, CancellationToken cancellationToken)
         {
             if (players_count > context.Players.Count())
                 throw new Exception("Player's count overflow the size of the list of players");
@@ -53,19 +55,20 @@ namespace Infrastructure.Repositories.Methods
                 context.Teams.Find(team.Id).Players = new List<Player>();
 
             Player player;
-            player = playerRepository.GetPlayer();
-            repository.BuyPlayer(team, player, buy: false);
+            player = await playerRepository.GetPlayer(cancellationToken);
+            await repository.BuyPlayer(team, player, buy: false, cancellationToken);
 
             return context.Teams.Find(team.Id).Players.ToList();
         }
 
-        public static void Create(ApplicationDbContext context, Team team)
+        public static async Task<Team> Create(ApplicationDbContext context, Team team, CancellationToken cancellationToken)
         {
             context.Teams.Add(team);
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
+            return team;
         }
 
-        public static Player BuyPlayer(ApplicationDbContext context, Team team, Player player, bool buy)
+        public static async Task<Player> BuyPlayer(ApplicationDbContext context, Team team, Player player, bool buy, CancellationToken cancellationToken)
         {
             if (team.Id == 0)
                 throw new Exception("Can't link the player with a null team ID");
@@ -104,25 +107,25 @@ namespace Infrastructure.Repositories.Methods
 
             context.Teams.Find(team.Id).Players.Add(requestedPlayer);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
 
             return requestedPlayer;
         }
 
-        public static Team RemovePlayers(ApplicationDbContext context, Team team)
+        public static async Task<Team> RemovePlayers(ApplicationDbContext context, Team team, CancellationToken cancellationToken)
         {
             Team t = new Team("default");
             t.Id = team.Id;
 
             context.Players.RemoveRange(context.Players.ToArray().Where(p => p.TeamIdPlayer == team.Id));
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
 
             return t;
 
         }
 
-        public static void FirePlayer(ApplicationDbContext context, int TeamId, int PlayerId)
+        public static async Task<int> FirePlayer(ApplicationDbContext context, int TeamId, int PlayerId, CancellationToken cancellationToken)
         {
 
             Player player = context.Teams.Include(p => p.Players).FirstOrDefault().Players.Where(p => p.Id == PlayerId).FirstOrDefault();
@@ -137,11 +140,13 @@ namespace Infrastructure.Repositories.Methods
 
                 context.Teams.Include(p => p.Players).First().Players.Remove(player);
 
-                context.SaveChanges();
+                await context.SaveChangesAsync(cancellationToken);
             }
+
+            return TeamId;
         }
 
-        public static void RemoveTeamById(ApplicationDbContext context, int id)
+        public static async Task<int> RemoveTeamById(ApplicationDbContext context, int id, CancellationToken cancellationToken)
         {
             Team team = context.Teams.Where(p => p.Id == id).First();
 
@@ -158,7 +163,8 @@ namespace Infrastructure.Repositories.Methods
 
             context.Teams.Remove(team);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
+            return id;
         }
 
     }

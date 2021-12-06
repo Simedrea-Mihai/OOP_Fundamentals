@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -28,34 +29,34 @@ namespace Infrastructure.Repositories
 
 
         public ProfileRepository(ApplicationDbContext context) => _context = context;
-        public string[] GetName()
+        public async Task<string[]> GetName(CancellationToken cancellationToken)
         {
             string[] names = new string[2];
 
             names[0] = BillingDetailsFakerPlayer.Generate().FirstName;
             names[1] = BillingDetailsFakerPlayer.Generate().LastName;
 
-            return names;
+            return await Task.FromResult(names);
         }
 
-        public Profile SetProfileManager(Profile profile, bool randomProfile)
+        public async Task<Profile> SetProfileManager(Profile profile, bool randomProfile, CancellationToken cancellationToken)
         {
             if(randomProfile)
                 profile.BirthDate = BillingDetailsFakerManager.Generate().BirthDate; 
 
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
             
-            return profile;
+            return await Task.FromResult(profile);
         }
 
-        public Profile SetProfilePlayer(Profile profile, bool randomProfile)
+        public async Task<Profile> SetProfilePlayer(Profile profile, bool randomProfile, CancellationToken cancellationToken)
         {
             if(randomProfile)
                 profile.BirthDate = BillingDetailsFakerPlayer.Generate().BirthDate;
 
             profile.Age = (DateTime.Now.Year - profile.BirthDate.Year);
 
-            return profile;
+            return await Task.FromResult(profile);
         }
 
     }

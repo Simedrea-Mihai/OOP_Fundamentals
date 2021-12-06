@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Players.Queries.GetPlayersList
 {
-    public class GetFreePlayerListQuery : IRequest<IList<PlayerListVm>>
+    public class GetFreePlayerListQuery : IRequest<IList<Player>>
     {
 
     }
 
-    public class GetPlayerFreeListQueryHandler : IRequestHandler<GetFreePlayerListQuery, IList<PlayerListVm>>
+    public class GetPlayerFreeListQueryHandler : IRequestHandler<GetFreePlayerListQuery, IList<Player>>
     {
         private readonly IPlayerRepository _repository;
         private readonly IMapper _mapper;
@@ -27,11 +27,11 @@ namespace Application.Features.Players.Queries.GetPlayersList
             _mapper = mapper;
         }
 
-        public Task<IList<PlayerListVm>> Handle(GetFreePlayerListQuery request, CancellationToken cancellationToken)
+        public async Task<IList<Player>> Handle(GetFreePlayerListQuery request, CancellationToken cancellationToken)
         {
-            var players = _repository.ListFreePlayers();
+            var players = await _repository.ListFreePlayers(cancellationToken);
 
-            return Task.FromResult(_mapper.Map<IList<PlayerListVm>>(players));
+            return _mapper.Map<IList<Player>>(players);
         }
     }
 }

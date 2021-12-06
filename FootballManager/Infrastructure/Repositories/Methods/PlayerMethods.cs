@@ -6,18 +6,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Contracts.Persistence;
 using Domain;
+using Domain.Entities.Enums;
 using Infrastructure.Repositories.TraitsDecorator;
 using Infrastructure.Static_Methods;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Methods
 {
+    public static class RandomExtensions
+    {
+        public static T NextEnum<T>(this Random random)
+        {
+            var values = Enum.GetValues(typeof(T));
+            return (T)values.GetValue(random.Next(values.Length));
+        }
+    }
+
     public static class PlayerMethods
     {
 
         private readonly static Random rnd = new Random();
 
-        public static Player GetPlayer(ApplicationDbContext context)
+        public static async Task<Player> GetPlayer(ApplicationDbContext context, CancellationToken cancellationToken)
         {
             var list = context.Players.Where(player => player.FreeAgent == true).ToList();
 
@@ -28,29 +38,27 @@ namespace Infrastructure.Repositories.Methods
 
             var player_id = rnd.Next(ids.Count);
 
-            var player = context.Players
+            return await context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
                 .ThenInclude(player => player.Traits)
-                .Where(player => player.FreeAgent == true && player.Id == list[player_id].Id).FirstOrDefault();
-
-            return player;
+                .Where(player => player.FreeAgent == true && player.Id == list[player_id].Id).FirstOrDefaultAsync();
         }
 
-        public static Player SetAttributes(ApplicationDbContext context, IPlayerRepository playerRepository, Player player, bool randomAttributes)
+        public static async Task<Player> SetAttributes(ApplicationDbContext context, IPlayerRepository playerRepository, Player player, bool randomAttributes, CancellationToken cancellationToken)
         {
             player.FreeAgent = true;
             IPlayerTraits traits = new Basic();
 
             if (randomAttributes)
-                player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()));
-
-            player = SetMarketValue(context, player);
-
-            return player;
+            {
+                player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()), rnd.NextEnum<PlayerPosition>());
+                Console.WriteLine(rnd.NextEnum<PlayerPosition>());
+            }
+            return await SetMarketValue(context, player, cancellationToken);
         }
 
-        public static Player SetMarketValue(ApplicationDbContext context, Player player)
+        public static async Task<Player> SetMarketValue(ApplicationDbContext context, Player player, CancellationToken cancellationToken)
         {
             int potential = player.PlayerAttribute.Potential;
 
@@ -63,16 +71,18 @@ namespace Infrastructure.Repositories.Methods
             else
                 player.MarketValue = rnd.Next(1, 5) * 1_000_000;
 
-            return player;
+            return await Task.FromResult(player);
         }
 
-        public static void RemovePlayerById(ApplicationDbContext context, int id)
+        public static async Task<int> RemovePlayerById(ApplicationDbContext context, int id, CancellationToken cancellationToken)
         {
             Player player = context.Players.Where(p => p.Id == id).First();
 
             context.Players.Remove(player);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
+
+            return player.Id;
         }
     }
 }

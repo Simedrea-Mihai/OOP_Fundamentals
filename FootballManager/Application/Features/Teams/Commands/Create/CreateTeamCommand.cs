@@ -36,9 +36,9 @@ namespace Application.Teams.CreateTeam
             else
                 team.Budget = command.Budget;
 
-            await _repository.CreateAsync(team, cancellationToken);
+            await _repository.Create(team, cancellationToken);
 
-            return await Task.FromResult(team.Id);
+            return team.Id;
         }
     }
 

@@ -28,11 +28,11 @@ namespace Application.Features.Players.Commands.Create
             _repository = repository;
         }
 
-        public Task<int> Handle(RemoveLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(RemoveLeagueCommand command, CancellationToken cancellationToken)
         {
-            _repository.RemoveLeagueByIdAsync(command.LeagueId, cancellationToken);
+            await _repository.RemoveLeagueByIdAsync(command.LeagueId, cancellationToken);
 
-            return Task.FromResult(command.LeagueId);
+            return command.LeagueId;
         }
     }
 }

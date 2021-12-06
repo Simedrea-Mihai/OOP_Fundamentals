@@ -24,12 +24,12 @@ namespace Application.Features.Leagues.CreateLeague
 
         public CreateLeagueCommandHandler(ILeagueRepository repository) => _repository = repository;
 
-        public Task<int> Handle(CreateLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateLeagueCommand command, CancellationToken cancellationToken)
         {
             League league = new(command.Name);
-            _repository.Create(league);
+            await _repository.Create(league, cancellationToken);
 
-            return Task.FromResult(league.Id);
+            return league.Id;
         }
     }
 }

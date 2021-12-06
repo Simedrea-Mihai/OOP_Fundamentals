@@ -11,14 +11,12 @@ namespace Application.Contracts.Persistence
 {
     public interface ILeagueRepository
     {
-        League Create(League league);
-        Task<League> CreateAsync(League league, CancellationToken cancellationToken);
+        Task<League> Create(League league, CancellationToken cancellationToken);
 
-        IList<League> ListAll();
-        Task<IList<League>> ListAllAsync(CancellationToken cancellationToken);
+        Task<IList<League>> ListAll(CancellationToken cancellationToken);
+        Task<League> ListById(int id, CancellationToken cancellationToken);
 
-        League AddTeams(League league, IList<Team> TeamIds);
-        Task<League> AddTeamsAsync(League league, IList<Team> TeamIds, CancellationToken cancellationToken);
+        Task<League> AddTeams(League league, IList<Team> TeamIds, CancellationToken cancellationToken);
 
         Task<int> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken);
     }

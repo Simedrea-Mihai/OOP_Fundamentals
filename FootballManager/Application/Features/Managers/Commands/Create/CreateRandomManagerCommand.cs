@@ -24,15 +24,15 @@ namespace Application.Features.Managers.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public Task<int> Handle(CreateRandomManagerCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateRandomManagerCommand command, CancellationToken cancellationToken)
         {
-            string[] name = _profileRepository.GetName();
+            string[] name = await _profileRepository.GetName(cancellationToken);
             Manager manager = new(new(name[0], name[1], DateTime.Now));
 
-            _profileRepository.SetProfileManager(manager.Profile, randomProfile: true);
-            _repository.Create(manager);
+            await _profileRepository.SetProfileManager(manager.Profile, randomProfile: true, cancellationToken);
+            await _repository.Create(manager, cancellationToken);
 
-            return Task.FromResult(manager.Id);
+            return manager.Id;
         }
 
 

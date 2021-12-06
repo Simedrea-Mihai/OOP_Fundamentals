@@ -11,32 +11,14 @@ namespace Application.Contracts.Persistence
 {
     public interface ITeamRepository
     {
-
-        // -------------- ADD SECTION --------------
-        Team Create(Team team);
-        Task<Team> CreateAsync(Team team, CancellationToken cancellationToken);
-
-
-        IList<Team> ListAll();
-        Task<IList<Team>> ListAllAsync(CancellationToken cancellationToken);
-
-        Manager AddManager(Team team, Manager manager);
-        Task<Manager> AddManagerAsync(Team team, Manager manager, CancellationToken cancellationToken);
-
-
-        Player BuyPlayer(Team team, Player player, bool buy);
-        Task<Player> BuyPlayerAsync(Team team, Player player, bool buy, CancellationToken cancellationToken);
-
-
-        //void AddPlayers(Team team, int players_count);
-        IList<Player> AddPlayers(Team team, int players_count);
-        Task<IList<Player>> AddPlayersAsync(Team team, int players_count, CancellationToken cancellationToken);
-
-
-
-        // -------------- REMOVE SECTION --------------
+        Task<Team> Create(Team team, CancellationToken cancellationToken);
+        Task<IList<Team>> ListAll(CancellationToken cancellationToken);
+        Task<Team> ListById(int id, CancellationToken cancellationToken);
+        Task<Manager> AddManager(Team team, Manager manager, CancellationToken cancellationToken);
+        Task<Player> BuyPlayer(Team team, Player player, bool buy, CancellationToken cancellationToken);
+        Task<IList<Player>> AddPlayers(Team team, int players_count, CancellationToken cancellationToken);
         Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken);
-        Task<int> FirePlayerAsync(int TeamId, int PlayerId, CancellationToken cancellationToken);
+        Task<int> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken);
         Task<int> RemoveTeamByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

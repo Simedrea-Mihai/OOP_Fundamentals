@@ -2,17 +2,21 @@ using Application;
 using Application.Contracts;
 using Domain;
 using Infrastructure;
+using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Presentation.Services;
 using System;
 using System.Collections.Generic;
@@ -40,11 +44,23 @@ namespace Presentation
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+            ).AddNewtonsoftJson(o => o.SerializerSettings.Converters.Add(new StringEnumConverter())); 
 
             services.AddControllers();
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.Configure<IdentityOptions>(opts =>
+            {
+                opts.User.RequireUniqueEmail = true;
+                opts.Password.RequiredLength = 8;
+
+                opts.SignIn.RequireConfirmedEmail = true;
+            });
+
+
             AddSwagger(services);
         }
 

@@ -33,7 +33,7 @@ namespace Application.Features.Players.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public Task<int> Handle(CreatePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreatePlayerCommand command, CancellationToken cancellationToken)
         {
 
             Profile profile = new Profile();
@@ -56,11 +56,11 @@ namespace Application.Features.Players.Commands.Create
                 throw new Exception("Invalid values ( Potential or OVR > 99 OR < 1 )");
 
 
-            _profileRepository.SetProfilePlayer(player.Profile, randomProfile: false);
-            _repository.SetAttributes(player, randomAttributes: false);
-            _repository.Create(player);
+            await _profileRepository.SetProfilePlayer(player.Profile, randomProfile: false, cancellationToken);
+            await _repository.SetAttributes(player, randomAttributes: false, cancellationToken);
+            await _repository.Create(player, cancellationToken);
 
-            return Task.FromResult(player.Id);
+            return player.Id;
         }
     }
 }

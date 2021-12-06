@@ -11,39 +11,17 @@ namespace Application.Contracts.Persistence
 {
     public interface IPlayerRepository
     {
-        Player Create(Player player);
-        Task<Player> CreateAsync(Player player, CancellationToken cancellationToken);
-
-
-        Player SetAttributes(Player player, bool randomAttributes);
-        Task<Player> SetAttributesAsync(Player player, bool randomAttributes, CancellationToken cancellationToken);
-
-
-        Player SetMarketValue(Player player);
-        Task<Player> SetMarketValueAsync(Player player, CancellationToken cancellationToken);
-
-
-        Task<IList<Player>> ListAll();
-
-
-        IList<Player> ListFreePlayers();
-        Task<IList<Player>> ListFreePlayersAsync(CancellationToken cancellationToken);
-
-
-        IList<Player> ListTakenPlayers();
-        Task<IList<Player>> ListTakenPlayersAsync(CancellationToken cancellationToken);
-
-        IList<Player> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken);
-        IList<Player> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken);
-
-
-        Player GetPlayer();
-        Task<Player> GetPlayerAsync(CancellationToken cancellationToken);
-
-
+        Task<Player> Create(Player player, CancellationToken cancellationToken);
+        Task<Player> SetAttributes(Player player, bool randomAttributes, CancellationToken cancellationToken);
+        Task<Player> SetMarketValue(Player player, CancellationToken cancellationToken);
+        Task<IList<Player>> ListAll(CancellationToken cancellationToken);
+        Task<Player> ListById(int id, CancellationToken cancellationToken);
+        Task<IList<Player>> ListFreePlayers(CancellationToken cancellationToken);
+        Task<IList<Player>> ListTakenPlayers(CancellationToken cancellationToken);
+        Task<IList<Player>> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken);
+        Task<IList<Player>> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken);
+        Task<Player> GetPlayer(CancellationToken cancellationToken);
         bool Taken(Player player);
-        Task<bool> TakenAsync(Player player, CancellationToken cancellationToken);
-
         Task<int> RemovePlayerByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

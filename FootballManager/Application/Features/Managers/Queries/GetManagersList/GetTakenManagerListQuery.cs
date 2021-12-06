@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using AutoMapper;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Managers.Queries.GetManagersList
 {
-    public class GetTakenManagerListQuery : IRequest<IList<ManagerListVm>>
+    public class GetTakenManagerListQuery : IRequest<IList<Manager>>
     {
 
     }
 
-    public class GetTakenManagerListQueryHandler : IRequestHandler<GetTakenManagerListQuery, IList<ManagerListVm>>
+    public class GetTakenManagerListQueryHandler : IRequestHandler<GetTakenManagerListQuery, IList<Manager>>
     {
         private readonly IManagerRepository _repository;
         private readonly IMapper _mapper;
@@ -26,11 +27,11 @@ namespace Application.Features.Managers.Queries.GetManagersList
             _mapper = mapper;
         }
 
-        public Task<IList<ManagerListVm>> Handle(GetTakenManagerListQuery request, CancellationToken cancellationToken)
+        public async Task<IList<Manager>> Handle(GetTakenManagerListQuery request, CancellationToken cancellationToken)
         {
-            var managers = _repository.ListTakenManagers();
+            var managers = await _repository.ListTakenManagers(cancellationToken);
 
-            return Task.FromResult(_mapper.Map<IList<ManagerListVm>>(managers));
+            return _mapper.Map<IList<Manager>>(managers);
         }
 
     }

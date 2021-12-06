@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Application.Features.Managers.Commands.Create;
 using Application.Features.Teams.Commands.AddManager;
 using Application.Contracts.Persistence;
@@ -18,6 +17,9 @@ using Application.Features.Managers.Commands.CreateMultiple;
 using System.Threading;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Players.Commands.Create;
+using Presentation.DTOs;
+using AutoMapper;
+using Application.Features.Players.Queries.GetPlayersList;
 
 namespace Presentation.Controllers
 {
@@ -26,25 +28,60 @@ namespace Presentation.Controllers
     public class ManagerController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ManagerController(IMediator mediator) => _mediator = mediator;
+        public ManagerController(IMediator mediator, IMapper mapper)
+        {
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+
+        [HttpGet("Manager/{Id}")]
+        public async Task<IActionResult> ListById(int Id, CancellationToken cancellationToken)
+        {
+            GetManagerById command = new GetManagerById(Id);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(_mapper.Map<ManagerGetDto>(result));
+        }
 
         [HttpGet("Manager")]
-        public async Task<IList<ManagerListVm>> ListAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetManagerListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetManagerListQuery(), cancellationToken);
+
+            var list = new List<ManagerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<ManagerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpGet("Available-Manager")]
-        public async Task<IList<ManagerListVm>> ListAllFreeManagersAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllFreeManagersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetFreeManagerListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetFreeManagerListQuery(), cancellationToken);
+
+            var list = new List<ManagerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<ManagerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpGet("Unavailable-Manager")]
-        public async Task<IList<ManagerListVm>> ListAllTakenManagersAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllTakenManagersAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetTakenManagerListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetTakenManagerListQuery(), cancellationToken);
+
+            var list = new List<ManagerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<ManagerGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpPost("Manager")]

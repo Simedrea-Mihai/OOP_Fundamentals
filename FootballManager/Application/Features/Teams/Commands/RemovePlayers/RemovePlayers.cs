@@ -29,7 +29,7 @@ namespace Application.Teams.AddPlayers
 
             await _repository.RemovePlayers(team, cancellationToken);
 
-            return await Task.FromResult(command.TeamId);
+            return command.TeamId;
         }
     }
 }

@@ -27,9 +27,8 @@ namespace Application.Features.Teams.Commands.AddManager
 
         public async Task<int> Handle(FirePlayerCommand command, CancellationToken cancellationToken)
         {
-
-            await _teamRepository.FirePlayerAsync(command.TeamId, command.PlayerId, cancellationToken);
-            return await Task.FromResult(command.TeamId);
+            await _teamRepository.FirePlayer(command.TeamId, command.PlayerId, cancellationToken);
+            return command.TeamId;
         }
 
     }

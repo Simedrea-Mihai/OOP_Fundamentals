@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using AutoMapper;
+using Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Players.Queries.GetPlayersList
 {
-    public class GetPlayersByAgeQuery : IRequest<IList<PlayerListVm>>
+    public class GetPlayersByAgeQuery : IRequest<IList<Player>>
     {
         public bool Ascending { get; set; }
         [Required]
         public int Count { get; set; }
     }
 
-    public class GetPlayersByAgeQueryHandler : IRequestHandler<GetPlayersByAgeQuery, IList<PlayerListVm>>
+    public class GetPlayersByAgeQueryHandler : IRequestHandler<GetPlayersByAgeQuery, IList<Player>>
     {
         private readonly IPlayerRepository _repository;
         private readonly IMapper _mapper;
@@ -29,11 +30,11 @@ namespace Application.Features.Players.Queries.GetPlayersList
             _mapper = mapper;
         }
 
-        public Task<IList<PlayerListVm>> Handle(GetPlayersByAgeQuery command, CancellationToken cancellationToken)
+        public async Task<IList<Player>> Handle(GetPlayersByAgeQuery command, CancellationToken cancellationToken)
         {
-            var players = _repository.GetPlayersByAge(command.Ascending, command.Count, cancellationToken);
+            var players = await _repository.GetPlayersByAge(command.Ascending, command.Count, cancellationToken);
 
-            return Task.FromResult(_mapper.Map<IList<PlayerListVm>>(players));
+            return _mapper.Map<IList<Player>>(players);
         }
     }
 }

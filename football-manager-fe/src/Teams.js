@@ -1,6 +1,7 @@
 ﻿import React, { Component, useEffect, useState } from "react";
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 import {
     Chart as ChartJS,
@@ -28,6 +29,8 @@ ChartJS.register(
 
 function Teams() {
 
+    const [teamName, setTeamName] = useState(null);
+    const [teamBudget, setTeamBudget] = useState(null);
 
     const url = '/api/team/Team';
     const [team, setTeam] = useState(null);
@@ -46,10 +49,9 @@ function Teams() {
     }, [url])
 
     const postdata = () => {
-
         axios.post(url, {
-            "name": "testteam",
-            "budget": 123456789
+            "name": teamName,
+            "budget": teamBudget
         })
             .then((response) => {
                 console.log(response);
@@ -57,9 +59,23 @@ function Teams() {
             }, (error) => {
                 console.log(error);
             });
-
-
     }
+
+    const handleNameChange = (e) => {
+        setTeamName(e.target.value);
+    };
+
+    const handleBudgetChange = (e) => {
+
+        if (e.target.value == null)
+            setTeamBudget(0);
+
+        e.target.value = e.target.value.replace(/\D/g, '');
+        console.log(e.target.value);
+
+        setTeamBudget(e.target.value);
+    };
+
 
     if (team) {
 
@@ -88,8 +104,29 @@ function Teams() {
         return (
             
             <div className="App">
+                <br/>
+                <div className = "FormDiv"> 
+                    <Form>
+                        <Form.Group className="mb-3" controlId="formTeamName" onChange={handleNameChange}>
+                    <Form.Label>Name</Form.Label>
+                        <Form.Control type="Name" placeholder="Team's name" />
+                        <Form.Text className="text-muted">
+                        </Form.Text>
+                    </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formTeamBudget" onChange={ handleBudgetChange}>
+                   <Form.Label>Budget</Form.Label>
+                   <Form.Control type="Budget" placeholder="Team's budget" />
+                    </Form.Group>
+                        <Form.Group className="mb-3" controlId="formButton">
+                            <Button variant="outline-primary" onClick={() => postdata()}> Add data </Button>
+                    </Form.Group>
+
+                    </Form>
+                </div>
+                <br/>
+
                 <Line data={data} options={options} /> 
-                <Button variant="outline-primary" onClick={() => postdata()}> Add data </Button>
                 <h1> <br/> Teams data </h1>
                 <h1> {team.name} </h1>
                 <table className='table table-stripped'>

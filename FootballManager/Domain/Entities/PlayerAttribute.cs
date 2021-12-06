@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,15 +18,17 @@ namespace Domain
 
         public int OVR { get; set; }
         public int Potential { get; set; }
+        public PlayerPosition Position { get; set; }
 
         public Traits Traits { get; set; }
         public PlayerAttribute() { }
 
-        public PlayerAttribute(int ovr, int potential, Traits traits)
+        public PlayerAttribute(int ovr, int potential, Traits traits, PlayerPosition position)
         {
             OVR = ovr;
             Potential = potential;
             Traits = traits;
+            Position = position;
         }
 
     }

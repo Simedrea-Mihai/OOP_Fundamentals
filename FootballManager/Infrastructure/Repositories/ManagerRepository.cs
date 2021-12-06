@@ -20,59 +20,41 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        // CREATE 
-
-        public Manager Create(Manager manager)
+        public async Task<Manager> Create(Manager manager, CancellationToken cancellationToken)
         {
             _context.Managers.Add(manager);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return manager;
         }
 
-
-        // LIST ALL
-        public IList<Manager> ListAll()
+        public async Task<IList<Manager>> ListAll(CancellationToken cancellationToken)
         {
-            return _context.Managers.Include(manger => manger.Profile).ToList();
+            return await _context.Managers.Include(manger => manger.Profile).ToListAsync();
         }
 
-        // LIST ALL ASYNC
-        public async Task<IList<Manager>> ListAllAsync(CancellationToken cancellationToken)
+        public async Task<Manager> ListById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Managers.Include(manager => manager.Profile).ToListAsync().ConfigureAwait(false);
-        }
-
-
-        // LIST FREE MANAGERS
-        public IList<Manager> ListFreeManagers()
-        {
-            return _context.Managers.Where(manager => manager.FreeAgent == true).Include(manager => manager.Profile).ToList();
-        }
-
-        // LIST FREE MANAGERS ASYNC
-        public async Task<IList<Manager>> ListFreeManagersAsync(CancellationToken cancellationToken)
-        {
-            return await _context.Managers.Where(manager => manager.FreeAgent == true).Include(manager => manager.Profile).ToListAsync().ConfigureAwait(false);
+            return await _context.Managers
+                .Include(manager => manager.Profile)
+                .Where(p => p.Id == id).FirstAsync();
         }
 
 
-        // LIST TAKEN MANAGERS
-        public IList<Manager> ListTakenManagers()
+        public async Task<IList<Manager>> ListFreeManagers(CancellationToken cancellationToken)
         {
-            return _context.Managers.Where(manager => manager.FreeAgent == false).Include(manager => manager.Profile).ToList();
+            return await _context.Managers.Where(manager => manager.FreeAgent == true).Include(manager => manager.Profile).ToListAsync();
         }
 
-        // LIST TAKEN MANAGERS ASYNC
-        public async Task<IList<Manager>> ListTakenManagersAsync(CancellationToken cancellationToken)
+
+        public async Task<IList<Manager>> ListTakenManagers(CancellationToken cancellationToken)
         {
-            return await _context.Managers.Where(manager => manager.FreeAgent == false).Include(manager => manager.Profile).ToListAsync().ConfigureAwait(false);
+            return await _context.Managers.Where(manager => manager.FreeAgent == false).Include(manager => manager.Profile).ToListAsync();
         }
 
-        // REMOVE MANAGER BY ID
         public async Task<int> RemoveManagerByIdAsync(int id, CancellationToken cancellationToken)
         {
-            ManagerMethods.RemoveManagerById(_context, id);
-            return await Task.FromResult(id).ConfigureAwait(false);
+            int managerId = await ManagerMethods.RemoveManagerById(_context, id, cancellationToken);
+            return managerId;
         }
     }
 }

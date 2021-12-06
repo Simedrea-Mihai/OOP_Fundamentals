@@ -29,7 +29,7 @@ namespace Application.Features.Players.Queries.GetPlayersList
 
         public async Task<IList<Player>> Handle(GetPlayerListQuery request, CancellationToken cancellationToken)
         {
-            var players = await _repository.ListAll();
+            var players = await _repository.ListAll(cancellationToken);
 
             return players;
         }

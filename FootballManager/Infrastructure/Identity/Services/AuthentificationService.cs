@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Domain;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Infrastructure.Identity.Services
 {
@@ -57,11 +58,14 @@ namespace Infrastructure.Identity.Services
             return response;
         }
 
+        public string EmailConfirmationUrl { get; set; }
+
         public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
         {
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
             if (existingUser != null) throw new Exception($"Username '{request.UserName}' already exists.");
+
 
             var user = new ApplicationUser
             {
@@ -70,7 +74,7 @@ namespace Infrastructure.Identity.Services
                 LastName = request.LastName,
                 UserName = request.UserName,
                 BirthDate = request.BirthDate,
-                EmailConfirmed = true
+                EmailConfirmed = false
             };
 
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -81,8 +85,6 @@ namespace Infrastructure.Identity.Services
 
                 if (result.Succeeded)
                 {
-                    Console.WriteLine("success");
-                    _managerRepository.Create(new Manager(new Profile(user.FirstName, user.LastName, user.BirthDate)));
                     return new RegistrationResponse { UserId = user.Id };
                 }
 

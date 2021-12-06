@@ -38,7 +38,7 @@ namespace Application.Features.Teams.Commands.AddManager
             Team.Id = command.TeamId;
             Manager.Id = command.ManagerId;
 
-            await _teamRepository.AddManagerAsync(Team, Manager, cancellationToken);
+            await _teamRepository.AddManager(Team, Manager, cancellationToken);
 
             return Team.Id;
         }

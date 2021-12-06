@@ -31,7 +31,7 @@ namespace Application.Features.Leagues.AddTeams
             _repository = repository;
         }
 
-        public Task<int> Handle(AddTeams command, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddTeams command, CancellationToken cancellationToken)
         {
 
             League.Id = command.LeagueId;
@@ -44,9 +44,9 @@ namespace Application.Features.Leagues.AddTeams
 
             League.Teams = Teams;
 
-            var league = _repository.AddTeamsAsync(League, Teams, cancellationToken);
+            var league = await _repository.AddTeams(League, Teams, cancellationToken);
 
-            return Task.FromResult(league.Id);
+            return league.Id;
         }
     }
 }

@@ -3,28 +3,52 @@ using Application.Features.Teams.Commands.AddManager;
 using Application.Features.Teams.Queries.GetTeamList;
 using Application.Teams.AddPlayers;
 using Application.Teams.CreateTeam;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Features.Players.Queries.GetPlayersList;
 
 namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/team")]
-    public class TeamController
+    public class TeamController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public TeamController(IMediator mediator) => _mediator = mediator;
+        private readonly IMapper _mapper;
+        public TeamController(IMediator mediator, IMapper mapper)
+        {
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        [HttpGet("Team/{Id}")]
+        public async Task<IActionResult> ListById(int Id, CancellationToken cancellationToken)
+        {
+            GetTeamById command = new GetTeamById(Id);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(_mapper.Map<TeamGetDto>(result));
+        }
+
 
         [HttpGet("Team")]
-        public async Task<IList<TeamListVm>> ListAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListAllAsync(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new GetTeamsListQuery(), cancellationToken);
+            var created = await _mediator.Send(new GetTeamsListQuery(), cancellationToken);
+
+            var list = new List<TeamGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<TeamGetDto>(c));
+
+            return Ok(list);
         }
 
         [HttpPost("Team")]

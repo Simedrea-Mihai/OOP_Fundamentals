@@ -36,22 +36,14 @@ namespace Application.Features.Managers.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public Task<int> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
         {
             Profile profile = new Profile(command.FirstName, command.LastName, command.BirthDate);
             Manager manager = new Manager(profile);
-            /*
-            manager.Profile.BirthDate = command.BirthDate;
-            manager.TeamIdManager = command.TeamIdManager;
-            manager.Profile.Age = DateTime.Now.Year - manager.Profile.BirthDate.Year;
-            manager.FreeAgent = true;
 
-            if (manager.Profile.Age < 30)
-                throw new Exception("Age must be more than 30");*/
-
-            _profileRepository.SetProfileManager(manager.Profile, randomProfile: false);
-            _repository.Create(manager);
-            return Task.FromResult(manager.Id);
+            await _profileRepository.SetProfileManager(manager.Profile, randomProfile: false, cancellationToken);
+            await _repository.Create(manager, cancellationToken);
+            return manager.Id;
             
             
         }

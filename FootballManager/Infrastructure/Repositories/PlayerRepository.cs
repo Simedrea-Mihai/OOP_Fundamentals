@@ -24,172 +24,118 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Player Create(Player player)
+        public async Task<Player> Create(Player player, CancellationToken cancellationToken)
         {
             _context.Players.Add(player);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return player;
         }
 
 
-        public async Task<Player> CreateAsync(Player player, CancellationToken cancellationToken)
-        {
-
-            _context.Players.Add(player);
-            _context.SaveChanges();
-
-            return await Task.FromResult(player);
-        }
 
         // LIST
-        public async Task<IList<Player>> ListAll()
+        public async Task<IList<Player>> ListAll(CancellationToken cancellationToken)
         { 
 
             return await _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits).ToListAsync();
+                .Include(player => player.PlayerAttribute.Traits).ToListAsync(cancellationToken);
         }
 
-        // LIST ASYNC
-        public async Task<IList<Player>> ListAllAsync(CancellationToken cancellationToken)
+        // LIST BY ID
+        public async Task<Player> ListById(int id, CancellationToken cancellationToken)
         {
             return await _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
                 .Include(player => player.PlayerAttribute.Traits)
-                .ToListAsync(cancellationToken).ConfigureAwait(false);
+                .Where(p => p.Id == id).FirstAsync();
         }
 
         // LIST FREE PLAYERS
-        public IList<Player> ListFreePlayers()
-        {
-            return _context.Players
-                .Include(player => player.Profile)
-                .Where(player => player.FreeAgent == true)
-                .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits).ToList();
-        }
-
-        // LIST FREE PLAYERS ASYNC
-        public async Task<IList<Player>> ListFreePlayersAsync(CancellationToken cancellationToken)
+        public async Task<IList<Player>> ListFreePlayers(CancellationToken cancellationToken)
         {
             return await _context.Players
                 .Include(player => player.Profile)
                 .Where(player => player.FreeAgent == true)
                 .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits)
-                .ToListAsync().ConfigureAwait(false);
+                .Include(player => player.PlayerAttribute.Traits).ToListAsync(cancellationToken);
         }
+
 
 
         // LIST TAKEN PLAYERS
-        public IList<Player> ListTakenPlayers()
-        {
-            return _context.Players
-                .Include(player => player.Profile)
-                .Where(player => player.FreeAgent == false)
-                .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits).ToList();
-        }
-
-        // LIST TAKEN PLAYERS ASYNC
-
-        public async Task<IList<Player>> ListTakenPlayersAsync(CancellationToken cancellationToken)
+        public async Task<IList<Player>> ListTakenPlayers(CancellationToken cancellationToken)
         {
             return await _context.Players
                 .Include(player => player.Profile)
                 .Where(player => player.FreeAgent == false)
                 .Include(player => player.PlayerAttribute)
-                .Include(player => player.PlayerAttribute.Traits)
-                .ToListAsync().ConfigureAwait(false);
+                .Include(player => player.PlayerAttribute.Traits).ToListAsync(cancellationToken);
         }
 
         // GET ALL PLAYERS BY OVR
 
-        public IList<Player> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken)
+        public async Task<IList<Player>> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken)
         {
-            List<Player> players = new List<Player>();
-
             if(ascending)
-                players = _context.Players
+                return await _context.Players
                     .Include(player => player.Profile)
                     .Include(player => player.PlayerAttribute)
                     .Include(player => player.PlayerAttribute.Traits)
                     .OrderBy(x => x.PlayerAttribute.OVR)
                     .Take(count)
-                    .ToList();
+                    .ToListAsync(cancellationToken);
 
             else
-                players = _context.Players
+                 return await _context.Players
                     .Include(player => player.Profile)
                     .Include(player => player.PlayerAttribute)
                     .Include(player => player.PlayerAttribute.Traits)
                     .OrderByDescending(x => x.PlayerAttribute.OVR)
                     .Take(count)
-                    .ToList();
-
-
-            return players;
+                    .ToListAsync(cancellationToken);
         }
 
         // GET ALL PLAYERS BY AGE
-        public IList<Player> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken)
+        public async Task<IList<Player>> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken)
         {
-            List<Player> players = new List<Player>();
 
             if (ascending)
-                players = _context.Players
+                return await _context.Players
                     .Include(player => player.Profile)
                     .Include(player => player.PlayerAttribute)
                     .Include(player => player.PlayerAttribute.Traits)
                     .OrderBy(x => x.Profile.Age)
                     .Take(count)
-                    .ToList();
+                    .ToListAsync(cancellationToken);
 
             else
-                players = _context.Players
+                return await _context.Players
                     .Include(player => player.Profile)
                     .Include(player => player.PlayerAttribute)
                     .Include(player => player.PlayerAttribute.Traits)
                     .OrderByDescending(x => x.Profile.Age)
                     .Take(count)
-                    .ToList();
-
-
-            return players;
+                    .ToListAsync(cancellationToken);
         }
 
 
         // GET PLAYER
-        public Player GetPlayer()
+        public async Task<Player> GetPlayer(CancellationToken cancellationToken)
         {
-            Player player = PlayerMethods.GetPlayer(_context);
+            Player player = await PlayerMethods.GetPlayer(_context, cancellationToken);
             return player;
         }
 
 
-        // GET PLAYER ASYNC
-        public async Task<Player> GetPlayerAsync(CancellationToken cancellationToken)
-        {
-            Player player = PlayerMethods.GetPlayer(_context);
-            return await Task.FromResult(player).ConfigureAwait(false);
-        }
-
-
         // SET ATTRIBUTES
-        public Player SetAttributes(Player player, bool randomAttributes)
+        public async Task<Player> SetAttributes(Player player, bool randomAttributes, CancellationToken cancellationToken)
         {
-            Player playerInstance = PlayerMethods.SetAttributes(_context, _playerRepository, player, randomAttributes);
+            Player playerInstance = await PlayerMethods.SetAttributes(_context, _playerRepository, player, randomAttributes, cancellationToken);
             return playerInstance;
-        }
-
-        // SET ATTRIBUTES ASYNC
-        public async Task<Player> SetAttributesAsync(Player player, bool randomAttributes, CancellationToken cancellationToken)
-        {
-            Player playerInstance = PlayerMethods.SetAttributes(_context, _playerRepository, player, randomAttributes);
-            return await Task.FromResult(playerInstance).ConfigureAwait(false);
         }
 
 
@@ -203,37 +149,21 @@ namespace Infrastructure.Repositories
 
         }
 
-        // TAKEN ASYNC
-        public async Task<bool> TakenAsync(Player player, CancellationToken cancellationToken)
-        {
-            if (player.FreeAgent == false)
-                return await Task.FromResult(true).ConfigureAwait(false);
-            else
-                return await Task.FromResult(false).ConfigureAwait(false);
-        }
-
 
         // SET MARKET VALUE 
-        public Player SetMarketValue(Player player)
+        public async Task<Player> SetMarketValue(Player player, CancellationToken cancellationToken)
         {
-            Player playerInstance = PlayerMethods.SetMarketValue(_context, player);
+            Player playerInstance = await PlayerMethods.SetMarketValue(_context, player, cancellationToken);
             return playerInstance;
 
         }
 
-        // SET MARKET VALUE ASYNC
-
-        public async Task<Player> SetMarketValueAsync(Player player, CancellationToken cancellationToken)
-        {
-            Player playerInstance = PlayerMethods.SetMarketValue(_context, player);
-            return await Task.FromResult(playerInstance).ConfigureAwait(false);
-        }
 
         // REMOVE PLAYER BY ID
         public async Task<int> RemovePlayerByIdAsync(int id, CancellationToken cancellationToken)
         {
-            PlayerMethods.RemovePlayerById(_context, id);
-            return await Task.FromResult(id).ConfigureAwait(false);
+            int playerId = await PlayerMethods.RemovePlayerById(_context, id, cancellationToken);
+            return playerId;
         }
     }
 }

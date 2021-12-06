@@ -45,9 +45,9 @@ namespace Application.Features.Teams.Commands.AddManager
             Team.Players.Add(Player);
 
 
-            await _teamRepository.BuyPlayerAsync(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
+            await _teamRepository.BuyPlayer(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
 
-            return await Task.FromResult(Team.Players.Where(player => player.Id == command.PlayerId).First().Id);
+            return Team.Players.Where(player => player.Id == command.PlayerId).First().Id;
         }
 
     }

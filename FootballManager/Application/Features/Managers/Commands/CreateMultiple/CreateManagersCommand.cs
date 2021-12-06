@@ -36,16 +36,16 @@ namespace Application.Features.Managers.Commands.CreateMultiple
 
             for (int i = 0; i< command.Count; i++)
             {
-                name = _profileRepository.GetName();
+                name = await _profileRepository.GetName(cancellationToken);
                 Manager manager = new Manager(new Profile(name[0], name[1], DateTime.Now));
 
-                _profileRepository.SetProfileManager(manager.Profile, randomProfile: true);
-                _repository.Create(manager);
+                await _profileRepository.SetProfileManager(manager.Profile, randomProfile: true, cancellationToken);
+                await _repository.Create(manager, cancellationToken);
 
                 ids.Add(manager.Id);
             }
 
-            return await Task.FromResult(ids);
+            return ids;
         }
     }
 }
