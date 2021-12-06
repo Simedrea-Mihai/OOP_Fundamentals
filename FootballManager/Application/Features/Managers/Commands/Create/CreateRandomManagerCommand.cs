@@ -11,9 +11,9 @@ using MediatR;
 
 namespace Application.Features.Managers.Commands.Create
 {
-    public class CreateRandomManagerCommand : IRequest<int> { }
+    public class CreateRandomManagerCommand : IRequest<Manager> { }
 
-    public class CreateRandomManagerCommandHandler : IRequestHandler<CreateRandomManagerCommand, int>
+    public class CreateRandomManagerCommandHandler : IRequestHandler<CreateRandomManagerCommand, Manager>
     {
         private readonly IManagerRepository _repository;
         private readonly IProfileRepository _profileRepository;
@@ -24,15 +24,15 @@ namespace Application.Features.Managers.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public async Task<int> Handle(CreateRandomManagerCommand command, CancellationToken cancellationToken)
+        public async Task<Manager> Handle(CreateRandomManagerCommand command, CancellationToken cancellationToken)
         {
             string[] name = await _profileRepository.GetName(cancellationToken);
             Manager manager = new(new(name[0], name[1], DateTime.Now));
 
             await _profileRepository.SetProfileManager(manager.Profile, randomProfile: true, cancellationToken);
-            await _repository.Create(manager, cancellationToken);
+            var createdManager = await _repository.Create(manager, cancellationToken);
 
-            return manager.Id;
+            return createdManager;
         }
 
 

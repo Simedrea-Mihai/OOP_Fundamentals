@@ -85,15 +85,19 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Manager")]
-        public async Task<int> CreateAsyncManager([FromQuery] CreateManagerCommand command)
+        public async Task<IActionResult> CreateAsyncManager([FromQuery] CreateManagerCommand command)
         {
-            return await _mediator.Send(command);
+            var created = await _mediator.Send(command);
+            var result = _mapper.Map<ManagerGetDto>(created);
+            return Ok(result);
         }
 
         [HttpPost("Random-Manager")]
-        public async Task<int> CreateAsyncRandomManager([FromQuery] CreateRandomManagerCommand command)
+        public async Task<IActionResult> CreateAsyncRandomManager([FromQuery] CreateRandomManagerCommand command)
         {
-            return await _mediator.Send(command);
+            var created = await _mediator.Send(command);
+            var result = _mapper.Map<ManagerGetDto>(created);
+            return Ok(result);
         }
 
         [HttpPost("Managers")]

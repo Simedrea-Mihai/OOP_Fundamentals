@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Teams.Commands.AddManager
 {
-    public class AddManager : IRequest<int>
+    public class AddManager : IRequest<Manager>
     {
         [Required]
         public int TeamId { get; set; }
@@ -19,7 +19,7 @@ namespace Application.Features.Teams.Commands.AddManager
         public int ManagerId { get; set; }
     }
 
-    public class AddManagerHandler : IRequestHandler<AddManager, int>
+    public class AddManagerHandler : IRequestHandler<AddManager, Manager>
     {
         public readonly IManagerRepository _repository;
         public readonly ITeamRepository _teamRepository;
@@ -33,14 +33,14 @@ namespace Application.Features.Teams.Commands.AddManager
         }
 
 
-        public async Task<int> Handle(AddManager command, CancellationToken cancellationToken)
+        public async Task<Manager> Handle(AddManager command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
             Manager.Id = command.ManagerId;
 
-            await _teamRepository.AddManager(Team, Manager, cancellationToken);
+            Manager manager = await _teamRepository.AddManager(Team, Manager, cancellationToken);
 
-            return Team.Id;
+            return manager;
         }
 
     }

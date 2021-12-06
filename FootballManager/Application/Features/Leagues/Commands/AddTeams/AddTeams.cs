@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Application.Features.Leagues.AddTeams
 {
-    public class AddTeams : IRequest<int>
+    public class AddTeams : IRequest<IList<int>>
     {
         [Required]
         public int LeagueId { get; set; }
@@ -20,7 +20,7 @@ namespace Application.Features.Leagues.AddTeams
         public List<int> Teams { get; set; }
     }
 
-    public class AddTeamsHandler : IRequestHandler<AddTeams, int>
+    public class AddTeamsHandler : IRequestHandler<AddTeams, IList<int>>
     {
         private readonly ILeagueRepository _repository;
         private League League = new League("default");
@@ -31,7 +31,7 @@ namespace Application.Features.Leagues.AddTeams
             _repository = repository;
         }
 
-        public async Task<int> Handle(AddTeams command, CancellationToken cancellationToken)
+        public async Task<IList<int>> Handle(AddTeams command, CancellationToken cancellationToken)
         {
 
             League.Id = command.LeagueId;
@@ -44,9 +44,9 @@ namespace Application.Features.Leagues.AddTeams
 
             League.Teams = Teams;
 
-            var league = await _repository.AddTeams(League, Teams, cancellationToken);
+            var ids = await _repository.AddTeams(League, Teams, cancellationToken);
 
-            return league.Id;
+            return ids;
         }
     }
 }

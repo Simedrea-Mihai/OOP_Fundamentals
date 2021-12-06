@@ -52,33 +52,42 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Team")]
-        public async Task<int> CreateAsync([FromBody] CreateTeamCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTeamCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<TeamGetDto>(created);
+            return Ok(result);
         }
 
         [HttpPatch("Add-Manager")]
-        public async Task<int> AddManagerAsync([FromQuery] AddManager command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddManagerAsync([FromQuery] AddManager command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<ManagerGetDto>(created);
+            return Ok(result);
         }
         
         [HttpPatch("Add-Players")]
-        public async Task<int> AddPlayersAsync([FromQuery] AddPlayers command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddPlayersAsync([FromQuery] AddPlayers command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
         }
 
         [HttpPatch("Buy-Player")]
-        public async Task<int> BuyPlayerAsync([FromQuery] BuyPlayer command, CancellationToken cancellationToken)
+        public async Task<IActionResult> BuyPlayerAsync([FromQuery] BuyPlayer command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<PlayerGetDto>(created);
+            return Ok(result);
         }
 
         [HttpPatch("Fire-Player")]
-        public async Task<int> FirePlayerAsync([FromQuery] FirePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> FirePlayerAsync([FromQuery] FirePlayerCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<PlayerGetDto>(created);
+            return Ok(result);
         }
 
         /*

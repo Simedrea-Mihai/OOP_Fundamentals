@@ -20,10 +20,10 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<League> AddTeams(League league, IList<Team> TeamIds, CancellationToken cancellationToken)
+        public async Task<IList<int>> AddTeams(League league, IList<Team> TeamIds, CancellationToken cancellationToken)
         {
-            League leagueInstance = await LeagueMethods.AddTeams(_context, league, TeamIds, cancellationToken);
-            return leagueInstance;
+            var ids = await LeagueMethods.AddTeams(_context, league, TeamIds, cancellationToken);
+            return ids;
 
         }
 
@@ -66,10 +66,10 @@ namespace Infrastructure.Repositories
                 .ThenInclude(player => player.Traits).ToListAsync();
         }
 
-        public async Task<int> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<League> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken)
         {
-            int leagueId = await LeagueMethods.RemoveLeagueById(_context, id, cancellationToken);
-            return leagueId;
+            var createdLeague = await LeagueMethods.RemoveLeagueById(_context, id, cancellationToken);
+            return createdLeague;
         }
     }
 }

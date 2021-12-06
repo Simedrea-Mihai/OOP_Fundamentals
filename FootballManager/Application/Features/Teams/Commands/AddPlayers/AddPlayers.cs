@@ -12,7 +12,7 @@ using MediatR;
 
 namespace Application.Teams.AddPlayers
 {
-    public class AddPlayers : IRequest<int>
+    public class AddPlayers : IRequest<IList<int>>
     {
         [Required]
         public int TeamId { get; set; }
@@ -20,7 +20,7 @@ namespace Application.Teams.AddPlayers
         public int PlayersCount { get; set; }
     }
 
-    public class AddPlayersHandler : IRequestHandler<AddPlayers, int>
+    public class AddPlayersHandler : IRequestHandler<AddPlayers, IList<int>>
     {
         public readonly IPlayerRepository _PlayerRepository;
         public readonly IProfileRepository _ProfileRepository;
@@ -36,14 +36,19 @@ namespace Application.Teams.AddPlayers
             _teamRepository = teamRepository;
         }
 
-        public async Task<int> Handle(AddPlayers command, CancellationToken cancellationToken)
+        public async Task<IList<int>> Handle(AddPlayers command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
+            List<int> ids = new List<int>();
 
             for (int i = 0; i < command.PlayersCount; i++)
-                await _teamRepository.BuyPlayer(Team, await _PlayerRepository.GetPlayer(cancellationToken), buy: false, cancellationToken);
+            {
+                Player player = await _PlayerRepository.GetPlayer(cancellationToken);
+                await _teamRepository.BuyPlayer(Team, player, buy: false, cancellationToken);
+                ids.Add(player.Id);
+            }
 
-            return command.PlayersCount;
+            return ids;
         }
     }
 }

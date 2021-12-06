@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Players.Commands.Create
 {
-    public class RemoveLeagueCommand : IRequest<int>
+    public class RemoveLeagueCommand : IRequest<League>
     {
         [Required]
         public int LeagueId { get; set; }
 
     }
 
-    public class RemoveLeagueCommandHandler : IRequestHandler<RemoveLeagueCommand, int>
+    public class RemoveLeagueCommandHandler : IRequestHandler<RemoveLeagueCommand, League>
     {
         private readonly ILeagueRepository _repository;
 
@@ -28,11 +28,11 @@ namespace Application.Features.Players.Commands.Create
             _repository = repository;
         }
 
-        public async Task<int> Handle(RemoveLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<League> Handle(RemoveLeagueCommand command, CancellationToken cancellationToken)
         {
-            await _repository.RemoveLeagueByIdAsync(command.LeagueId, cancellationToken);
+            var league = await _repository.RemoveLeagueByIdAsync(command.LeagueId, cancellationToken);
 
-            return command.LeagueId;
+            return league;
         }
     }
 }

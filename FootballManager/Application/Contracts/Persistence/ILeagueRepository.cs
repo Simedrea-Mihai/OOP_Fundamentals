@@ -16,8 +16,8 @@ namespace Application.Contracts.Persistence
         Task<IList<League>> ListAll(CancellationToken cancellationToken);
         Task<League> ListById(int id, CancellationToken cancellationToken);
 
-        Task<League> AddTeams(League league, IList<Team> TeamIds, CancellationToken cancellationToken);
+        Task<IList<int>> AddTeams(League league, IList<Team> TeamIds, CancellationToken cancellationToken);
 
-        Task<int> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken);
+        Task<League> RemoveLeagueByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

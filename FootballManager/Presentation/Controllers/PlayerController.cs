@@ -80,6 +80,20 @@ namespace Presentation.Controllers
 
             return Ok(list);
         }
+
+        [HttpGet("Player-By-Position")]
+        public async Task<IActionResult> ListByPositionAsync([FromQuery] GetPlayersByPosition command, CancellationToken cancellationToken)
+        {
+            var created = await _mediator.Send(command, cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
+        }
+
         [HttpGet("Player-By-Ovr")]
         public async Task<IActionResult> ListByOvrAsync([FromQuery]GetPlayersByOvrQuery command, CancellationToken cancellationToken)
         {
@@ -107,9 +121,11 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Player")]
-        public async Task<int> CreateAsyncPlayer([FromQuery]CreatePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsyncPlayer([FromQuery]CreatePlayerCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<PlayerGetDto>(created);
+            return Ok(result);
         }
        
 

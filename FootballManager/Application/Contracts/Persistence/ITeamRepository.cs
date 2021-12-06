@@ -18,7 +18,7 @@ namespace Application.Contracts.Persistence
         Task<Player> BuyPlayer(Team team, Player player, bool buy, CancellationToken cancellationToken);
         Task<IList<Player>> AddPlayers(Team team, int players_count, CancellationToken cancellationToken);
         Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken);
-        Task<int> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken);
+        Task<Player> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken);
         Task<int> RemoveTeamByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

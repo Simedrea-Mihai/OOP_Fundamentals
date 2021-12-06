@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Domain;
+using Domain.Entities.Enums;
 
 namespace Application.Contracts.Persistence
 {
@@ -15,6 +16,7 @@ namespace Application.Contracts.Persistence
         Task<Player> SetAttributes(Player player, bool randomAttributes, CancellationToken cancellationToken);
         Task<Player> SetMarketValue(Player player, CancellationToken cancellationToken);
         Task<IList<Player>> ListAll(CancellationToken cancellationToken);
+        Task<IList<Player>> ListByPosition(PlayerPosition position, CancellationToken cancellationToken);
         Task<Player> ListById(int id, CancellationToken cancellationToken);
         Task<IList<Player>> ListFreePlayers(CancellationToken cancellationToken);
         Task<IList<Player>> ListTakenPlayers(CancellationToken cancellationToken);

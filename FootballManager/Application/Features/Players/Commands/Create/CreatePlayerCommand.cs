@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
 using Domain.Entities.CommandEntities;
+using Domain.Entities.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,24 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Players.Commands.Create
 {
-    public class CreatePlayerCommand : IRequest<int>
+    public class CreatePlayerCommand : IRequest<Player>
     {
         [Required]
-        public CProfile Profile { get; set; }
+        public string FirstName { get; set; }
         [Required]
-
-        public CPlayerAttribute PlayerAttribute { get; set; }
+        public string LastName { get; set; }
+        [Required]
+        public DateTime BirthDate { get; set; }
+        [Required]
+        public int OVR { get; set; }
+        [Required]
+        public int Potential { get; set; }
+        [Required]
+        public PlayerPosition Position { get; set; }
 
     }
 
-    public class CreatePlayerCommandHandler : IRequestHandler<CreatePlayerCommand, int>
+    public class CreatePlayerCommandHandler : IRequestHandler<CreatePlayerCommand, Player>
     {
         private readonly IPlayerRepository _repository;
         private readonly IProfileRepository _profileRepository;
@@ -33,20 +41,21 @@ namespace Application.Features.Players.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public async Task<int> Handle(CreatePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<Player> Handle(CreatePlayerCommand command, CancellationToken cancellationToken)
         {
 
             Profile profile = new Profile();
-            profile.FirstName = command.Profile.FirstName;
-            profile.LastName = command.Profile.LastName;
-            profile.BirthDate = command.Profile.BirthDate;
+            profile.FirstName = command.FirstName;
+            profile.LastName = command.LastName;
+            profile.BirthDate = command.BirthDate;
 
 
             Player player = new Player(profile);
 
             player.PlayerAttribute = new PlayerAttribute();
-            player.PlayerAttribute.OVR = command.PlayerAttribute.OVR;
-            player.PlayerAttribute.Potential = command.PlayerAttribute.Potential;
+            player.PlayerAttribute.OVR = command.OVR;
+            player.PlayerAttribute.Potential = command.Potential;
+            player.PlayerAttribute.Position = command.Position;
             player.PlayerAttribute.Traits = new Traits(0, "Basic");
 
 
@@ -60,7 +69,7 @@ namespace Application.Features.Players.Commands.Create
             await _repository.SetAttributes(player, randomAttributes: false, cancellationToken);
             await _repository.Create(player, cancellationToken);
 
-            return player.Id;
+            return player;
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Teams.Commands.AddManager
 {
-    public class BuyPlayer : IRequest<int>
+    public class BuyPlayer : IRequest<Player>
     {
 
         [Required]
@@ -20,7 +20,7 @@ namespace Application.Features.Teams.Commands.AddManager
         public int PlayerId { get; set; }
     }
 
-    public class BuyPlayerHandler : IRequestHandler<BuyPlayer, int>
+    public class BuyPlayerHandler : IRequestHandler<BuyPlayer, Player>
     {
         public readonly IManagerRepository _repository;
         public readonly ITeamRepository _teamRepository;
@@ -34,7 +34,7 @@ namespace Application.Features.Teams.Commands.AddManager
             _teamRepository = teamRepository;
         }
 
-        public async Task<int> Handle(BuyPlayer command, CancellationToken cancellationToken)
+        public async Task<Player> Handle(BuyPlayer command, CancellationToken cancellationToken)
         {
             Team.Id = command.TeamId;
 
@@ -45,9 +45,9 @@ namespace Application.Features.Teams.Commands.AddManager
             Team.Players.Add(Player);
 
 
-            await _teamRepository.BuyPlayer(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
+            Player player = await _teamRepository.BuyPlayer(Team, Team.Players.Where(player => player.Id == command.PlayerId).First(), buy: true, cancellationToken);
 
-            return Team.Players.Where(player => player.Id == command.PlayerId).First().Id;
+            return player;
         }
 
     }

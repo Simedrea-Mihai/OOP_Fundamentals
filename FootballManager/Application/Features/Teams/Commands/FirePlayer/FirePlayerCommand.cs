@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Teams.Commands.AddManager
 {
-    public class FirePlayerCommand : IRequest<int>
+    public class FirePlayerCommand : IRequest<Player>
     {
         [Required]
         public int TeamId { get; set; }
@@ -19,16 +19,16 @@ namespace Application.Features.Teams.Commands.AddManager
         public int PlayerId { get; set; }
     }
 
-    public class FirePlayerCommandHandler : IRequestHandler<FirePlayerCommand, int>
+    public class FirePlayerCommandHandler : IRequestHandler<FirePlayerCommand, Player>
     {
         public readonly ITeamRepository _teamRepository;
 
         public FirePlayerCommandHandler(ITeamRepository teamRepository) => _teamRepository = teamRepository;
 
-        public async Task<int> Handle(FirePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<Player> Handle(FirePlayerCommand command, CancellationToken cancellationToken)
         {
-            await _teamRepository.FirePlayer(command.TeamId, command.PlayerId, cancellationToken);
-            return command.TeamId;
+            Player player = await _teamRepository.FirePlayer(command.TeamId, command.PlayerId, cancellationToken);
+            return player;
         }
 
     }

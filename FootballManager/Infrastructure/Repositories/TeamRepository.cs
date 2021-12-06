@@ -39,8 +39,8 @@ namespace Infrastructure.Repositories
 
         public async Task<Manager> AddManager(Team team, Manager manager, CancellationToken cancellationToken)
         {
-            await TeamMethods.AddManager(_context, team, manager, cancellationToken);
-            return manager;
+            var createdManager = await TeamMethods.AddManager(_context, team, manager, cancellationToken);
+            return createdManager;
         }
 
         public async Task<IList<Player>> AddPlayers(Team team, int players_count, CancellationToken cancellationToken)
@@ -82,10 +82,10 @@ namespace Infrastructure.Repositories
             return t;
         }
 
-        public async Task<int> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken)
+        public async Task<Player> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken)
         {
-            await TeamMethods.FirePlayer(_context, TeamId, PlayerId, cancellationToken);
-            return TeamId;
+            var createdPlayer = await TeamMethods.FirePlayer(_context, TeamId, PlayerId, cancellationToken);
+            return createdPlayer;
         }
 
 

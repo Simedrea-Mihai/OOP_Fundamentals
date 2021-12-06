@@ -12,24 +12,24 @@ using MediatR;
 
 namespace Application.Features.Leagues.CreateLeague
 {
-    public class CreateLeagueCommand: IRequest<int>
+    public class CreateLeagueCommand: IRequest<League>
     {
         [Required]
         public string Name { get; set; }
     }
 
-    public class CreateLeagueCommandHandler: IRequestHandler<CreateLeagueCommand, int>
+    public class CreateLeagueCommandHandler: IRequestHandler<CreateLeagueCommand, League>
     {
         private readonly ILeagueRepository _repository;
 
         public CreateLeagueCommandHandler(ILeagueRepository repository) => _repository = repository;
 
-        public async Task<int> Handle(CreateLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<League> Handle(CreateLeagueCommand command, CancellationToken cancellationToken)
         {
             League league = new(command.Name);
-            await _repository.Create(league, cancellationToken);
+            var createdLeague = await _repository.Create(league, cancellationToken);
 
-            return league.Id;
+            return createdLeague;
         }
     }
 }

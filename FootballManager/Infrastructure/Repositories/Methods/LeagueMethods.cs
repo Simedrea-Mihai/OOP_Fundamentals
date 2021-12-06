@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories.Methods
 {
     public static class LeagueMethods
     {
-        public static async Task<League> AddTeams(ApplicationDbContext context, League league, IList<Team> TeamIds, CancellationToken cancellationToken)
+        public static async Task<IList<int>> AddTeams(ApplicationDbContext context, League league, IList<Team> TeamIds, CancellationToken cancellationToken)
         {
             if (league.Id == 0)
                 throw new Exception("Can't link the teams with a null league ID");
@@ -23,6 +23,7 @@ namespace Infrastructure.Repositories.Methods
             var leagueList = context.Leagues.Include(league => league.Teams).ToList();
 
             Team team = new Team("deafult");
+            List<int> ids = new List<int>();
 
             int i = 0;
             while (i < TeamIds.Count())
@@ -32,10 +33,11 @@ namespace Infrastructure.Repositories.Methods
 
                 if (team != null)
                 {
-                    if (leagueList[league.Id - 1].Teams.ToList().Exists(t => t.Name == team.Name) == true)
+                    if (leagueList.Where(t => t.Id == league.Id).First().Teams.ToList().Exists(t => t.Name == team.Name) == true)
                         throw new Exception("Can't exist two teams with the same name");
 
                     team.LeagueAppended = true;
+                    ids.Add(team.Id);
                     context.Leagues.Find(league.Id).Teams.Add(team);
                 }
 
@@ -44,7 +46,7 @@ namespace Infrastructure.Repositories.Methods
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return league;
+            return ids;
         }
 
         public static async Task<League> Create(ApplicationDbContext context, League league, CancellationToken cancellationToken)
@@ -54,12 +56,12 @@ namespace Infrastructure.Repositories.Methods
             return league;
         }
 
-        public static async Task<int> RemoveLeagueById(ApplicationDbContext context, int id, CancellationToken cancellationToken)
+        public static async Task<League> RemoveLeagueById(ApplicationDbContext context, int id, CancellationToken cancellationToken)
         {
             League league = context.Leagues.Where(p => p.Id == id).First();
             context.Leagues.Remove(league);
             await context.SaveChangesAsync(cancellationToken);
-            return league.Id;
+            return league;
         }
 
     }

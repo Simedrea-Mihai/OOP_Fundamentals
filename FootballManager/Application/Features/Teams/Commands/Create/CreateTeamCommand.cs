@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Application.Teams.CreateTeam
 {
-    public class CreateTeamCommand : IRequest<int>
+    public class CreateTeamCommand : IRequest<Team>
     {
         [Required]
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace Application.Teams.CreateTeam
 
     }
 
-    public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, int>
+    public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, Team>
     {
         private readonly ITeamRepository _repository;
         private readonly Random rnd = new Random();
@@ -27,7 +27,7 @@ namespace Application.Teams.CreateTeam
         public CreateTeamHandler(ITeamRepository repository) => _repository = repository;
 
 
-        public async Task<int> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
+        public async Task<Team> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {
             Team team = new(command.Name);
 
@@ -36,9 +36,9 @@ namespace Application.Teams.CreateTeam
             else
                 team.Budget = command.Budget;
 
-            await _repository.Create(team, cancellationToken);
+            Team createdTeam = await _repository.Create(team, cancellationToken);
 
-            return team.Id;
+            return createdTeam;
         }
     }
 

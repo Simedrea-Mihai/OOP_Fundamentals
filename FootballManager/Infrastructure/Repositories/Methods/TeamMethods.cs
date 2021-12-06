@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories.Methods
 {
     public static class TeamMethods
     {
-        public static async Task<Team> AddManager(ApplicationDbContext context, Team team, Manager manager, CancellationToken cancellationToken)
+        public static async Task<Manager> AddManager(ApplicationDbContext context, Team team, Manager manager, CancellationToken cancellationToken)
         {
             if (team.Id == 0)
                 throw new Exception("Can't link the manager with a null team ID");
@@ -43,7 +43,7 @@ namespace Infrastructure.Repositories.Methods
 
 
             await context.SaveChangesAsync(cancellationToken);
-            return team;
+            return requestedManager;
         }
 
         public static async Task<IList<Player>> AddPlayers(ApplicationDbContext context, ITeamRepository repository, IPlayerRepository playerRepository, Team team, int players_count, CancellationToken cancellationToken)
@@ -73,8 +73,15 @@ namespace Infrastructure.Repositories.Methods
             if (team.Id == 0)
                 throw new Exception("Can't link the player with a null team ID");
 
-            var list = context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits).ToList();
-            context.Players.Include(player => player.Profile).Include(player => player.PlayerAttribute).ThenInclude(player => player.Traits);
+            var list = context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits).ToList();
+
+            context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits);
 
 
             var requestedPlayer = list.FirstOrDefault(
@@ -125,10 +132,18 @@ namespace Infrastructure.Repositories.Methods
 
         }
 
-        public static async Task<int> FirePlayer(ApplicationDbContext context, int TeamId, int PlayerId, CancellationToken cancellationToken)
+        public static async Task<Player> FirePlayer(ApplicationDbContext context, int TeamId, int PlayerId, CancellationToken cancellationToken)
         {
 
-            Player player = context.Teams.Include(p => p.Players).FirstOrDefault().Players.Where(p => p.Id == PlayerId).FirstOrDefault();
+            Player player = context.Teams
+                .Include(p => p.Players)
+                .ThenInclude(p => p.Profile)
+                .Include(p => p.Players)
+                .ThenInclude(p => p.PlayerAttribute)
+                .Include(p => p.Players)
+                .ThenInclude(p => p.PlayerAttribute.Traits)
+                .FirstOrDefault().Players
+                .Where(p => p.Id == PlayerId).FirstOrDefault();
 
             if (player == null)
                 throw new Exception($"Player with ID {PlayerId} was not found in team's database");
@@ -138,12 +153,12 @@ namespace Infrastructure.Repositories.Methods
                 context.Teams.Include(p => p.Players).First().Players.Where(p => p.Id == PlayerId).First().FreeAgent = true;
                 context.Teams.Include(p => p.Players).First().Players.Where(p => p.Id == PlayerId).First().TeamIdPlayer = 0;
 
-                context.Teams.Include(p => p.Players).First().Players.Remove(player);
+                //context.Teams.Include(p => p.Players).First().Players.Remove(player);
 
                 await context.SaveChangesAsync(cancellationToken);
             }
 
-            return TeamId;
+            return player;
         }
 
         public static async Task<int> RemoveTeamById(ApplicationDbContext context, int id, CancellationToken cancellationToken)

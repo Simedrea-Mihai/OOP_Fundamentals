@@ -14,7 +14,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Managers.Commands.Create
 {
-    public class CreateManagerCommand : IRequest<int>
+    public class CreateManagerCommand : IRequest<Manager>
     {
         [Required]
         public string FirstName { get; set; }
@@ -25,7 +25,7 @@ namespace Application.Features.Managers.Commands.Create
 
     }
 
-    public class CreateManagerCommandHandler : IRequestHandler<CreateManagerCommand, int>
+    public class CreateManagerCommandHandler : IRequestHandler<CreateManagerCommand, Manager>
     {
         private readonly IManagerRepository _repository;
         private readonly IProfileRepository _profileRepository;
@@ -36,14 +36,14 @@ namespace Application.Features.Managers.Commands.Create
             _profileRepository = profileRepository;
         }
 
-        public async Task<int> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
+        public async Task<Manager> Handle(CreateManagerCommand command, CancellationToken cancellationToken)
         {
             Profile profile = new Profile(command.FirstName, command.LastName, command.BirthDate);
             Manager manager = new Manager(profile);
 
             await _profileRepository.SetProfileManager(manager.Profile, randomProfile: false, cancellationToken);
-            await _repository.Create(manager, cancellationToken);
-            return manager.Id;
+            var createdManager = await _repository.Create(manager, cancellationToken);
+            return createdManager;
             
             
         }

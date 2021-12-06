@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
+using Domain.Entities.Enums;
 using Infrastructure.Repositories.Methods;
 using Infrastructure.Repositories.TraitsDecorator;
 using Infrastructure.Static_Methods;
@@ -42,6 +43,16 @@ namespace Infrastructure.Repositories
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
                 .Include(player => player.PlayerAttribute.Traits).ToListAsync(cancellationToken);
+        }
+
+        // LIST BY POSITION
+        public async Task<IList<Player>> ListByPosition(PlayerPosition position, CancellationToken cancellationToken)
+        {
+            return await _context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .Include(player => player.PlayerAttribute.Traits)
+                .Where(p => p.PlayerAttribute.Position == position).ToListAsync();
         }
 
         // LIST BY ID

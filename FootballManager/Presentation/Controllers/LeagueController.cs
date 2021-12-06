@@ -51,21 +51,27 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("League")]
-        public async Task<int> CreateAsync([FromQuery] CreateLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromQuery] CreateLeagueCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<LeagueGetDto>(created);
+            return Ok(result);
+
         }
 
         [HttpPatch("Add-Teams")]
-        public async Task<int> AddTeamAsync([FromQuery] AddTeams command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddTeamAsync([FromQuery] AddTeams command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
         }
 
         [HttpDelete("League")]
-        public async Task<int> RemoveAsyncLeagueById([FromQuery] RemoveLeagueCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveAsyncLeagueById([FromQuery] RemoveLeagueCommand command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            var created = await _mediator.Send(command, cancellationToken);
+            var result = _mapper.Map<LeagueGetDto>(created);
+            return Ok(result);
         }
     }
 }
