@@ -108,19 +108,20 @@ function Teams() {
                 <div className = "FormDiv"> 
                     <Form>
                         <Form.Group className="mb-3" controlId="formTeamName" onChange={handleNameChange}>
-                    <Form.Label>Name</Form.Label>
-                        <Form.Control type="Name" placeholder="Team's name" />
-                        <Form.Text className="text-muted">
-                        </Form.Text>
-                    </Form.Group>
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="Name" placeholder="Team's name" />
+                            <Form.Text className="text-muted">
+                            </Form.Text>
+                        </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formTeamBudget" onChange={ handleBudgetChange}>
-                   <Form.Label>Budget</Form.Label>
-                   <Form.Control type="Budget" placeholder="Team's budget" />
-                    </Form.Group>
+                            <Form.Label>Budget</Form.Label>
+                            <Form.Control type="Budget" placeholder="Team's budget" />
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="formButton">
                             <Button variant="outline-primary" onClick={() => postdata()}> Add data </Button>
-                    </Form.Group>
+                        </Form.Group>
 
                     </Form>
                 </div>
@@ -170,7 +171,7 @@ function Teams() {
         return (
             
             <div>
-
+                <p> No data </p>
             </div>    
             
         )

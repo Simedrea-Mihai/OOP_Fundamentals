@@ -7,6 +7,7 @@ import { Teams } from './Teams';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Team from './Teams';
+import Register from './Register'
 
 ReactDOM.render(
 
@@ -16,7 +17,8 @@ ReactDOM.render(
 
             <Route component={App} />
             <Route path='/home' component={Home} />
-            <Route path='/team'> <Team/> </Route>
+            <Route path='/team'> <Team /> </Route>
+            <Route path='/sign_in'> <Register /> </Route>
 
 
         </div>
@@ -26,7 +28,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

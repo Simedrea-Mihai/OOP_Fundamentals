@@ -74,7 +74,7 @@ namespace Infrastructure.Identity.Services
                 LastName = request.LastName,
                 UserName = request.UserName,
                 BirthDate = request.BirthDate,
-                EmailConfirmed = false
+                EmailConfirmed = true
             };
 
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);

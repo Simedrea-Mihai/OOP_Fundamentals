@@ -1,7 +1,9 @@
 using Application;
 using Application.Contracts;
+using Application.Contracts.Identity;
 using Domain;
 using Infrastructure;
+using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,12 +52,20 @@ namespace Presentation
             services.AddScoped<ILoggedInUserService, LoggedInUserService>();
             services.AddAutoMapper(typeof(Startup));
 
+
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSenderPaperCut, EmailSenderPaperCut>();
 
             services.Configure<IdentityOptions>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
                 opts.Password.RequiredLength = 8;
+                opts.Password.RequiredLength = 5;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireDigit = true;
+
 
                 opts.SignIn.RequireConfirmedEmail = true;
             });

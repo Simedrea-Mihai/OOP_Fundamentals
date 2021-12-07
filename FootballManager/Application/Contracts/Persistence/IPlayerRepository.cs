@@ -20,6 +20,7 @@ namespace Application.Contracts.Persistence
         Task<Player> ListById(int id, CancellationToken cancellationToken);
         Task<IList<Player>> ListFreePlayers(CancellationToken cancellationToken);
         Task<IList<Player>> ListTakenPlayers(CancellationToken cancellationToken);
+        Task<IList<Player>> GetTopPlayersPotential(bool ascending, int count, CancellationToken cancellationToken);
         Task<IList<Player>> GetPlayersByOvr(bool ascending, int count, CancellationToken cancellationToken);
         Task<IList<Player>> GetPlayersByAge(bool ascending, int count, CancellationToken cancellationToken);
         Task<Player> GetPlayer(CancellationToken cancellationToken);

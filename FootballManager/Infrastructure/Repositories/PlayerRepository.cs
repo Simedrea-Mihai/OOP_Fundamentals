@@ -133,6 +133,27 @@ namespace Infrastructure.Repositories
                     .ToListAsync(cancellationToken);
         }
 
+        // GET TOP N PLAYERS BY POTENTIAL
+        public async Task<IList<Player>> GetTopPlayersPotential(bool ascending, int count, CancellationToken cancellationToken)
+        {
+            if(ascending)
+                return await _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderBy(x => x.PlayerAttribute.Potential)
+                    .Take(count)
+                    .ToListAsync(cancellationToken);
+            else
+                return await _context.Players
+                    .Include(player => player.Profile)
+                    .Include(player => player.PlayerAttribute)
+                    .Include(player => player.PlayerAttribute.Traits)
+                    .OrderByDescending(x => x.PlayerAttribute.Potential)
+                    .Take(count)
+                    .ToListAsync(cancellationToken);
+        }
+
 
         // GET PLAYER
         public async Task<Player> GetPlayer(CancellationToken cancellationToken)

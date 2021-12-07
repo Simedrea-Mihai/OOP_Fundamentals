@@ -22,18 +22,22 @@ namespace Presentation.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _sender;
         private readonly EmailSender sender = new EmailSender();
+        private readonly IEmailSenderPaperCut _emailSender;
 
         public string Email { get; set; }
 
         public bool DisplayConfirmAccountLink { get; set; }
 
-        public string EmailConfirmationUrl { get; set; }
 
-        public AccountController(IAuthenticationService authenticationService, UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public AccountController(IAuthenticationService authenticationService,
+            UserManager<ApplicationUser> userManager,
+            IEmailSender sender,
+            IEmailSenderPaperCut emailSender)
         {
             _authenticationService = authenticationService;
             _userManager = userManager;
             _sender = sender;
+            _emailSender = emailSender;
         }
 
 
@@ -49,8 +53,8 @@ namespace Presentation.Controllers
         {
             return Ok(await _authenticationService.AuthenticateAsync(request));
         }
-        /*
 
+        /*
         [HttpPost("register")]
         [SwaggerOperation(
             Summary = "Registers a user",
@@ -58,10 +62,13 @@ namespace Presentation.Controllers
             OperationId = "auth.register",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<RegistrationResponse>> RegisterAsync([FromQuery] RegistrationRequest request)
+        public async Task<ActionResult<RegistrationResponse>> RegisterAsync([FromBody] RegistrationRequest request)
         {
             return Ok(await _authenticationService.RegisterAsync(request));
-        }*/
+        }
+        */
+
+        public string EmailConfirmationUrl { get; set; }
 
         [HttpPost("register")]
         [SwaggerOperation(
@@ -70,7 +77,7 @@ namespace Presentation.Controllers
             OperationId = "auth.register",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<RegistrationResponse>> OnGetAsync([FromQuery] RegistrationRequest request, string email, string returnUrl = null)
+        public async Task<ActionResult<RegistrationResponse>> OnGetAsync([FromQuery] RegistrationRequest request)
         {
 
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
@@ -93,50 +100,44 @@ namespace Presentation.Controllers
             if (existingEmail == null)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                EmailConfirmationUrl = Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    protocol: Request.Scheme);
-
-                await sender.SendEmailAsync(request.Email, "Confirmation", EmailConfirmationUrl);
-
-                var confirmedEmail = await _userManager.IsEmailConfirmedAsync(user);
-                if (confirmedEmail == true)
-                    user.EmailConfirmed = true;
-
-                await _userManager.ConfirmEmailAsync(user, code);
-
-                if (user.EmailConfirmed)
-                {
-                    var result = await _userManager.CreateAsync(user, request.Password);
-
-                    if (result.Succeeded)
-                    {
-                        return new RegistrationResponse { UserId = user.Id };
-                    }
-                }
-                else
-                    return Ok(EmailConfirmationUrl);
-
-
-
-                /*
                 var result = await _userManager.CreateAsync(user, request.Password);
 
                 if (result.Succeeded)
                 {
-                    //return new RegistrationResponse { UserId = user.Id };
+
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    EmailConfirmationUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = userId, code = code, returnUrl = "" },
+                        protocol: Request.Scheme);
+
+                    Console.WriteLine(code);
+
+                    //await sender.SendEmailAsync(request.Email, "Confirmation", EmailConfirmationUrl);
+                    _emailSender.SendEmail(user.Email, "Confirm your email", "Please confirm your account by clicking this link: " + EmailConfirmationUrl);
+
+                    return new RegistrationResponse { UserId = user.Id };
                 }
 
-                throw new Exception($"{result.Errors}");*/
+                throw new Exception($"{result.Errors}");
             }
 
-            //throw new Exception($"Email {request.Email} already exists.");
-            throw new Exception("Confirm your email");
+            throw new Exception($"Email {request.Email} already exists.");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return Ok("ConfirmEmail");
+            return NoContent();
+
+        }
+
 
     }
 

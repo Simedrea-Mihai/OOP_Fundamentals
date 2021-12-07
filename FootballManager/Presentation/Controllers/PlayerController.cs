@@ -120,6 +120,19 @@ namespace Presentation.Controllers
             return Ok(list);
         }
 
+        [HttpGet("Player-By-Potential")]
+        public async Task<IActionResult> ListTop5Potential([FromQuery] GetTopPlayersPotential command, CancellationToken cancellationToken)
+        {
+            var created = await _mediator.Send(command, cancellationToken);
+
+            var list = new List<PlayerGetDto>();
+
+            foreach (var c in created)
+                list.Add(_mapper.Map<PlayerGetDto>(c));
+
+            return Ok(list);
+        }
+
         [HttpPost("Player")]
         public async Task<IActionResult> CreateAsyncPlayer([FromQuery]CreatePlayerCommand command, CancellationToken cancellationToken)
         {
