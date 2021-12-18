@@ -26,7 +26,7 @@ namespace Application.Teams.AddPlayers
         public readonly IProfileRepository _ProfileRepository;
         public readonly ITeamRepository _teamRepository;
 
-        private readonly Team Team = new Team("default");
+        private readonly Team Team = new Team("default", "default", "default");
 
 
         public AddPlayersHandler(IPlayerRepository PlayerRepository, IProfileRepository ProfileRepository, ITeamRepository teamRepository)

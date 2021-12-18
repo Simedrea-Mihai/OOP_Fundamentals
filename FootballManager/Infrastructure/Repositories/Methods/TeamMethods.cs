@@ -121,7 +121,7 @@ namespace Infrastructure.Repositories.Methods
 
         public static async Task<Team> RemovePlayers(ApplicationDbContext context, Team team, CancellationToken cancellationToken)
         {
-            Team t = new Team("default");
+            Team t = new Team("default", "default", "default");
             t.Id = team.Id;
 
             context.Players.RemoveRange(context.Players.ToArray().Where(p => p.TeamIdPlayer == team.Id));

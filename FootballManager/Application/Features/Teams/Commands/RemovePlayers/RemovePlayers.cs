@@ -19,7 +19,7 @@ namespace Application.Teams.AddPlayers
     public class RemovePlayersHandler : IRequestHandler<RemovePlayers, int>
     {
         private readonly ITeamRepository _repository;
-        private readonly Team team = new Team("default");
+        private readonly Team team = new Team("default", "default", "default");
 
         public RemovePlayersHandler(ITeamRepository repository) => _repository = repository;
 

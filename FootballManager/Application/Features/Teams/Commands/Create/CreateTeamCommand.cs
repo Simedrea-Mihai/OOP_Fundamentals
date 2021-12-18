@@ -15,6 +15,10 @@ namespace Application.Teams.CreateTeam
     {
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Description { get; set; }
+        [Required]
+        public string HeaderDescription { get; set; }
         public double Budget { get; set; }
 
     }
@@ -29,7 +33,7 @@ namespace Application.Teams.CreateTeam
 
         public async Task<Team> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {
-            Team team = new(command.Name);
+            Team team = new(command.Name, command.Description, command.HeaderDescription);
 
             if (command.Budget == 0)
                 team.Budget = rnd.Next(1, 4) * 100000000;

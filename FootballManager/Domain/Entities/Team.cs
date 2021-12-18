@@ -13,11 +13,15 @@ namespace Domain
         public ICollection<Player> Players { get; set; }
         public Manager Manager { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public string HeaderDescription { get; set; }
         public bool LeagueAppended { get; set; }
 
-        public Team(string name)
+        public Team(string name, string description, string headerDescription)
         {
             Name = name;
+            Description = description;
+            HeaderDescription = headerDescription;
         }
 
     }

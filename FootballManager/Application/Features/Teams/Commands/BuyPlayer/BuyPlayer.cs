@@ -25,7 +25,7 @@ namespace Application.Features.Teams.Commands.AddManager
         public readonly IManagerRepository _repository;
         public readonly ITeamRepository _teamRepository;
 
-        private Team Team = new Team("default");
+        private Team Team = new Team("default", "default", "default");
         private Player Player = new Player(new("default", "default", DateTime.Now));
 
         public BuyPlayerHandler(IManagerRepository repository, ITeamRepository teamRepository)

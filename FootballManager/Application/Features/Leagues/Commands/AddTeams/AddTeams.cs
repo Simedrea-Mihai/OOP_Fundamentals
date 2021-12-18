@@ -38,7 +38,7 @@ namespace Application.Features.Leagues.AddTeams
 
             for(int i = 0; i < command.Teams.Count(); i++)
             {
-                Teams.Add(new Team("default"));
+                Teams.Add(new Team("default", "default", "default"));
                 Teams[i].Id = command.Teams[i];
             }
 

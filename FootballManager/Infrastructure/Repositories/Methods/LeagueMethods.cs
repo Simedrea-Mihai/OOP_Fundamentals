@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories.Methods
             var list = context.Teams.ToList();
             var leagueList = context.Leagues.Include(league => league.Teams).ToList();
 
-            Team team = new Team("deafult");
+            Team team = new Team("deafult", "default", "default");
             List<int> ids = new List<int>();
 
             int i = 0;

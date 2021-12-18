@@ -103,6 +103,14 @@ namespace Presentation.Controllers
             return await _mediator.Send(command, cancellationToken);
         }
 
+        [HttpPost("TeamEvent")]
+        public async Task<IActionResult> CreateEvent([FromQuery] CreateTeamEventCommand command, CancellationToken cancellationToken)
+        {
+            var created = await _mediator.Send(command, cancellationToken);
+            return Ok(created);
+        }
+
+
 
     }
 }

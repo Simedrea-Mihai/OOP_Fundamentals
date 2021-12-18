@@ -9,6 +9,8 @@ namespace Presentation.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public string HeaderDescription { get; set; }
         public double Budget { get; set; }
         public List<PlayerGetDto> Players { get; set; }
         public ManagerGetDto Manager { get; set; }

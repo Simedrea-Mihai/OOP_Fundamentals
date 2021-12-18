@@ -23,7 +23,7 @@ namespace Application.Features.Teams.Commands.AddManager
     {
         public readonly IManagerRepository _repository;
         public readonly ITeamRepository _teamRepository;
-        private readonly Team Team = new Team("default");
+        private readonly Team Team = new Team("default", "default", "default");
         private readonly Manager Manager = new Manager(new("defalut", "default", DateTime.Now));
 
         public AddManagerHandler(IManagerRepository repository, ITeamRepository teamRepository)

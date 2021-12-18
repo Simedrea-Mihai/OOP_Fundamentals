@@ -49,7 +49,7 @@ namespace Presentation.Controllers
             OperationId = "auth.authenticate",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync([FromQuery] AuthenticationRequest request)
+        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request)
         {
             return Ok(await _authenticationService.AuthenticateAsync(request));
         }
@@ -77,7 +77,7 @@ namespace Presentation.Controllers
             OperationId = "auth.register",
             Tags = new[] { "AuthEndpoints" })
         ]
-        public async Task<ActionResult<RegistrationResponse>> OnGetAsync([FromQuery] RegistrationRequest request)
+        public async Task<ActionResult<RegistrationResponse>> OnGetAsync(RegistrationRequest request)
         {
 
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
@@ -107,13 +107,11 @@ namespace Presentation.Controllers
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    EmailConfirmationUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
+                    EmailConfirmationUrl = Url.ActionLink(
+                        "ConfirmEmail",
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = "" },
                         protocol: Request.Scheme);
 
-                    Console.WriteLine(code);
 
                     //await sender.SendEmailAsync(request.Email, "Confirmation", EmailConfirmationUrl);
                     _emailSender.SendEmail(user.Email, "Confirm your email", "Please confirm your account by clicking this link: " + EmailConfirmationUrl);
@@ -127,11 +125,13 @@ namespace Presentation.Controllers
             throw new Exception($"Email {request.Email} already exists.");
         }
 
-        [HttpPost]
+        [HttpGet("confirm-email", Name = "ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
+            
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
             IdentityResult result = await _userManager.ConfirmEmailAsync(user, code);
+
             if (result.Succeeded)
                 return Ok("ConfirmEmail");
             return NoContent();
