@@ -38,9 +38,20 @@ namespace Application.Features.Players.Commands.CreateMultiple
             {
                 name = await _profileRepository.GetName(cancellationToken);
                 Player player = new Player(new Profile(name[0], name[1], DateTime.Now));
+                player.Profile.Nationality = name[2];
 
                 await _profileRepository.SetProfilePlayer(player.Profile, randomProfile: true, cancellationToken);
                 await _repository.SetAttributes(player, randomAttributes: true, cancellationToken);
+
+                if (i == 1)
+                    player.PlayerAttribute.Position = Domain.Entities.Enums.PlayerPosition.GK;
+                else if (i == 2)
+                    player.PlayerAttribute.Position = Domain.Entities.Enums.PlayerPosition.CB;
+                else if (i == 3)
+                    player.PlayerAttribute.Position = Domain.Entities.Enums.PlayerPosition.CAM;
+                else if (i == 4)
+                    player.PlayerAttribute.Position = Domain.Entities.Enums.PlayerPosition.ST;
+
                 await _repository.Create(player, cancellationToken);
                 ids.Add(player.Id);
             }

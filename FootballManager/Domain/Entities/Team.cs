@@ -9,6 +9,7 @@ namespace Domain
     public sealed class Team : BaseEntity
     {
         public override int Id { get; set; }
+        public string UserId { get; set; }
         public double Budget { get; set; }
         public ICollection<Player> Players { get; set; }
         public Manager Manager { get; set; }

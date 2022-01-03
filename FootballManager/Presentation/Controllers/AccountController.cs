@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-
+using Application.Contracts;
 using Application.Contracts.Identity;
 using Application.Models.Authentication;
 using Infrastructure.Identity.Models;
@@ -23,6 +23,7 @@ namespace Presentation.Controllers
         private readonly IEmailSender _sender;
         private readonly EmailSender sender = new EmailSender();
         private readonly IEmailSenderPaperCut _emailSender;
+        private readonly ILoggedInUserService _loggedInUserService;
 
         public string Email { get; set; }
 
@@ -32,12 +33,14 @@ namespace Presentation.Controllers
         public AccountController(IAuthenticationService authenticationService,
             UserManager<ApplicationUser> userManager,
             IEmailSender sender,
-            IEmailSenderPaperCut emailSender)
+            IEmailSenderPaperCut emailSender,
+            ILoggedInUserService loggedInUserService)
         {
             _authenticationService = authenticationService;
             _userManager = userManager;
             _sender = sender;
             _emailSender = emailSender;
+            _loggedInUserService = loggedInUserService;
         }
 
 
@@ -82,7 +85,7 @@ namespace Presentation.Controllers
 
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-            if (existingUser != null) throw new Exception($"Username '{request.UserName}' already exists.");
+            if (existingUser != null) return Ok($"Username '{request.UserName}' already exists.");
 
 
             var user = new ApplicationUser
@@ -104,7 +107,6 @@ namespace Presentation.Controllers
 
                 if (result.Succeeded)
                 {
-
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     EmailConfirmationUrl = Url.ActionLink(
@@ -118,22 +120,22 @@ namespace Presentation.Controllers
 
                     return new RegistrationResponse { UserId = user.Id };
                 }
-
-                throw new Exception($"{result.Errors}");
+                return Ok($"{result.Errors}");
             }
 
-            throw new Exception($"Email {request.Email} already exists.");
+            return Ok($"Email {request.Email} already exists.");
         }
 
         [HttpGet("confirm-email", Name = "ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            
+            var decodedTokenString = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
-            IdentityResult result = await _userManager.ConfirmEmailAsync(user, code);
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, decodedTokenString);
 
             if (result.Succeeded)
-                return Ok("ConfirmEmail");
+                return Ok("Your email was confirmed");
+
             return NoContent();
 
         }

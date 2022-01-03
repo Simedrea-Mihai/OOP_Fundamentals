@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure.Repositories.Methods;
+using Application.Contracts;
 
 namespace Infrastructure.Repositories
 {
@@ -17,11 +18,13 @@ namespace Infrastructure.Repositories
         private readonly ApplicationDbContext _context;
         private readonly ITeamRepository _repository;
         private readonly IPlayerRepository _playerRepository;
+        private readonly ILoggedInUserService _loggedInUserService; 
 
-        public TeamRepository(ApplicationDbContext context, IPlayerRepository playerRepository)
+        public TeamRepository(ApplicationDbContext context, IPlayerRepository playerRepository, ILoggedInUserService loggedInUserService)
         {
             _context = context;
             _playerRepository = playerRepository;
+            _loggedInUserService = loggedInUserService;
         }
 
         public async Task<Team> ListById(int id, CancellationToken cancellationToken)
@@ -51,6 +54,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Team> Create(Team team, CancellationToken cancellationToken)
         {
+            team.UserId = _loggedInUserService.UserId;
             _context.Teams.Add(team);
             await _context.SaveChangesAsync(cancellationToken);
             return team;
@@ -88,6 +92,19 @@ namespace Infrastructure.Repositories
             return createdPlayer;
         }
 
+        public async Task<IDictionary<string, int>> GetPopulationByCountry(int TeamId, CancellationToken cancellationToken)
+        {
+            var team = await _context.Teams.Include(t => t.Players).ThenInclude(t => t.Profile).Where(t => t.Id == TeamId).FirstAsync();
+            string[] locales = { "RO", "EN", "DE", "AR", "CZ", "ES", "FR", "GE", "HR", "IT", "LV", "NL", "PL", "RU", "SK", "TR", "SV", "VI" };
+
+            IDictionary<string, int> nationalities = new Dictionary<string, int>();
+            foreach (var locale in locales)
+            {
+                var number = team.Players.Where(p => p.Profile.Nationality == locale.ToLower()).ToList().Count;
+                nationalities.Add(locale, number);
+            }
+            return nationalities;
+        }
 
         public async Task<int> RemoveTeamByIdAsync(int id, CancellationToken cancellationToken)
         {

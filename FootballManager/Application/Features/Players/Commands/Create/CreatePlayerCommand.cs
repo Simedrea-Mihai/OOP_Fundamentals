@@ -22,6 +22,8 @@ namespace Application.Features.Players.Commands.Create
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]
+        public string Nationality { get; set; }
+        [Required]
         public int OVR { get; set; }
         [Required]
         public int Potential { get; set; }
@@ -48,6 +50,7 @@ namespace Application.Features.Players.Commands.Create
             profile.FirstName = command.FirstName;
             profile.LastName = command.LastName;
             profile.BirthDate = command.BirthDate;
+            profile.Nationality = command.Nationality;
 
 
             Player player = new Player(profile);

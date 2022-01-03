@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Contracts;
 using Application.Contracts.Persistence;
 using Domain;
 using MediatR;
@@ -29,7 +30,6 @@ namespace Application.Teams.CreateTeam
         private readonly Random rnd = new Random();
 
         public CreateTeamHandler(ITeamRepository repository) => _repository = repository;
-
 
         public async Task<Team> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
         {

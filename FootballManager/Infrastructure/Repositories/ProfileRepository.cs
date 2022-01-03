@@ -15,12 +15,13 @@ namespace Infrastructure.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly ApplicationDbContext _context;
-
+        Random rnd = new Random();
 
         Faker<Profile> BillingDetailsFakerPlayer = new Faker<Profile>(locale: "ro")
             .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
             .RuleFor(x => x.LastName, x => x.Person.LastName)
-            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(PlayerConstants.YearsToGoBack, DateTime.Now.AddYears(PlayerConstants.Offset)).Date);
+            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(PlayerConstants.YearsToGoBack, DateTime.Now.AddYears(PlayerConstants.Offset)).Date)
+            .RuleFor(x => x.Nationality, x => x.Locale.ToString());
 
         Faker<Profile> BillingDetailsFakerManager = new Faker<Profile>(locale: "ro")
             .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
@@ -31,10 +32,21 @@ namespace Infrastructure.Repositories
         public ProfileRepository(ApplicationDbContext context) => _context = context;
         public async Task<string[]> GetName(CancellationToken cancellationToken)
         {
-            string[] names = new string[2];
+            string[] locales = { "RO", "EN", "DE", "AR", "CZ", "ES", "FR", "GE", "HR", "IT", "LV", "NL", "PL", "RU", "SK", "TR", "SV", "VI" };
+            int r = rnd.Next(0, locales.Length);
 
-            names[0] = BillingDetailsFakerPlayer.Generate().FirstName;
-            names[1] = BillingDetailsFakerPlayer.Generate().LastName;
+            Faker<Profile> BillingDetailsFakerPlayerLocal = new Faker<Profile>(locale: locales[r].ToLower())
+            .RuleFor(x => x.FirstName, x => x.Name.FirstName(Bogus.DataSets.Name.Gender.Male))
+            .RuleFor(x => x.LastName, x => x.Person.LastName)
+            .RuleFor(x => x.BirthDate, x => x.Date.PastOffset(PlayerConstants.YearsToGoBack, DateTime.Now.AddYears(PlayerConstants.Offset)).Date)
+            .RuleFor(x => x.Nationality, x => x.Locale.ToString());
+
+
+            string[] names = new string[3];
+
+            names[0] = BillingDetailsFakerPlayerLocal.Generate().FirstName;
+            names[1] = BillingDetailsFakerPlayerLocal.Generate().LastName;
+            names[2] = BillingDetailsFakerPlayerLocal.Generate().Nationality;
 
             return await Task.FromResult(names);
         }

@@ -1,4 +1,7 @@
-﻿namespace Application.Models.Authentication
+﻿using Domain;
+using System.Collections.Generic;
+
+namespace Application.Models.Authentication
 {
     public class AuthenticationResponse
     {

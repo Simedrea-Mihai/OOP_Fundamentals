@@ -12,7 +12,7 @@ namespace Domain
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public int Age { get; set; }
-
+        public string Nationality { get; set; }
 
         public Player Player { get; set; }
         public int? PlayerId { get; set; }

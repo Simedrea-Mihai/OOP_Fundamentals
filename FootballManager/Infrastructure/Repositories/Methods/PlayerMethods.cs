@@ -53,7 +53,7 @@ namespace Infrastructure.Repositories.Methods
             if (randomAttributes)
             {
                 player.PlayerAttribute = new PlayerAttribute(rnd.Next(60, 70), SPlayer.SetPotential(player), new Traits(traits.ExtraOvr(), traits.Description()), rnd.NextEnum<PlayerPosition>());
-                Console.WriteLine(rnd.NextEnum<PlayerPosition>());
+
             }
             return await SetMarketValue(context, player, cancellationToken);
         }

@@ -15,6 +15,7 @@ namespace Application.Features.Players.Queries.GetPlayersList
     public class GetPlayersByPosition : IRequest<IList<Player>>
     {
         public PlayerPosition Position { get; set; }
+        public int TeamId { get; set; }
 
         public GetPlayersByPosition() { }
 
@@ -38,7 +39,7 @@ namespace Application.Features.Players.Queries.GetPlayersList
 
         public async Task<IList<Player>> Handle(GetPlayersByPosition command, CancellationToken cancellationToken)
         {
-            var player = await _repository.ListByPosition(command.Position, cancellationToken);
+            var player = await _repository.ListByPosition(command.Position, command.TeamId, cancellationToken);
 
             return player;
         }

@@ -1,9 +1,11 @@
 ﻿using Application.Contracts.Persistence;
 using Domain;
 using Domain.Entities.Enums;
+using Infrastructure.Identity.Models;
 using Infrastructure.Repositories.Methods;
 using Infrastructure.Repositories.TraitsDecorator;
 using Infrastructure.Static_Methods;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -37,8 +39,7 @@ namespace Infrastructure.Repositories
 
         // LIST
         public async Task<IList<Player>> ListAll(CancellationToken cancellationToken)
-        { 
-
+        {
             return await _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
@@ -46,13 +47,14 @@ namespace Infrastructure.Repositories
         }
 
         // LIST BY POSITION
-        public async Task<IList<Player>> ListByPosition(PlayerPosition position, CancellationToken cancellationToken)
+        public async Task<IList<Player>> ListByPosition(PlayerPosition position, int teamId, CancellationToken cancellationToken)
         {
             return await _context.Players
                 .Include(player => player.Profile)
                 .Include(player => player.PlayerAttribute)
                 .Include(player => player.PlayerAttribute.Traits)
-                .Where(p => p.PlayerAttribute.Position == position).ToListAsync();
+                .Where(p => p.PlayerAttribute.Position == position)
+                .Where(p => p.Team.Id == teamId).ToListAsync();
         }
 
         // LIST BY ID

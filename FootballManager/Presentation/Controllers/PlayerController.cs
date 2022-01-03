@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain;
 using Infrastructure.Static_Methods;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Presentation.DTOs;
@@ -141,9 +142,9 @@ namespace Presentation.Controllers
             return Ok(result);
         }
        
-
+        [Authorize]
         [HttpPost("Players")]
-        public async Task<List<int>> CreateAsyncPlayers([FromQuery]CreatePlayersCommand command, CancellationToken cancellationToken)
+        public async Task<List<int>> CreateAsyncPlayers(CreatePlayersCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }

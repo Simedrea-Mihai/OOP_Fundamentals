@@ -14,6 +14,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Features.Players.Queries.GetPlayersList;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Identity.Models;
+using Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -23,10 +27,15 @@ namespace Presentation.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public TeamController(IMediator mediator, IMapper mapper)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILoggedInUserService _loggedInUserService;
+
+        public TeamController(IMediator mediator, IMapper mapper, UserManager<ApplicationUser> userManager, ILoggedInUserService loggedInUserService)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _userManager = userManager;
+            _loggedInUserService = loggedInUserService;
         }
 
         [HttpGet("Team/{Id}")]
@@ -37,25 +46,37 @@ namespace Presentation.Controllers
             return Ok(_mapper.Map<TeamGetDto>(result));
         }
 
-
+        [Authorize]
         [HttpGet("Team")]
         public async Task<IActionResult> ListAllAsync(CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(new GetTeamsListQuery(), cancellationToken);
-
             var list = new List<TeamGetDto>();
-
             foreach (var c in created)
-                list.Add(_mapper.Map<TeamGetDto>(c));
+                if (c.UserId == _loggedInUserService.UserId)
+                    list.Add(_mapper.Map<TeamGetDto>(c));
 
             return Ok(list);
         }
 
+        [HttpGet("Team-Nationality/{Id}")]
+        public async Task<IActionResult> GetPopulationByCountry(int Id, CancellationToken cancellationToken)
+        {
+            GetPopulationByCountryQuery command = new GetPopulationByCountryQuery(Id);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+
+        [Authorize]
         [HttpPost("Team")]
         public async Task<IActionResult> CreateAsync([FromBody] CreateTeamCommand command, CancellationToken cancellationToken)
         {
+            // Some probs here
             var created = await _mediator.Send(command, cancellationToken);
+            string userName = _loggedInUserService.UserId;
+            var user = await _userManager.FindByNameAsync(userName);
             var result = _mapper.Map<TeamGetDto>(created);
+            result.UserId = userName;
             return Ok(result);
         }
 
