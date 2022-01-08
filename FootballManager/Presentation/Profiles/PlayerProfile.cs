@@ -22,7 +22,8 @@ namespace Application.Profiles
                 .ForMember(x => x.Age, opts => opts.MapFrom(x => x.Profile.Age))
                 .ForMember(x => x.FirstName, opts => opts.MapFrom(x => x.Profile.FirstName))
                 .ForMember(x => x.LastName, opts => opts.MapFrom(x => x.Profile.LastName))
-                .ForMember(x => x.Nationality, opts => opts.MapFrom(x => x.Profile.Nationality));
+                .ForMember(x => x.Nationality, opts => opts.MapFrom(x => x.Profile.Nationality))
+                .ForMember(x => x.FreeAgent, opts => opts.MapFrom(x => x.FreeAgent));
         }
     }
 }

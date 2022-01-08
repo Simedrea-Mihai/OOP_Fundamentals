@@ -1,35 +1,43 @@
-import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
-import homeFill from '@iconify/icons-eva/home-fill';
-import personFill from '@iconify/icons-eva/person-fill';
-import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Icon } from "@iconify/react";
+import { useRef, useState } from "react";
+import homeFill from "@iconify/icons-eva/home-fill";
+import personFill from "@iconify/icons-eva/person-fill";
+import settings2Fill from "@iconify/icons-eva/settings-2-fill";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 // material
-import { alpha } from '@mui/material/styles';
-import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+import { alpha } from "@mui/material/styles";
+import {
+  Button,
+  Box,
+  Divider,
+  MenuItem,
+  Typography,
+  Avatar,
+  IconButton,
+} from "@mui/material";
 // components
-import MenuPopover from '../../components/MenuPopover';
+import MenuPopover from "../../components/MenuPopover";
 //
-import account from '../../components/authentication/login/account';
+import account from "../../components/authentication/login/account";
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: "Home",
     icon: homeFill,
-    linkTo: '/'
+    linkTo: "/",
   },
   {
-    label: 'Profile',
+    label: "Profile",
     icon: personFill,
-    linkTo: '#'
+    linkTo: "#",
   },
   {
-    label: 'Settings',
+    label: "Settings",
     icon: settings2Fill,
-    linkTo: '#'
-  }
+    linkTo: "#",
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -38,6 +46,7 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -47,11 +56,17 @@ export default function AccountPopover() {
   };
 
   const loginFunction = () => {
-    navigate('/login', { replace: true });
+    navigate("/login", { replace: true });
   };
 
   const registerFunction = () => {
-    navigate('/register', { replace: true });
+    navigate("/register", { replace: true });
+  };
+
+  const logoutFunction = () => {
+    sessionStorage.clear();
+    navigate("/dashboard/app", { replace: true });
+    window.location.reload(true);
   };
 
   return (
@@ -64,16 +79,16 @@ export default function AccountPopover() {
           width: 44,
           height: 44,
           ...(open && {
-            '&:before': {
+            "&:before": {
               zIndex: 1,
               content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72)
-            }
-          })
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              position: "absolute",
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            },
+          }),
         }}
       >
         <Avatar src={account.photoURL} alt="photoURL" />
@@ -90,7 +105,7 @@ export default function AccountPopover() {
             <Typography variant="subtitle1" noWrap>
               {account.displayName}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
               {account.email}
             </Typography>
           </Box>
@@ -105,7 +120,7 @@ export default function AccountPopover() {
               to={option.linkTo}
               component={RouterLink}
               onClick={handleClose}
-              sx={{ typography: 'body2', py: 1, px: 2.5 }}
+              sx={{ typography: "body2", py: 1, px: 2.5 }}
             >
               <Box
                 component={Icon}
@@ -113,7 +128,7 @@ export default function AccountPopover() {
                 sx={{
                   mr: 2,
                   width: 24,
-                  height: 24
+                  height: 24,
                 }}
               />
 
@@ -123,18 +138,33 @@ export default function AccountPopover() {
 
         {account.loggedIn === true && (
           <Box sx={{ p: 2, pt: 1.5 }}>
-            <Button fullWidth color="inherit" variant="outlined">
+            <Button
+              fullWidth
+              color="inherit"
+              variant="outlined"
+              onClick={logoutFunction}
+            >
               Logout
             </Button>
           </Box>
         )}
         {account.loggedIn !== true && (
           <Box sx={{ p: 2, pt: 1.5 }}>
-            <Button fullWidth color="inherit" variant="outlined" onClick={loginFunction}>
+            <Button
+              fullWidth
+              color="inherit"
+              variant="outlined"
+              onClick={loginFunction}
+            >
               Login
             </Button>
             <Divider sx={{ my: 1 }} />
-            <Button fullWidth color="inherit" variant="outlined" onClick={registerFunction}>
+            <Button
+              fullWidth
+              color="inherit"
+              variant="outlined"
+              onClick={registerFunction}
+            >
               Register
             </Button>
           </Box>

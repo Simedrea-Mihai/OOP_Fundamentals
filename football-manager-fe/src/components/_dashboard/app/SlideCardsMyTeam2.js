@@ -65,45 +65,6 @@ export default function SlideCards({ teamOVR, teamPotential, teamData }) {
 
   return (
     <Stack spacing={2}>
-      <Grid>
-        <Flippy flipDirection="horizontal" flipOnHover={1}>
-          <FrontSide
-            style={{
-              backgroundColor: "#FFF7CD",
-              borderRadius: 15,
-              textAlign: "center",
-              height: 234,
-            }}
-          >
-            <RootStyle>
-              <IconWrapperStyle>
-                <Icon icon="iconoir:graph-up" width={24} height={24} />
-              </IconWrapperStyle>
-              <Typography variant="h3"> {teamOVR} </Typography>
-              <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                Team OVR
-              </Typography>
-            </RootStyle>
-          </FrontSide>
-          <BackSide
-            style={{
-              backgroundColor: "#FFF7CD",
-              borderRadius: 15,
-            }}
-          >
-            <RootStyle>
-              <IconWrapperStyle>
-                <Icon icon="carbon:idea" width={24} height={24} />
-              </IconWrapperStyle>
-              <Typography variant="h3"> {teamPotential} </Typography>
-              <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                Expected OVR
-              </Typography>
-            </RootStyle>
-          </BackSide>
-        </Flippy>
-      </Grid>
-
       <Grid item>
         <Flippy flipDirection="vertical" flipOnHover={1}>
           <FrontSide

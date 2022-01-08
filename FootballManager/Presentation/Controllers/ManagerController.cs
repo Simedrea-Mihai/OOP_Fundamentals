@@ -85,7 +85,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Manager")]
-        public async Task<IActionResult> CreateAsyncManager([FromQuery] CreateManagerCommand command)
+        public async Task<IActionResult> CreateAsyncManager(CreateManagerCommand command)
         {
             var created = await _mediator.Send(command);
             var result = _mapper.Map<ManagerGetDto>(created);
@@ -93,7 +93,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Random-Manager")]
-        public async Task<IActionResult> CreateAsyncRandomManager([FromQuery] CreateRandomManagerCommand command)
+        public async Task<IActionResult> CreateAsyncRandomManager(CreateRandomManagerCommand command)
         {
             var created = await _mediator.Send(command);
             var result = _mapper.Map<ManagerGetDto>(created);
@@ -101,13 +101,13 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Managers")]
-        public async Task<List<int>> CreatesAsync([FromQuery] CreateManagersCommand command)
+        public async Task<List<int>> CreatesAsync(CreateManagersCommand command)
         {
             return (List<int>)await _mediator.Send(command);
         }
 
         [HttpDelete("Manager")]
-        public async Task<int> RemoveAsyncManagerById([FromQuery] RemoveManagerCommand command, CancellationToken cancellationToken)
+        public async Task<int> RemoveAsyncManagerById(RemoveManagerCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }

@@ -14,9 +14,12 @@ namespace Application.Features.Players.Commands.Create
 {
     public class RemoveTeamCommand : IRequest<int>
     {
-        [Required]
-        public int TeamId { get; set; }
+        public int Id { get; set; }
 
+        public RemoveTeamCommand(int id)
+        {
+            Id = id;
+        }
     }
 
     public class RemoveTeamCommandHandler : IRequestHandler<RemoveTeamCommand, int>
@@ -30,9 +33,9 @@ namespace Application.Features.Players.Commands.Create
 
         public async Task<int> Handle(RemoveTeamCommand command, CancellationToken cancellationToken)
         {
-            await _repository.RemoveTeamByIdAsync(command.TeamId, cancellationToken);
+            await _repository.RemoveTeamByIdAsync(command.Id, cancellationToken);
 
-            return command.TeamId;
+            return command.Id;
         }
     }
 }

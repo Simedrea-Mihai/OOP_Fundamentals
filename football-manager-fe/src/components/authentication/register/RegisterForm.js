@@ -18,6 +18,7 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [exception, setException] = useState(null);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -55,24 +56,31 @@ export default function RegisterForm() {
           (response) => {
             console.log(response);
             data = response.data;
+            console.log(data != null && data);
             try {
-              if (data !== null && data.includes('Email')) formik.setFieldError('email', data);
-              else if (data !== null && data.includes('Username'))
-                formik.setFieldError('userName', data);
+              if (data !== null && data.includes("Email"))
+                formik.setFieldError("email", data);
+              else if (data !== null && data.includes("Username"))
+                formik.setFieldError("userName", data);
+              else if (data !== null)
+                console.log('a');
             } catch (ex) {
               console.log(ex);
+              navigate("/login", {replace: true});
             }
           },
-          (error) => {
-            data = error.response.data;
-            try {
-              if (data !== null && data.includes('Email')) formik.setFieldError('email', data);
-              else if (data !== null && data.includes('Username'))
-                formik.setFieldError('userName', data);
-            } catch (ex) {
-              console.log(ex);
+            (error) => {
+              data = error.response.data;
+              try {
+                if (data !== null && data.includes("Email"))
+                  formik.setFieldError("email", data);
+                else if (data !== null && data.includes("Username"))
+                  formik.setFieldError("userName", data);
+                } catch (ex) {
+                  console.log(ex);
+                  navigate("/login", {replace: true});
+                }
             }
-          }
         );
     }
   });

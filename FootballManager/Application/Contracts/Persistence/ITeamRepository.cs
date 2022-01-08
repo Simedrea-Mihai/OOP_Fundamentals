@@ -16,6 +16,7 @@ namespace Application.Contracts.Persistence
         Task<Team> ListById(int id, CancellationToken cancellationToken);
         Task<Manager> AddManager(Team team, Manager manager, CancellationToken cancellationToken);
         Task<Player> BuyPlayer(Team team, Player player, bool buy, CancellationToken cancellationToken);
+        Task<List<Player>> BuyPlayers(Team team, List<int> players, bool buy, CancellationToken cancellationToken);
         Task<IList<Player>> AddPlayers(Team team, int players_count, CancellationToken cancellationToken);
         Task<Team> RemovePlayers(Team team, CancellationToken cancellationToken);
         Task<Player> FirePlayer(int TeamId, int PlayerId, CancellationToken cancellationToken);

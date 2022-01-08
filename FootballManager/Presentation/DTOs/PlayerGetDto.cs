@@ -18,5 +18,6 @@ namespace Presentation.DTOs
         public PlayerPosition Position { get; set; }
         public int OVR { get; set; }
         public int Potential { get; set; }
+        public bool FreeAgent { get; set; }
     }
 }

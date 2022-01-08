@@ -74,6 +74,12 @@ namespace Infrastructure.Repositories
                 .ThenInclude(player => player.Profile).ToListAsync(cancellationToken);
         }
 
+        public async Task<List<Player>> BuyPlayers(Team team, List<int> playersIds, bool buy, CancellationToken cancellationToken)
+        {
+            var requestedPlayers = await TeamMethods.BuyPlayers(_context, team, playersIds, buy, cancellationToken);
+            return requestedPlayers;
+        }
+
         public async Task<Player> BuyPlayer(Team team, Player player, bool buy, CancellationToken cancellationToken)
         {
             Player requestedPlayer = await TeamMethods.BuyPlayer(_context, team, player, buy, cancellationToken);

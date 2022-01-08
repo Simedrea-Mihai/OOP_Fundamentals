@@ -103,54 +103,6 @@ export default function SlideCards({ teamOVR, teamPotential, teamData }) {
           </BackSide>
         </Flippy>
       </Grid>
-
-      <Grid item>
-        <Flippy flipDirection="vertical" flipOnHover={1}>
-          <FrontSide
-            style={{
-              backgroundColor: "#C8FACD",
-              borderRadius: 15,
-              textAlign: "center",
-              height: 234,
-            }}
-          >
-            <RootStyle2>
-              <IconWrapperStyle2>
-                <Icon
-                  icon="fluent:text-description-20-filled"
-                  width={24}
-                  height={24}
-                />
-              </IconWrapperStyle2>
-              <Typography variant="h4">
-                {" "}
-                {teamData != null && teamData.name}{" "}
-              </Typography>
-              <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                Description
-              </Typography>
-            </RootStyle2>
-          </FrontSide>
-          <BackSide
-            style={{
-              backgroundColor: "#C8FACD",
-              borderRadius: 15,
-            }}
-          >
-            <RootStyle3>
-              <IconWrapperStyle2>
-                <Icon icon="bi:chat-left-text" width={24} height={24} />
-              </IconWrapperStyle2>
-              <Typography variant="subtitle2">
-                {teamData != null && teamData.headerDescription}
-              </Typography>
-              <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-                {teamData != null && teamData.description}
-              </Typography>
-            </RootStyle3>
-          </BackSide>
-        </Flippy>
-      </Grid>
     </Stack>
   );
 }

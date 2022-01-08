@@ -68,6 +68,61 @@ namespace Infrastructure.Repositories.Methods
             return team;
         }
 
+        public static async Task<List<Player>> BuyPlayers(ApplicationDbContext context, Team team, List<int> playerIds, bool buy, CancellationToken cancellationToken)
+        {
+            if (team.Id == 0)
+                throw new Exception("Can't link the player with a null team ID");
+
+            var list = context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits).ToList();
+
+            context.Players
+                .Include(player => player.Profile)
+                .Include(player => player.PlayerAttribute)
+                .ThenInclude(player => player.Traits);
+
+            List<Player> players = new List<Player>();
+
+            foreach(int p in playerIds)
+            {
+                var requestedPlayer = list.FirstOrDefault(
+                    pl => pl.Id == p
+                    && pl.FreeAgent == true);
+
+                if(requestedPlayer == null)
+                    throw new Exception($"Player with ID: {p} was not found in the database or it's already taken");
+                else
+                {
+                    if (context.Teams.Find(team.Id).Budget > requestedPlayer.MarketValue)
+                    {
+                        requestedPlayer.FreeAgent = false;
+                        requestedPlayer.TeamIdPlayer = team.Id;
+
+
+                        if (buy == true)
+                            context.Teams.Find(team.Id).Budget -= requestedPlayer.MarketValue;
+
+                    }
+                    else
+                        throw new Exception("Budget < Player's market value");
+                }
+
+                if (context.Teams.Find(team.Id).Players == null)
+                    context.Teams.Find(team.Id).Players = new List<Player>();
+
+                context.Teams.Find(team.Id).Players.Add(requestedPlayer);
+                players.Add(requestedPlayer);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+            return players;
+
+
+
+        }
+
         public static async Task<Player> BuyPlayer(ApplicationDbContext context, Team team, Player player, bool buy, CancellationToken cancellationToken)
         {
             if (team.Id == 0)

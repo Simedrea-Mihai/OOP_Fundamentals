@@ -36,7 +36,7 @@ namespace Application.Teams.CreateTeam
             Team team = new(command.Name, command.Description, command.HeaderDescription);
 
             if (command.Budget == 0)
-                team.Budget = rnd.Next(1, 4) * 100000000;
+                team.Budget = rnd.Next(3, 11) * 100000000;
             else
                 team.Budget = command.Budget;
 

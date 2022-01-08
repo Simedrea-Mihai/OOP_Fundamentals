@@ -1,9 +1,9 @@
 // material
-import { Box, Grid, Container, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { Box, Grid, Container, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 // components
-import Page from '../components/Page';
+import Page from "../components/Page";
 import {
   BestMidfielder,
   BestGoalkeeper,
@@ -13,10 +13,10 @@ import {
   PlayersInfo,
   Map,
   SlideCards,
-  SkeletonPH
-} from '../components/_dashboard/app';
-import account from '../components/authentication/login/account';
-import NavColors from '../components/NavColor';
+  SkeletonPH,
+} from "../components/_dashboard/app";
+import account from "../components/authentication/login/account";
+import NavColors from "../components/NavColor";
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -94,28 +94,40 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            {dataST !== null && dataST[0] !== Array.Empty && <BestStriker props={dataST} />}
+            {dataST !== null && dataST[0] !== Array.Empty && (
+              <BestStriker props={dataST} />
+            )}
             {(dataST === null || dataST[0] === Array.Empty) && <SkeletonPH />}
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            {dataCAM !== null && dataCAM[0] !== Array.Empty && <BestMidfielder props={dataCAM} />}
+            {dataCAM !== null && dataCAM[0] !== Array.Empty && (
+              <BestMidfielder props={dataCAM} />
+            )}
             {(dataCAM === null || dataCAM[0] === Array.Empty) && <SkeletonPH />}
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            {dataCB !== null && dataCB[0] !== Array.Empty && <BestDefender props={dataCB} />}
+            {dataCB !== null && dataCB[0] !== Array.Empty && (
+              <BestDefender props={dataCB} />
+            )}
             {(dataCB === null || dataCB[0] === Array.Empty) && <SkeletonPH />}
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            {dataGK !== null && dataGK[0] !== Array.Empty && <BestGoalkeeper props={dataGK} />}
+            {dataGK !== null && dataGK[0] !== Array.Empty && (
+              <BestGoalkeeper props={dataGK} />
+            )}
             {(dataGK === null || dataGK[0] === Array.Empty) && <SkeletonPH />}
           </Grid>
 
-          <Grid item lg={9}>
+          <Grid item xs={9}>
             <TeamChart data={data} />
           </Grid>
 
-          <Grid item lg={3}>
-            <SlideCards teamOVR={teamOVR} teamPotential={teamPotential} teamData={data} />
+          <Grid item xs={3}>
+            <SlideCards
+              teamOVR={teamOVR}
+              teamPotential={teamPotential}
+              teamData={data}
+            />
           </Grid>
 
           <Grid item xs={16} sm={6} md={12}>

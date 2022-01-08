@@ -96,7 +96,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Player-By-Ovr")]
-        public async Task<IActionResult> ListByOvrAsync([FromQuery]GetPlayersByOvrQuery command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListByOvrAsync(GetPlayersByOvrQuery command, CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(command, cancellationToken);
 
@@ -109,7 +109,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Player-By-Age")]
-        public async Task<IActionResult> ListByAgeAsync([FromQuery] GetPlayersByAgeQuery command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListByAgeAsync(GetPlayersByAgeQuery command, CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(command, cancellationToken);
 
@@ -122,7 +122,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Player-By-Potential")]
-        public async Task<IActionResult> ListTop5Potential([FromQuery] GetTopPlayersPotential command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListTop5Potential(GetTopPlayersPotential command, CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(command, cancellationToken);
 
@@ -135,7 +135,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Player")]
-        public async Task<IActionResult> CreateAsyncPlayer([FromQuery]CreatePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsyncPlayer(CreatePlayerCommand command, CancellationToken cancellationToken)
         {
             var created = await _mediator.Send(command, cancellationToken);
             var result = _mapper.Map<PlayerGetDto>(created);
@@ -150,7 +150,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("Player")]
-        public async Task<int> RemoveAsyncPlayerById([FromQuery]RemovePlayerCommand command, CancellationToken cancellationToken)
+        public async Task<int> RemoveAsyncPlayerById(RemovePlayerCommand command, CancellationToken cancellationToken)
         {
             return await _mediator.Send(command, cancellationToken);
         }
